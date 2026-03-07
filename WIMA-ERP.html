@@ -148,7 +148,7 @@
     .user-role { font-size:10px; color:var(--wima-teal); white-space:nowrap; }
 
     /* Header */
-    .main-area { flex:1; display:flex; flex-direction:column; overflow:hidden; min-width:0; max-width:calc(100% - var(--sidebar-width)); }
+    .main-area { flex:1; display:flex; flex-direction:column; overflow:hidden; min-width:0; }
     .header { height:var(--header-height); background:var(--wima-navy-mid); border-bottom:1px solid var(--wima-navy-border); display:flex; align-items:center; padding:0 24px; gap:16px; flex-shrink:0; }
     .header-breadcrumb { display:flex; align-items:center; gap:6px; font-size:13px; color:var(--wima-muted); }
     .header-breadcrumb .sep { color:var(--wima-navy-border); }
@@ -695,7 +695,8 @@ function doLogin() {
     document.getElementById('sidebar-avatar').textContent = currentUser.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
     // Go to app
     document.getElementById('page-login').style.display = 'none';
-    document.getElementById('page-app').style.display = 'flex';    showSection('dashboard');
+    document.getElementById('page-app').style.display = 'flex';
+    setTimeout(() => showSection('dashboard'), 50);
   }, 1000);
 }
 
