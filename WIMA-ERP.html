@@ -36,10 +36,11 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: var(--font-main); background: var(--wima-navy); color: var(--wima-white); min-height: 100vh; overflow-x: hidden; }
+    html, body { height: 100%; overflow: hidden; }
+    body { font-family: var(--font-main); background: var(--wima-navy); color: var(--wima-white); }
 
-    #page-login { display: flex; width:100vw; min-height:100vh; }
-    #page-app   { display: none; width:100vw; height:100vh; }
+    #page-login { display: flex; width:100%; min-height:100vh; }
+    #page-app   { display: none; width:100%; height:100vh; overflow:hidden; }
 
     /* ============================================================
        SHARED COMPONENTS
@@ -112,7 +113,7 @@
     /* ============================================================
        APP SHELL (Sidebar + Header)
     ============================================================ */
-    .app-shell { display:flex; height:100vh; overflow:hidden; width:100vw; position:fixed; top:0; left:0; }
+    .app-shell { display:flex; height:100vh; width:100%; overflow:hidden; }
 
     /* Sidebar */
     .sidebar { width:var(--sidebar-width); min-width:var(--sidebar-width); background:var(--wima-navy-mid); border-right:1px solid var(--wima-navy-border); display:flex; flex-direction:column; height:100vh; position:sticky; top:0; transition:all 0.25s cubic-bezier(0.4,0,0.2,1); z-index:100; }
