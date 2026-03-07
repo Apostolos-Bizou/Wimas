@@ -564,13 +564,13 @@ function showSection(id) {
     seafarers:    { bc: 'Seafarers',        html: renderSeafarers() },
     otrs:         { bc: 'OTR Requests',     html: renderOTRs() },
     courses:      { bc: 'Course Schedule',  html: '<div id="cs-shell"></div>' },
-    attendance:   { bc: 'Attendance',       html: renderPlaceholder('✅','Attendance','Per-session attendance tracking, grades, pass/fail — Sprint 5') },
-    certificates: { bc: 'Certificates',     html: renderPlaceholder('🎓','Certificates','Certificate generation, upload, download — Sprint 6') },
-    compliance:   { bc: 'Compliance Matrix',html: renderPlaceholder('🛡️','Compliance Matrix','Matrix builder, expiry alerts, compliance scores — Sprint 7') },
-    invoices:     { bc: 'Invoices',         html: renderPlaceholder('💳','Invoices','Invoice generation, PDF export — Sprint 6') },
-    reports:      { bc: 'Reports',          html: renderPlaceholder('📊','Reports & KPIs','Compliance reports, career development — Sprint 8') },
-    centers:      { bc: 'Training Centers', html: renderPlaceholder('🏢','Training Centers','Center profiles, courses, accreditations — Sprint 8') },
-    users:        { bc: 'Users',            html: renderPlaceholder('👥','User Management','Create users, assign roles — Sprint 2') },
+    attendance:   { bc: 'Attendance',       html: renderAttendance() },
+    certificates: { bc: 'Certificates',     html: renderCertificates() },
+    compliance:   { bc: 'Compliance Matrix',html: renderCompliance() },
+    invoices:     { bc: 'Invoices',         html: renderInvoices() },
+    reports:      { bc: 'Reports',          html: renderReports() },
+    centers:      { bc: 'Training Centers', html: renderCenters() },
+    users:        { bc: 'Users',            html: renderUsers() },
   };
   const s = sections[id] || sections.dashboard;
   bc.innerHTML = `<span class="crumb-link" onclick="showSection('dashboard')">Dashboard</span><span class="sep">›</span><span class="current">${s.bc}</span>`;
@@ -1797,6 +1797,951 @@ function selectCenter(el) {
 }
 function doAssign() {
   const selected = document.querySelector('.center-option.selected .center-option-name');
+  const centerName = selected ? selected.textContent : 'Wima Training Center';
+  closeModal();
+  // Show success feedback
+  const banner = document.createElement('div');
+  banner.style.cssText = 'position:fixed;bottom:24px;right:24px;background:var(--wima-teal);color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:600;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,0.4);animation:modalIn 0.2s ease';
+  banner.textContent = '✓ Assigned to ' + centerName;
+  document.body.appendChild(banner);
+  setTimeout(() => banner.remove(), 3000);
+}
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   RENDER: ATTENDANCE (E05)
+═══════════════════════════════════════════════════════════════ */
+const ATTENDANCE_SESSIONS = [
+  { id:1, course:'STCW Basic Safety Training', dates:['07 Mar','08 Mar','09 Mar','10 Mar','11 Mar'], center:'Wima Internal', instructor:'K. Papadopoulos',
+    seafarers:[
+      {name:'Petros Nikolaou',rank:'AB',days:[1,1,1,1,1],grade:88,passed:true},
+      {name:'Vasilis Katsaros',rank:'3/O',days:[1,1,0,1,1],grade:74,passed:false},
+      {name:'Ioannis Stefanou',rank:'2/O',days:[1,1,1,1,1],grade:92,passed:true},
+      {name:'Maria Papadaki',rank:'AB',days:[1,0,1,1,1],grade:81,passed:true},
+      {name:'Kostas Antoniadis',rank:'Bosun',days:[1,1,1,0,1],grade:77,passed:true},
+    ]},
+  { id:2, course:'GMDSS Radio Operator', dates:['08 Mar','09 Mar','10 Mar'], center:'Wima Internal', instructor:'M. Stavridou',
+    seafarers:[
+      {name:'Nikos Drakos',rank:'2/O',days:[1,1,1],grade:95,passed:true},
+      {name:'Elena Voulgari',rank:'3/O',days:[1,1,0],grade:60,passed:false},
+      {name:'Thanasis Pappas',rank:'2/O',days:[1,1,1],grade:85,passed:true},
+    ]},
+  { id:3, course:'Medical First Aid Advanced', dates:['10 Mar','11 Mar'], center:'Compass Center', instructor:'A. Theodorou',
+    seafarers:[
+      {name:'Stavros Hatzis',rank:'Chief Officer',days:[1,1],grade:89,passed:true},
+      {name:'Dimitra Lekkou',rank:'3/O',days:[1,0],grade:null,passed:null},
+    ]},
+];
+
+let attSession = 0;
+let attTab = 'attendance';
+
+function renderAttendance() {
+  const s = ATTENDANCE_SESSIONS[attSession];
+  const totalDays = s.dates.length;
+  return `
+    <div class="page-header">
+      <div>
+        <div class="page-title">✅ Attendance & Grades</div>
+        <div class="page-subtitle">Record attendance per day, submit grades and manage pass/fail</div>
+      </div>
+      <div class="page-actions">
+        <button class="btn btn-secondary" onclick="exportAttendance()">📤 Export Sheet</button>
+        <button class="btn btn-primary" onclick="submitAllGrades()">✓ Submit Grades</button>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:12px;margin-bottom:20px;overflow-x:auto;padding-bottom:4px">
+      ${ATTENDANCE_SESSIONS.map((ss,i)=>`
+        <div onclick="attSession=${i};document.getElementById('main-content').innerHTML=renderAttendance()"
+          style="padding:12px 18px;background:${attSession===i?'var(--wima-teal-glow)':'var(--wima-surface)'};border:1px solid ${attSession===i?'var(--wima-teal)':'var(--wima-navy-border)'};border-radius:10px;cursor:pointer;flex-shrink:0;min-width:200px;transition:all 0.15s">
+          <div style="font-size:12px;font-weight:600;color:${attSession===i?'var(--wima-teal)':'var(--wima-white)'};margin-bottom:3px">${ss.course}</div>
+          <div style="font-size:11px;color:var(--wima-muted)">${ss.instructor} · ${ss.seafarers.length} seafarers</div>
+        </div>`).join('')}
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <span class="card-title">📋 ${s.course}</span>
+          <div style="font-size:11px;color:var(--wima-muted);margin-top:2px">👤 ${s.instructor} · 🏢 ${s.center}</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <div class="page-tabs" style="margin:0;border:none;gap:4px">
+            <div class="tab ${attTab==='attendance'?'active':''}" onclick="attTab='attendance';document.getElementById('att-body').innerHTML=renderAttBody()" style="cursor:pointer;padding:6px 14px;font-size:12px">Attendance</div>
+            <div class="tab ${attTab==='grades'?'active':''}" onclick="attTab='grades';document.getElementById('att-body').innerHTML=renderAttBody()" style="cursor:pointer;padding:6px 14px;font-size:12px">Grades</div>
+          </div>
+        </div>
+      </div>
+      <div id="att-body">${renderAttBody()}</div>
+    </div>
+
+    <div class="grid-2" style="margin-top:0">
+      <div class="card" style="margin-bottom:0">
+        <div class="card-header"><span class="card-title">📊 Attendance Summary</span></div>
+        <div class="card-body" style="padding:14px">
+          ${s.seafarers.map(sf=>{
+            const present = sf.days.filter(d=>d===1).length;
+            const pct = Math.round(present/totalDays*100);
+            return `<div style="margin-bottom:12px">
+              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
+                <span style="color:var(--wima-white);font-weight:500">${sf.name}</span>
+                <span style="color:${pct>=80?'var(--wima-green)':pct>=60?'var(--wima-orange)':'var(--wima-red)'};font-weight:600">${pct}%</span>
+              </div>
+              <div class="progress-wrap"><div class="progress-bar" style="width:${pct}%;background:${pct>=80?'var(--wima-green)':pct>=60?'var(--wima-orange)':'var(--wima-red)'}"></div></div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:0">
+        <div class="card-header"><span class="card-title">🎓 Grade Distribution</span></div>
+        <div class="card-body" style="padding:14px">
+          ${s.seafarers.map(sf=>`
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--wima-navy-border)">
+              <div><div style="font-size:12px;font-weight:500;color:var(--wima-white)">${sf.name}</div><span class="badge badge-purple" style="font-size:10px">${sf.rank}</span></div>
+              <div style="display:flex;align-items:center;gap:8px">
+                ${sf.grade!==null?`<span style="font-family:var(--font-mono);font-size:14px;font-weight:700;color:${sf.passed?'var(--wima-green)':'var(--wima-red)'}">${sf.grade}%</span>
+                <span class="badge ${sf.passed?'badge-green':'badge-red'}">${sf.passed?'PASS':'FAIL'}</span>`
+                :`<span class="badge badge-orange">Pending</span>`}
+              </div>
+            </div>`).join('')}
+          <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--wima-navy-border);display:flex;justify-content:space-between;font-size:13px">
+            <span style="color:var(--wima-muted)">Pass Rate</span>
+            <span style="font-weight:700;color:var(--wima-green)">${Math.round(s.seafarers.filter(sf=>sf.passed===true).length/s.seafarers.length*100)}%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderAttBody() {
+  const s = ATTENDANCE_SESSIONS[attSession];
+  if (attTab === 'attendance') {
+    return `
+      <div style="overflow-x:auto">
+        <table class="wima-table" style="min-width:600px">
+          <thead><tr>
+            <th style="min-width:160px">Seafarer</th>
+            <th>Rank</th>
+            ${s.dates.map(d=>`<th style="text-align:center;min-width:70px">${d}</th>`).join('')}
+            <th style="text-align:center">Present</th>
+            <th style="text-align:center">%</th>
+          </tr></thead>
+          <tbody>
+            ${s.seafarers.map((sf,si)=>{
+              const present = sf.days.filter(d=>d===1).length;
+              const pct = Math.round(present/s.dates.length*100);
+              return `<tr>
+                <td style="color:var(--wima-white);font-weight:500">${sf.name}</td>
+                <td><span class="badge badge-purple" style="font-size:10px">${sf.rank}</span></td>
+                ${sf.days.map((d,di)=>`
+                  <td style="text-align:center">
+                    <select style="background:${d===1?'rgba(16,185,129,0.15)':d===0?'rgba(239,68,68,0.15)':'var(--wima-surface)'};border:1px solid var(--wima-navy-border);border-radius:6px;color:var(--wima-white);padding:4px 6px;font-size:11px;cursor:pointer;outline:none">
+                      <option ${d===1?'selected':''}>✓ Present</option>
+                      <option ${d===0?'selected':''}>✗ Absent</option>
+                      <option>⏰ Late</option>
+                    </select>
+                  </td>`).join('')}
+                <td style="text-align:center;font-weight:600;font-family:var(--font-mono)">${present}/${s.dates.length}</td>
+                <td style="text-align:center"><span style="color:${pct>=80?'var(--wima-green)':pct>=60?'var(--wima-orange)':'var(--wima-red)'};font-weight:600">${pct}%</span></td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>`;
+  } else {
+    return `
+      <table class="wima-table">
+        <thead><tr><th>Seafarer</th><th>Rank</th><th>Attendance</th><th>Grade</th><th>Pass/Fail</th><th>Remarks</th><th>Certificate</th></tr></thead>
+        <tbody>
+          ${s.seafarers.map(sf=>{
+            const present = sf.days.filter(d=>d===1).length;
+            const pct = Math.round(present/s.dates.length*100);
+            return `<tr>
+              <td style="color:var(--wima-white);font-weight:500">${sf.name}</td>
+              <td><span class="badge badge-purple" style="font-size:10px">${sf.rank}</span></td>
+              <td><span style="color:${pct>=80?'var(--wima-green)':'var(--wima-orange)'}">${pct}%</span></td>
+              <td>
+                <input type="number" value="${sf.grade||''}" min="0" max="100" placeholder="0–100"
+                  style="width:70px;background:var(--wima-surface);border:1px solid var(--wima-navy-border);border-radius:6px;color:var(--wima-white);padding:5px 8px;font-size:12px;font-family:var(--font-mono);outline:none">
+              </td>
+              <td>${sf.passed!==null?`<span class="badge ${sf.passed?'badge-green':'badge-red'}">${sf.passed?'PASS':'FAIL'}</span>`:'<span class="badge badge-muted">—</span>'}</td>
+              <td><input type="text" placeholder="Optional remarks..." style="background:var(--wima-surface);border:1px solid var(--wima-navy-border);border-radius:6px;color:var(--wima-white);padding:5px 8px;font-size:12px;width:150px;outline:none"></td>
+              <td>${sf.passed?'<button class="btn btn-primary btn-sm">🎓 Issue</button>':'<span style="color:var(--wima-muted);font-size:11px">—</span>'}</td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>`;
+  }
+}
+
+function exportAttendance() { showToast('📤 Attendance sheet exported as PDF', 'teal'); }
+function submitAllGrades() {
+  showToast('✓ Grades submitted — Certificates being generated...', 'green');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RENDER: CERTIFICATES (E06)
+═══════════════════════════════════════════════════════════════ */
+const CERTS_DATA = [
+  {id:'CERT-2026-0841',seafarer:'Petros Nikolaou',rank:'AB',course:'STCW Basic Safety Training',center:'Wima',issueDate:'15 Jan 2026',expiryDate:'15 Jan 2031',status:'valid',source:'internal',principal:'Shell'},
+  {id:'CERT-2026-0840',seafarer:'Ioannis Stefanou',rank:'2nd Officer',course:'GMDSS GOC',center:'STI Maritime',issueDate:'03 Sep 2025',expiryDate:'03 Mar 2026',status:'expired',source:'external',principal:'Pioneer'},
+  {id:'CERT-2026-0839',seafarer:'Maria Papadaki',rank:'AB',course:'Advanced Firefighting',center:'Wima',issueDate:'20 Jun 2025',expiryDate:'20 Jun 2030',status:'valid',source:'internal',principal:'Crossover'},
+  {id:'CERT-2026-0838',seafarer:'Vasilis Katsaros',rank:'3rd Officer',course:'ECDIS Type Specific',center:'Compass',issueDate:'08 Jan 2026',expiryDate:'08 Jan 2031',status:'valid',source:'external',principal:'Shell'},
+  {id:'CERT-2026-0837',seafarer:'Nikos Drakos',rank:'2nd Officer',course:'Medical First Aid Adv.',center:'Wima',issueDate:'10 Apr 2024',expiryDate:'10 Apr 2026',status:'expiring',source:'internal',principal:'Pioneer'},
+  {id:'CERT-2026-0836',seafarer:'Elena Voulgari',rank:'3rd Officer',course:'Oil Tanker Familiarization',center:'Wima',issueDate:'01 Mar 2026',expiryDate:'01 Mar 2031',status:'valid',source:'internal',principal:'Shell'},
+  {id:'CERT-2026-0835',seafarer:'Thanasis Pappas',rank:'2nd Officer',course:'Crowd & Crisis Management',center:'STI Maritime',issueDate:'14 Feb 2025',expiryDate:'14 Feb 2030',status:'valid',source:'external',principal:'Crossover'},
+  {id:'CERT-2026-0834',seafarer:'Stavros Hatzis',rank:'Chief Officer',course:'Bridge Resource Mgmt',center:'Wima',issueDate:'28 Jan 2026',expiryDate:'28 Jan 2031',status:'valid',source:'internal',principal:'Shell'},
+  {id:'CERT-2026-0833',seafarer:'Dimitra Lekkou',rank:'3rd Officer',course:'STCW PST',center:'Compass',issueDate:'05 Dec 2025',expiryDate:'05 Dec 2030',status:'valid',source:'external',principal:'Pioneer'},
+  {id:'CERT-2026-0832',seafarer:'Kostas Antoniadis',rank:'Bosun',course:'Dynamic Positioning',center:'STI Maritime',issueDate:'19 Nov 2025',expiryDate:'19 Nov 2030',status:'valid',source:'external',principal:'Crossover'},
+];
+
+let certFilter = 'all';
+let certSearch = '';
+
+function renderCertificates() {
+  return `
+    <div class="page-header">
+      <div>
+        <div class="page-title">🎓 Certificates</div>
+        <div class="page-subtitle">View, download and manage all issued certificates</div>
+      </div>
+      <div class="page-actions">
+        <button class="btn btn-secondary" onclick="openUploadCertModal()">📤 Upload External</button>
+        <button class="btn btn-primary">🎓 Issue Certificate</button>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card green"><div class="stat-icon green">🎓</div><div class="stat-value" style="color:var(--wima-green)">138</div><div class="stat-label">Total Issued</div><div class="stat-delta up">↑ 12 this month</div></div>
+      <div class="stat-card teal"><div class="stat-icon teal">✅</div><div class="stat-value" style="color:var(--wima-teal)">119</div><div class="stat-label">Currently Valid</div></div>
+      <div class="stat-card orange"><div class="stat-icon orange">⚠️</div><div class="stat-value" style="color:var(--wima-orange)">11</div><div class="stat-label">Expiring (90 days)</div></div>
+      <div class="stat-card red"><div class="stat-icon red">❌</div><div class="stat-value" style="color:var(--wima-red)">8</div><div class="stat-label">Expired</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">📋 Certificate Registry</span>
+        <div style="display:flex;gap:8px;align-items:center">
+          <div class="search-wrap" style="width:220px;margin:0">
+            <span style="color:var(--wima-muted);font-size:13px">🔍</span>
+            <input id="cert-search" type="text" placeholder="Search seafarer, course..." style="background:none;border:none;color:var(--wima-white);font-family:var(--font-main);font-size:13px;outline:none;flex:1" oninput="certSearch=this.value;document.getElementById('cert-table').innerHTML=renderCertTable()">
+          </div>
+          <select onchange="certFilter=this.value;document.getElementById('cert-table').innerHTML=renderCertTable()" style="background:var(--wima-surface);border:1px solid var(--wima-navy-border);border-radius:7px;color:var(--wima-white);padding:6px 10px;font-size:12px;outline:none">
+            <option value="all">All Status</option>
+            <option value="valid">✅ Valid</option>
+            <option value="expiring">⚠️ Expiring</option>
+            <option value="expired">❌ Expired</option>
+          </select>
+        </div>
+      </div>
+      <div id="cert-table">${renderCertTable()}</div>
+    </div>
+
+    <!-- Upload External Certificate Modal -->
+    <div class="modal-overlay" id="upload-cert-modal">
+      <div class="modal-box">
+        <div class="modal-header">
+          <span class="modal-title">📤 Upload External Certificate</span>
+          <button class="modal-close" onclick="document.getElementById('upload-cert-modal').classList.remove('open')">✕</button>
+        </div>
+        <div class="modal-body" style="padding:20px 22px">
+          <div class="form-group">
+            <label class="form-label">Seafarer *</label>
+            <select class="form-input"><option>Petros Nikolaou</option><option>Vasilis Katsaros</option><option>Ioannis Stefanou</option><option>Maria Papadaki</option></select>
+          </div>
+          <div class="form-row cols-2">
+            <div class="form-group">
+              <label class="form-label">Course Type *</label>
+              <select class="form-input"><option>STCW Basic Safety Training</option><option>GMDSS GOC</option><option>ECDIS Type Specific</option><option>Medical First Aid Adv.</option><option>Advanced Firefighting</option></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Training Center *</label>
+              <input class="form-input" type="text" placeholder="e.g. STI Maritime, Compass">
+            </div>
+          </div>
+          <div class="form-row cols-2">
+            <div class="form-group">
+              <label class="form-label">Issue Date *</label>
+              <input class="form-input" type="date">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Expiry Date</label>
+              <input class="form-input" type="date">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Certificate PDF *</label>
+            <div style="border:2px dashed var(--wima-navy-border);border-radius:8px;padding:24px;text-align:center;cursor:pointer;color:var(--wima-muted);transition:border-color 0.15s" onmouseover="this.style.borderColor='var(--wima-teal)'" onmouseout="this.style.borderColor='var(--wima-navy-border)'">
+              <div style="font-size:28px;margin-bottom:8px">📎</div>
+              <div style="font-size:13px">Click to upload or drag & drop</div>
+              <div style="font-size:11px;margin-top:4px">PDF · max 10MB</div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="padding:14px 22px;border-top:1px solid var(--wima-navy-border);display:flex;justify-content:flex-end;gap:10px">
+          <button class="btn btn-ghost" onclick="document.getElementById('upload-cert-modal').classList.remove('open')">Cancel</button>
+          <button class="btn btn-primary" onclick="document.getElementById('upload-cert-modal').classList.remove('open');showToast('✓ Certificate uploaded and linked to seafarer profile','green')">📤 Upload Certificate</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderCertTable() {
+  const filtered = CERTS_DATA.filter(c => {
+    const matchStatus = certFilter==='all' || c.status===certFilter;
+    const matchSearch = !certSearch || c.seafarer.toLowerCase().includes(certSearch.toLowerCase()) || c.course.toLowerCase().includes(certSearch.toLowerCase());
+    return matchStatus && matchSearch;
+  });
+  if (!filtered.length) return `<div style="padding:40px;text-align:center;color:var(--wima-muted)">No certificates found</div>`;
+  return `<table class="wima-table">
+    <thead><tr><th>Certificate No.</th><th>Seafarer</th><th>Course</th><th>Center</th><th>Issued</th><th>Expires</th><th>Principal</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+      ${filtered.map(c=>`<tr>
+        <td style="font-family:var(--font-mono);font-size:11px;color:var(--wima-teal)">${c.id}</td>
+        <td><div style="font-size:13px;font-weight:500;color:var(--wima-white)">${c.seafarer}</div><span class="badge badge-purple" style="font-size:10px">${c.rank}</span></td>
+        <td style="color:var(--wima-muted-light);font-size:12px">${c.course}</td>
+        <td><div style="font-size:12px">${c.center}</div><span style="font-size:10px;color:var(--wima-muted)">${c.source}</span></td>
+        <td style="font-family:var(--font-mono);font-size:11px">${c.issueDate}</td>
+        <td style="font-family:var(--font-mono);font-size:11px;color:${c.status==='expired'?'var(--wima-red)':c.status==='expiring'?'var(--wima-orange)':'var(--wima-muted-light)'}">${c.expiryDate}</td>
+        <td><span class="badge badge-muted" style="font-size:10px">${c.principal}</span></td>
+        <td><span class="badge ${c.status==='valid'?'badge-green':c.status==='expiring'?'badge-orange':'badge-red'}">${c.status==='valid'?'Valid':c.status==='expiring'?'Expiring':'Expired'}</span></td>
+        <td style="display:flex;gap:4px">
+          <button class="btn btn-ghost btn-sm">PDF ↓</button>
+          ${c.status!=='valid'?'<button class="btn btn-primary btn-sm" style="font-size:10px">+ OTR</button>':''}
+        </td>
+      </tr>`).join('')}
+    </tbody>
+  </table>`;
+}
+
+function openUploadCertModal() {
+  document.getElementById('upload-cert-modal').classList.add('open');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RENDER: INVOICES (E06)
+═══════════════════════════════════════════════════════════════ */
+const INVOICES_DATA = [
+  {id:'INV-2026-0084',agent:'Aegean Crew Management',principal:'Shell',date:'01 Mar 2026',due:'31 Mar 2026',amount:4850,tax:776,total:5626,status:'sent',items:[
+    {desc:'STCW BST x3 seafarers',qty:3,unit:850,sub:2550},
+    {desc:'GMDSS GOC x2 seafarers',qty:2,unit:1000,sub:2000},
+    {desc:'Advanced Firefighting x1',qty:1,unit:300,sub:300},
+  ]},
+  {id:'INV-2026-0083',agent:'Maritime Partners Ltd',principal:'Pioneer',date:'25 Feb 2026',due:'25 Mar 2026',amount:2400,tax:384,total:2784,status:'paid',items:[
+    {desc:'ECDIS Type Specific x2',qty:2,unit:900,sub:1800},
+    {desc:'Bridge Resource Mgmt x1',qty:1,unit:600,sub:600},
+  ]},
+  {id:'INV-2026-0082',agent:'Crossover Shipping',principal:'Crossover',date:'20 Feb 2026',due:'20 Mar 2026',amount:3200,tax:512,total:3712,status:'overdue',items:[
+    {desc:'Medical First Aid Adv. x4',qty:4,unit:500,sub:2000},
+    {desc:'ISM/ISPS Awareness x3',qty:3,unit:400,sub:1200},
+  ]},
+  {id:'INV-2026-0081',agent:'Aegean Crew Management',principal:'Shell',date:'15 Feb 2026',due:'15 Mar 2026',amount:1600,tax:256,total:1856,status:'paid',items:[
+    {desc:'Crowd & Crisis Mgmt x2',qty:2,unit:800,sub:1600},
+  ]},
+  {id:'INV-2026-0080',agent:'Global Marine Crew',principal:'Crossover',date:'10 Feb 2026',due:'10 Mar 2026',amount:950,tax:152,total:1102,status:'draft',items:[
+    {desc:'Dynamic Positioning x1',qty:1,unit:950,sub:950},
+  ]},
+];
+
+let invFilter = 'all';
+let activeInvId = null;
+
+function renderInvoices() {
+  return `
+    <div class="page-header">
+      <div>
+        <div class="page-title">💳 Invoices</div>
+        <div class="page-subtitle">Generate, track and export invoices per money agent</div>
+      </div>
+      <div class="page-actions">
+        <button class="btn btn-secondary">📤 Export CSV</button>
+        <button class="btn btn-primary" onclick="showToast('Invoice builder coming next sprint','teal')">＋ New Invoice</button>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card teal"><div class="stat-icon teal">💰</div><div class="stat-value" style="color:var(--wima-teal)">€18,080</div><div class="stat-label">Total Invoiced (Mar)</div></div>
+      <div class="stat-card green"><div class="stat-icon green">✅</div><div class="stat-value" style="color:var(--wima-green)">€4,640</div><div class="stat-label">Paid</div></div>
+      <div class="stat-card orange"><div class="stat-icon orange">📤</div><div class="stat-value" style="color:var(--wima-orange)">€5,626</div><div class="stat-label">Sent / Pending</div></div>
+      <div class="stat-card red"><div class="stat-icon red">⚠️</div><div class="stat-value" style="color:var(--wima-red)">€3,712</div><div class="stat-label">Overdue</div></div>
+    </div>
+
+    <div style="display:flex;gap:16px;align-items:flex-start">
+      <div class="card" style="flex:1;margin-bottom:0">
+        <div class="card-header">
+          <span class="card-title">📋 Invoice List</span>
+          <div style="display:flex;gap:6px">
+            ${['all','draft','sent','paid','overdue'].map(f=>`
+              <button onclick="invFilter='${f}';document.getElementById('inv-list').innerHTML=renderInvList()" 
+                style="padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid ${invFilter===f?'var(--wima-teal)':'var(--wima-navy-border)'};background:${invFilter===f?'var(--wima-teal-glow)':'transparent'};color:${invFilter===f?'var(--wima-teal)':'var(--wima-muted)'};text-transform:capitalize">${f==='all'?'All':f}</button>`).join('')}
+          </div>
+        </div>
+        <div id="inv-list">${renderInvList()}</div>
+      </div>
+
+      <div id="inv-detail-panel" style="width:380px;flex-shrink:0">
+        ${activeInvId ? renderInvDetail(activeInvId) : `
+          <div class="card" style="margin-bottom:0;text-align:center;padding:48px 24px">
+            <div style="font-size:40px;margin-bottom:12px;opacity:0.3">💳</div>
+            <div style="font-size:13px;color:var(--wima-muted)">Click an invoice to view details</div>
+          </div>`}
+      </div>
+    </div>
+  `;
+}
+
+function renderInvList() {
+  const filtered = INVOICES_DATA.filter(i => invFilter==='all' || i.status===invFilter);
+  return `<table class="wima-table">
+    <thead><tr><th>Invoice No.</th><th>Agent</th><th>Date</th><th>Amount</th><th>Status</th></tr></thead>
+    <tbody>
+      ${filtered.map(inv=>`<tr onclick="document.getElementById('inv-detail-panel').innerHTML=renderInvDetail('${inv.id}')" style="cursor:pointer">
+        <td style="font-family:var(--font-mono);font-size:11px;color:var(--wima-teal)">${inv.id}</td>
+        <td><div style="font-size:13px;font-weight:500;color:var(--wima-white)">${inv.agent}</div><span style="font-size:11px;color:var(--wima-muted)">${inv.principal}</span></td>
+        <td style="font-family:var(--font-mono);font-size:11px">${inv.date}</td>
+        <td style="font-weight:700;color:var(--wima-white)">€${inv.total.toLocaleString()}</td>
+        <td><span class="badge ${inv.status==='paid'?'badge-green':inv.status==='sent'?'badge-teal':inv.status==='overdue'?'badge-red':'badge-muted'}">${inv.status.charAt(0).toUpperCase()+inv.status.slice(1)}</span></td>
+      </tr>`).join('')}
+    </tbody>
+  </table>`;
+}
+
+function renderInvDetail(id) {
+  const inv = INVOICES_DATA.find(i=>i.id===id);
+  if (!inv) return '';
+  const statusColor = inv.status==='paid'?'var(--wima-green)':inv.status==='overdue'?'var(--wima-red)':inv.status==='sent'?'var(--wima-teal)':'var(--wima-muted)';
+  return `
+    <div class="card" style="margin-bottom:0">
+      <div class="card-header" style="justify-content:space-between">
+        <div>
+          <div style="font-family:var(--font-mono);font-size:11px;color:var(--wima-teal);margin-bottom:3px">${inv.id}</div>
+          <span class="badge ${inv.status==='paid'?'badge-green':inv.status==='overdue'?'badge-red':inv.status==='sent'?'badge-teal':'badge-muted'}">${inv.status.charAt(0).toUpperCase()+inv.status.slice(1)}</span>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-ghost btn-sm">PDF ↓</button>
+          ${inv.status==='draft'?'<button class="btn btn-primary btn-sm" onclick="showToast(\'✓ Invoice sent to '+inv.agent+'\',\'teal\')">Send →</button>':''}
+          ${inv.status==='sent'||inv.status==='overdue'?'<button class="btn btn-primary btn-sm" onclick="showToast(\'✓ Payment recorded\',\'green\')">Mark Paid</button>':''}
+        </div>
+      </div>
+      <div style="padding:16px">
+        <div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--wima-navy-border)">
+          <div style="font-size:12px;color:var(--wima-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.6px">Bill To</div>
+          <div style="font-weight:600;color:var(--wima-white)">${inv.agent}</div>
+          <div style="font-size:12px;color:var(--wima-muted)">${inv.principal} Fleet</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--wima-navy-border)">
+          <div><div style="font-size:11px;color:var(--wima-muted)">Issue Date</div><div style="font-size:13px">${inv.date}</div></div>
+          <div><div style="font-size:11px;color:var(--wima-muted)">Due Date</div><div style="font-size:13px;color:${inv.status==='overdue'?'var(--wima-red)':'inherit'}">${inv.due}</div></div>
+        </div>
+        <div style="margin-bottom:14px">
+          ${inv.items.map(item=>`
+            <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(30,47,74,0.4);font-size:12px">
+              <div style="color:var(--wima-muted-light)">${item.desc}</div>
+              <div style="font-family:var(--font-mono)">€${item.sub.toLocaleString()}</div>
+            </div>`).join('')}
+        </div>
+        <div style="background:var(--wima-navy);border-radius:8px;padding:12px">
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--wima-muted);margin-bottom:5px"><span>Subtotal</span><span>€${inv.amount.toLocaleString()}</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--wima-muted);margin-bottom:8px"><span>VAT 16%</span><span>€${inv.tax.toLocaleString()}</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:700;color:var(--wima-white);border-top:1px solid var(--wima-navy-border);padding-top:8px"><span>Total</span><span style="color:${statusColor}">€${inv.total.toLocaleString()}</span></div>
+        </div>
+      </div>
+    </div>`;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RENDER: COMPLIANCE MATRIX (E07)
+═══════════════════════════════════════════════════════════════ */
+const MATRIX_DATA = {
+  Shell: {
+    'Captain': [
+      {course:'STCW BST',freq:'5yr',validity:60,status:'valid',lastDone:'Jan 2026'},
+      {course:'GMDSS GOC',freq:'5yr',validity:60,status:'expiring',lastDone:'Mar 2021'},
+      {course:'ECDIS Type Specific',freq:'5yr',validity:60,status:'valid',lastDone:'Jun 2024'},
+      {course:'Medical First Aid Adv.',freq:'2yr',validity:24,status:'expiring',lastDone:'Apr 2024'},
+      {course:'Bridge Resource Mgmt',freq:'5yr',validity:60,status:'valid',lastDone:'Jan 2024'},
+      {course:'Shell HSSE Induction',freq:'Annual',validity:12,status:'valid',lastDone:'Jan 2026'},
+      {course:'High Voltage Safety',freq:'5yr',validity:60,status:'missing',lastDone:'—'},
+    ],
+    '2nd Officer': [
+      {course:'STCW BST',freq:'5yr',validity:60,status:'valid',lastDone:'Nov 2025'},
+      {course:'GMDSS GOC',freq:'5yr',validity:60,status:'valid',lastDone:'Jul 2023'},
+      {course:'Advanced Firefighting',freq:'5yr',validity:60,status:'valid',lastDone:'Mar 2024'},
+      {course:'Shell HSSE Induction',freq:'Annual',validity:12,status:'missing',lastDone:'—'},
+    ],
+  },
+  Pioneer: {
+    'Chief Officer': [
+      {course:'STCW BST',freq:'5yr',validity:60,status:'valid',lastDone:'Dec 2025'},
+      {course:'Oil Tanker Familiarization',freq:'Once',validity:0,status:'valid',lastDone:'May 2020'},
+      {course:'Crowd & Crisis Mgmt',freq:'5yr',validity:60,status:'valid',lastDone:'Oct 2023'},
+      {course:'Medical First Aid Adv.',freq:'2yr',validity:24,status:'expired',lastDone:'Dec 2023'},
+    ],
+  },
+};
+
+let matrixPrincipal = 'Shell';
+let matrixRank = 'Captain';
+
+function renderCompliance() {
+  const principals = Object.keys(MATRIX_DATA);
+  const ranks = Object.keys(MATRIX_DATA[matrixPrincipal] || {});
+  const matrix = (MATRIX_DATA[matrixPrincipal] || {})[matrixRank] || [];
+  const valid = matrix.filter(r=>r.status==='valid').length;
+  const total = matrix.length;
+  const score = total ? Math.round(valid/total*100) : 0;
+
+  return `
+    <div class="page-header">
+      <div>
+        <div class="page-title">🛡️ Training Matrix & Compliance</div>
+        <div class="page-subtitle">Define required courses per principal/rank, track compliance scores</div>
+      </div>
+      <div class="page-actions">
+        <button class="btn btn-secondary">📤 Export Report</button>
+        <button class="btn btn-primary" onclick="showToast('Matrix builder — coming Sprint 7','teal')">＋ Edit Matrix</button>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap">
+      ${principals.map(p=>`<button onclick="matrixPrincipal='${p}';matrixRank=Object.keys(MATRIX_DATA['${p}']||{})[0]||'Captain';document.getElementById('main-content').innerHTML=renderCompliance()"
+        style="padding:8px 18px;border-radius:8px;border:1px solid ${matrixPrincipal===p?'var(--wima-teal)':'var(--wima-navy-border)'};background:${matrixPrincipal===p?'var(--wima-teal-glow)':'transparent'};color:${matrixPrincipal===p?'var(--wima-teal)':'var(--wima-muted)'};cursor:pointer;font-size:13px;font-weight:600;transition:all 0.15s">${p}</button>`).join('')}
+    </div>
+
+    <div class="grid-3-1" style="align-items:flex-start">
+      <div>
+        <div class="card">
+          <div class="card-header">
+            <div style="display:flex;align-items:center;gap:12px">
+              <span class="card-title">🛡️ ${matrixPrincipal} — ${matrixRank}</span>
+              <span class="badge ${score>=90?'badge-green':score>=70?'badge-orange':'badge-red'}">${score}% Compliant</span>
+            </div>
+            <select onchange="matrixRank=this.value;document.getElementById('main-content').innerHTML=renderCompliance()" style="background:var(--wima-surface);border:1px solid var(--wima-navy-border);border-radius:7px;color:var(--wima-white);padding:6px 10px;font-size:12px;outline:none">
+              ${ranks.map(r=>`<option ${r===matrixRank?'selected':''}>${r}</option>`).join('')}
+            </select>
+          </div>
+          <table class="wima-table">
+            <thead><tr><th>Required Course</th><th>Frequency</th><th>Last Done</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody>
+              ${matrix.map(r=>`<tr>
+                <td style="color:var(--wima-white);font-weight:500">${r.course}</td>
+                <td style="font-size:12px">${r.freq}</td>
+                <td style="font-family:var(--font-mono);font-size:11px">${r.lastDone}</td>
+                <td><span class="badge ${r.status==='valid'?'badge-green':r.status==='expiring'?'badge-orange':r.status==='missing'?'badge-muted':'badge-red'}">${r.status.charAt(0).toUpperCase()+r.status.slice(1)}</span></td>
+                <td>${r.status!=='valid'?`<button class="btn btn-primary btn-sm" onclick="showToast('OTR created for ${r.course}','teal')">+ OTR</button>`:`<button class="btn btn-ghost btn-sm">PDF ↓</button>`}</td>
+              </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div class="card" style="margin-bottom:0">
+          <div class="card-header"><span class="card-title">📊 Compliance Score</span></div>
+          <div class="card-body" style="padding:16px;text-align:center">
+            <div style="position:relative;width:120px;height:120px;margin:0 auto 16px">
+              <svg viewBox="0 0 120 120" style="transform:rotate(-90deg)">
+                <circle cx="60" cy="60" r="48" fill="none" stroke="var(--wima-navy-light)" stroke-width="12"/>
+                <circle cx="60" cy="60" r="48" fill="none" stroke="${score>=90?'var(--wima-green)':score>=70?'var(--wima-orange)':'var(--wima-red)'}" stroke-width="12" stroke-dasharray="${Math.round(score*3.016)} 301.6" stroke-linecap="round"/>
+              </svg>
+              <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
+                <div style="font-size:26px;font-weight:700;color:var(--wima-white)">${score}%</div>
+                <div style="font-size:10px;color:var(--wima-muted)">Compliant</div>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px">
+              <div style="text-align:center;padding:8px;background:rgba(16,185,129,0.1);border-radius:6px"><div style="color:var(--wima-green);font-weight:700;font-size:16px">${matrix.filter(r=>r.status==='valid').length}</div><div style="color:var(--wima-muted)">Valid</div></div>
+              <div style="text-align:center;padding:8px;background:rgba(245,158,11,0.1);border-radius:6px"><div style="color:var(--wima-orange);font-weight:700;font-size:16px">${matrix.filter(r=>r.status==='expiring').length}</div><div style="color:var(--wima-muted)">Expiring</div></div>
+              <div style="text-align:center;padding:8px;background:rgba(239,68,68,0.1);border-radius:6px"><div style="color:var(--wima-red);font-weight:700;font-size:16px">${matrix.filter(r=>r.status==='expired').length}</div><div style="color:var(--wima-muted)">Expired</div></div>
+              <div style="text-align:center;padding:8px;background:rgba(100,116,139,0.1);border-radius:6px"><div style="color:var(--wima-muted);font-weight:700;font-size:16px">${matrix.filter(r=>r.status==='missing').length}</div><div style="color:var(--wima-muted)">Missing</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:0">
+          <div class="card-header"><span class="card-title">⚠️ Expiry Alerts</span></div>
+          <div class="card-body" style="padding:12px">
+            ${matrix.filter(r=>r.status!=='valid').map(r=>`
+              <div class="alert-item" style="margin-bottom:8px">
+                <span class="alert-dot" style="background:${r.status==='missing'?'var(--wima-muted)':r.status==='expired'?'var(--wima-red)':'var(--wima-orange)'}"></span>
+                <div class="alert-text">
+                  <strong style="color:var(--wima-white);font-size:12px">${r.course}</strong>
+                  <div style="font-size:11px;color:var(--wima-muted);margin-top:2px">${r.status==='missing'?'Not completed — Required':'Renewal required'}</div>
+                </div>
+              </div>`).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RENDER: REPORTS (E08)
+═══════════════════════════════════════════════════════════════ */
+function renderReports() {
+  return `
+    <div class="page-header">
+      <div>
+        <div class="page-title">📊 Reports & Analytics</div>
+        <div class="page-subtitle">Compliance reports, career development, market intelligence</div>
+      </div>
+      <div class="page-actions">
+        <button class="btn btn-secondary">📤 Export All</button>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card teal"><div class="stat-icon teal">📋</div><div class="stat-value" style="color:var(--wima-teal)">214</div><div class="stat-label">Total Seafarers</div><div class="stat-delta up">↑ 18 this quarter</div></div>
+      <div class="stat-card green"><div class="stat-icon green">✅</div><div class="stat-value" style="color:var(--wima-green)">78%</div><div class="stat-label">Fully Compliant</div><div class="stat-delta up">↑ 6% vs last month</div></div>
+      <div class="stat-card orange"><div class="stat-icon orange">⚠️</div><div class="stat-value" style="color:var(--wima-orange)">34</div><div class="stat-label">Expiring (90d)</div></div>
+      <div class="stat-card purple"><div class="stat-icon purple">🚀</div><div class="stat-value" style="color:var(--wima-purple)">12</div><div class="stat-label">Promotable Seafarers</div></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header"><span class="card-title">🛡️ Compliance by Principal</span><span class="text-small text-muted">Mar 2026</span></div>
+        <div class="card-body" style="padding:16px">
+          ${[
+            {principal:'Shell',seafarers:87,pct:89,color:'var(--wima-green)'},
+            {principal:'Pioneer',seafarers:64,pct:76,color:'var(--wima-teal)'},
+            {principal:'Crossover',seafarers:45,pct:68,color:'var(--wima-orange)'},
+            {principal:'Global Marine',seafarers:18,pct:94,color:'var(--wima-green)'},
+          ].map(p=>`
+            <div style="margin-bottom:14px">
+              <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+                <div><span style="font-size:13px;font-weight:500;color:var(--wima-white)">${p.principal}</span> <span style="font-size:11px;color:var(--wima-muted)">${p.seafarers} seafarers</span></div>
+                <span style="font-size:13px;font-weight:700;color:${p.color}">${p.pct}%</span>
+              </div>
+              <div class="progress-wrap"><div class="progress-bar" style="width:${p.pct}%;background:${p.color}"></div></div>
+            </div>`).join('')}
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="card-title">📈 Courses Trend</span><span class="text-small text-muted">Last 6 months</span></div>
+        <div class="card-body" style="padding:16px">
+          <div style="display:flex;align-items:flex-end;gap:8px;height:120px;margin-bottom:12px">
+            ${[
+              {month:'Oct',wima:24,ext:12},
+              {month:'Nov',wima:28,ext:14},
+              {month:'Dec',wima:18,ext:8},
+              {month:'Jan',wima:32,ext:16},
+              {month:'Feb',wima:38,ext:18},
+              {month:'Mar',wima:35,ext:15},
+            ].map(m=>{
+              const max=60,h1=Math.round(m.wima/max*100),h2=Math.round(m.ext/max*100);
+              return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+                <div style="width:100%;background:var(--wima-teal);height:${h1}%;border-radius:4px 4px 0 0;opacity:0.9"></div>
+                <div style="width:100%;background:var(--wima-purple);height:${h2}%;border-radius:4px 4px 0 0;opacity:0.7"></div>
+                <div style="font-size:10px;color:var(--wima-muted);margin-top:4px">${m.month}</div>
+              </div>`;
+            }).join('')}
+          </div>
+          <div style="display:flex;gap:16px;justify-content:center;font-size:11px">
+            <span><span style="display:inline-block;width:10px;height:10px;background:var(--wima-teal);border-radius:2px;margin-right:4px"></span>Wima Internal</span>
+            <span><span style="display:inline-block;width:10px;height:10px;background:var(--wima-purple);border-radius:2px;margin-right:4px"></span>External Centers</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header"><span class="card-title">🚀 Promotable Seafarers</span><span class="badge badge-green">12 ready</span></div>
+        <div class="card-body" style="padding:0">
+          <table class="wima-table">
+            <thead><tr><th>Seafarer</th><th>Current Rank</th><th>Target</th><th>Readiness</th><th></th></tr></thead>
+            <tbody>
+              ${[
+                {name:'Petros Nikolaou',current:'AB',target:'3rd Officer',score:92},
+                {name:'Ioannis Stefanou',current:'3rd Officer',target:'2nd Officer',score:88},
+                {name:'Maria Papadaki',current:'2nd Officer',target:'Chief Officer',score:79},
+                {name:'Nikos Drakos',current:'Chief Officer',target:'Captain',score:95},
+              ].map(s=>`<tr>
+                <td style="color:var(--wima-white);font-weight:500">${s.name}</td>
+                <td><span class="badge badge-purple" style="font-size:10px">${s.current}</span></td>
+                <td><span class="badge badge-teal" style="font-size:10px">${s.target}</span></td>
+                <td>
+                  <div style="display:flex;align-items:center;gap:6px">
+                    <div class="progress-wrap" style="width:70px"><div class="progress-bar" style="width:${s.score}%;background:var(--wima-green)"></div></div>
+                    <span style="font-size:12px;color:var(--wima-green);font-weight:600">${s.score}%</span>
+                  </div>
+                </td>
+                <td><button class="btn btn-ghost btn-sm">PDF ↓</button></td>
+              </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="card-title">🏢 Market Intelligence</span><span class="text-small text-muted">External center usage</span></div>
+        <div class="card-body" style="padding:16px">
+          ${[
+            {center:'STI Maritime',courses:48,revenue:24000,trend:'↑',trendColor:'var(--wima-red)'},
+            {center:'Compass Center',courses:32,revenue:16000,trend:'↓',trendColor:'var(--wima-green)'},
+            {center:'Other External',courses:18,revenue:9000,trend:'→',trendColor:'var(--wima-muted)'},
+          ].map(c=>`
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--wima-navy-border)">
+              <div><div style="font-size:13px;font-weight:500;color:var(--wima-white)">${c.center}</div><div style="font-size:11px;color:var(--wima-muted)">${c.courses} courses this quarter</div></div>
+              <div style="text-align:right">
+                <div style="font-size:13px;font-weight:700;color:var(--wima-red)">-€${c.revenue.toLocaleString()}</div>
+                <div style="font-size:12px;color:${c.trendColor}">${c.trend} Revenue loss</div>
+              </div>
+            </div>`).join('')}
+          <button class="btn btn-ghost w-full" style="margin-top:12px;justify-content:center">View Full Report →</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RENDER: TRAINING CENTERS (E02)
+═══════════════════════════════════════════════════════════════ */
+const CENTERS_DATA = [
+  {id:1,name:'Wima Training Center',type:'Internal',location:'Piraeus, Greece',contact:'Charlene Wima',email:'training@wimas.io',phone:'+30 210 4120000',status:'active',accreditations:['STCW','GMDSS','ISO 9001'],courses:['STCW BST','Advanced Firefighting','Medical First Aid','GMDSS','Crowd & Crisis Mgmt','ECDIS','Bridge Resource Mgmt'],sessionsThisMonth:8,logo:'🏫'},
+  {id:2,name:'STI Maritime Center',type:'External',location:'Thessaloniki, Greece',contact:'Andreas Stavros',email:'info@sti-maritime.gr',phone:'+30 2310 555000',status:'active',accreditations:['STCW','DNV','MCA'],courses:['STCW BST','Advanced Firefighting','Oil Tanker','DP Basic','GMDSS'],sessionsThisMonth:5,logo:'⚓'},
+  {id:3,name:'Compass Training',type:'External',location:'Athens, Greece',contact:'Sofia Alexiou',email:'admin@compass-training.gr',phone:'+30 210 9870000',status:'active',accreditations:['STCW','Flag State'],courses:['ECDIS Type Specific','ISM/ISPS','Medical First Aid','PST'],sessionsThisMonth:3,logo:'🧭'},
+  {id:4,name:'MarineEd Institute',type:'External',location:'Heraklion, Crete',contact:'Petros Manolis',email:'contact@marineed.gr',phone:'+30 2810 300000',status:'review',accreditations:['STCW'],courses:['STCW BST'],sessionsThisMonth:0,logo:'🎓'},
+];
+
+let activeCenterId = null;
+
+function renderCenters() {
+  return `
+    <div class="page-header">
+      <div>
+        <div class="page-title">🏢 Training Centers</div>
+        <div class="page-subtitle">Manage internal and external training center profiles and accreditations</div>
+      </div>
+      <div class="page-actions">
+        <button class="btn btn-primary" onclick="showToast('Add center form — coming next sprint','teal')">＋ Add Center</button>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card teal"><div class="stat-icon teal">🏢</div><div class="stat-value" style="color:var(--wima-teal)">4</div><div class="stat-label">Total Centers</div></div>
+      <div class="stat-card green"><div class="stat-icon green">✅</div><div class="stat-value" style="color:var(--wima-green)">3</div><div class="stat-label">Active</div></div>
+      <div class="stat-card teal"><div class="stat-icon teal">📅</div><div class="stat-value" style="color:var(--wima-teal)">16</div><div class="stat-label">Sessions This Month</div></div>
+      <div class="stat-card orange"><div class="stat-icon orange">⚠️</div><div class="stat-value" style="color:var(--wima-orange)">1</div><div class="stat-label">Under Review</div></div>
+    </div>
+
+    <div class="grid-2">
+      ${CENTERS_DATA.map(c=>`
+        <div class="card" style="cursor:pointer;margin-bottom:0;transition:border-color 0.15s;border-color:${activeCenterId===c.id?'var(--wima-teal)':'var(--wima-navy-border)'}" onclick="activeCenterId=${c.id};document.getElementById('main-content').innerHTML=renderCenters()">
+          <div class="card-header">
+            <div style="display:flex;align-items:center;gap:12px">
+              <div style="width:42px;height:42px;border-radius:10px;background:var(--wima-navy-light);border:1px solid var(--wima-navy-border);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">${c.logo}</div>
+              <div>
+                <div style="font-size:14px;font-weight:600;color:var(--wima-white)">${c.name}</div>
+                <div style="font-size:11px;color:var(--wima-muted)">${c.type} · ${c.location}</div>
+              </div>
+            </div>
+            <span class="badge ${c.status==='active'?'badge-green':'badge-orange'}">${c.status.charAt(0).toUpperCase()+c.status.slice(1)}</span>
+          </div>
+          <div style="padding:14px">
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px">
+              ${c.accreditations.map(a=>`<span class="badge badge-teal" style="font-size:10px">${a}</span>`).join('')}
+            </div>
+            <div style="font-size:12px;color:var(--wima-muted);margin-bottom:8px">📚 ${c.courses.length} courses offered</div>
+            <div style="display:flex;gap:16px;font-size:12px">
+              <span>📧 ${c.email}</span>
+              <span style="color:var(--wima-muted)">📅 ${c.sessionsThisMonth} sessions this month</span>
+            </div>
+          </div>
+          ${activeCenterId===c.id ? `
+          <div style="padding:0 14px 14px">
+            <div style="border-top:1px solid var(--wima-navy-border);padding-top:12px;margin-bottom:8px">
+              <div style="font-size:11px;color:var(--wima-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.6px">Courses Offered</div>
+              <div style="display:flex;flex-wrap:wrap;gap:4px">
+                ${c.courses.map(course=>`<span style="padding:3px 8px;background:var(--wima-navy);border:1px solid var(--wima-navy-border);border-radius:5px;font-size:11px;color:var(--wima-muted-light)">${course}</span>`).join('')}
+              </div>
+            </div>
+            <div style="display:flex;gap:6px">
+              <button class="btn btn-ghost btn-sm">📋 View Sessions</button>
+              <button class="btn btn-primary btn-sm">✏️ Edit Profile</button>
+            </div>
+          </div>` : ''}
+        </div>`).join('')}
+    </div>
+  `;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RENDER: USERS (E01)
+═══════════════════════════════════════════════════════════════ */
+const USERS_DATA = [
+  {id:1,name:'Charlene Wima',email:'charlene@wimas.io',role:'Training Administrator',center:'Wima Training Center',status:'active',lastLogin:'07 Mar 2026, 08:14',initials:'CW',color:'#0EA5E9'},
+  {id:2,name:'Niki Varia',email:'niki@wimas.io',role:'System Admin',center:'Wima Training Center',status:'active',lastLogin:'06 Mar 2026, 17:52',initials:'NV',color:'#8B5CF6'},
+  {id:3,name:'Andreas Stavros',email:'a.stavros@aegean.gr',role:'Money Agent',center:'Aegean Crew Mgmt',status:'active',lastLogin:'07 Mar 2026, 09:30',initials:'AS',color:'#10B981'},
+  {id:4,name:'Sofia Alexiou',email:'s.alexiou@pioneer.com',role:'Money Agent',center:'Pioneer Shipping',status:'active',lastLogin:'05 Mar 2026, 14:20',initials:'SA',color:'#F59E0B'},
+  {id:5,name:'Kostas Papadopoulos',email:'k.papa@wimas.io',role:'Instructor',center:'Wima Training Center',status:'active',lastLogin:'07 Mar 2026, 07:58',initials:'KP',color:'#0EA5E9'},
+  {id:6,name:'Maria Stavridou',email:'m.stavr@wimas.io',role:'Instructor',center:'Wima Training Center',status:'active',lastLogin:'06 Mar 2026, 15:10',initials:'MS',color:'#EC4899'},
+  {id:7,name:'Petros Nikolaou',email:'p.nikol@mail.com',role:'Seafarer',center:'—',status:'active',lastLogin:'04 Mar 2026, 11:05',initials:'PN',color:'#64748B'},
+  {id:8,name:'Costas Tsoumas',email:'c.tsoum@crossover.gr',role:'Money Agent',center:'Crossover Shipping',status:'inactive',lastLogin:'10 Feb 2026, 09:20',initials:'CT',color:'#64748B'},
+  {id:9,name:'Anna Theodorou',email:'a.theo@wimas.io',role:'Instructor',center:'Wima Training Center',status:'active',lastLogin:'07 Mar 2026, 08:45',initials:'AT',color:'#14B8A6'},
+];
+
+let userFilter = 'all';
+let showCreateUser = false;
+
+function renderUsers() {
+  const filtered = USERS_DATA.filter(u => userFilter==='all' || u.role.toLowerCase().includes(userFilter) || u.status===userFilter);
+  return `
+    <div class="page-header">
+      <div>
+        <div class="page-title">👥 User Management</div>
+        <div class="page-subtitle">Create users, assign roles and manage platform access</div>
+      </div>
+      <div class="page-actions">
+        <button class="btn btn-primary" onclick="document.getElementById('create-user-modal').classList.add('open')">＋ Create User</button>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card teal"><div class="stat-icon teal">👥</div><div class="stat-value" style="color:var(--wima-teal)">${USERS_DATA.length}</div><div class="stat-label">Total Users</div></div>
+      <div class="stat-card green"><div class="stat-icon green">✅</div><div class="stat-value" style="color:var(--wima-green)">${USERS_DATA.filter(u=>u.status==='active').length}</div><div class="stat-label">Active</div></div>
+      <div class="stat-card purple"><div class="stat-icon purple">🎓</div><div class="stat-value" style="color:var(--wima-purple)">${USERS_DATA.filter(u=>u.role==='Instructor').length}</div><div class="stat-label">Instructors</div></div>
+      <div class="stat-card orange"><div class="stat-icon orange">⚓</div><div class="stat-value" style="color:var(--wima-orange)">${USERS_DATA.filter(u=>u.role==='Money Agent').length}</div><div class="stat-label">Money Agents</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          ${[{v:'all',l:'All'},{'v':'admin','l':'Admin'},{'v':'training administrator','l':'Training Admin'},{'v':'money agent','l':'Agents'},{'v':'instructor','l':'Instructors'},{'v':'seafarer','l':'Seafarers'},{'v':'inactive','l':'Inactive'}].map(f=>`
+            <button onclick="userFilter='${f.v}';document.getElementById('main-content').innerHTML=renderUsers()" 
+              style="padding:5px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid ${userFilter===f.v?'var(--wima-teal)':'var(--wima-navy-border)'};background:${userFilter===f.v?'var(--wima-teal-glow)':'transparent'};color:${userFilter===f.v?'var(--wima-teal)':'var(--wima-muted)'};transition:all 0.15s">${f.l}</button>`).join('')}
+        </div>
+        <span style="font-size:12px;color:var(--wima-muted)">${filtered.length} users</span>
+      </div>
+      <table class="wima-table">
+        <thead><tr><th>User</th><th>Role</th><th>Organization</th><th>Last Login</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>
+          ${filtered.map(u=>`<tr>
+            <td>
+              <div style="display:flex;align-items:center;gap:10px">
+                <div style="width:34px;height:34px;border-radius:8px;background:${u.color}22;border:1px solid ${u.color}44;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:${u.color};flex-shrink:0">${u.initials}</div>
+                <div><div style="font-size:13px;font-weight:500;color:var(--wima-white)">${u.name}</div><div style="font-size:11px;color:var(--wima-muted)">${u.email}</div></div>
+              </div>
+            </td>
+            <td><span class="badge ${u.role==='System Admin'?'badge-purple':u.role==='Training Administrator'?'badge-teal':u.role==='Instructor'?'badge-green':u.role==='Money Agent'?'badge-orange':'badge-muted'}" style="font-size:10px">${u.role}</span></td>
+            <td style="font-size:12px;color:var(--wima-muted-light)">${u.center}</td>
+            <td style="font-family:var(--font-mono);font-size:10px;color:var(--wima-muted)">${u.lastLogin}</td>
+            <td><span class="badge ${u.status==='active'?'badge-green':'badge-muted'}">${u.status==='active'?'Active':'Inactive'}</span></td>
+            <td>
+              <div style="display:flex;gap:4px">
+                <button class="btn btn-ghost btn-sm" onclick="showToast('Edit user — coming next sprint','teal')">✏️ Edit</button>
+                <button class="btn btn-ghost btn-sm" onclick="showToast('User ${u.status==='active'?'deactivated':'activated'}','${u.status==='active'?'orange':'green'}')">${u.status==='active'?'🔒 Deactivate':'🔓 Activate'}</button>
+              </div>
+            </td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Create User Modal -->
+    <div class="modal-overlay" id="create-user-modal">
+      <div class="modal-box">
+        <div class="modal-header">
+          <span class="modal-title">👤 Create New User</span>
+          <button class="modal-close" onclick="document.getElementById('create-user-modal').classList.remove('open')">✕</button>
+        </div>
+        <div class="modal-body" style="padding:20px 22px">
+          <div class="form-row cols-2">
+            <div class="form-group">
+              <label class="form-label">Full Name *</label>
+              <input class="form-input" type="text" placeholder="e.g. Georgios Papadakis" id="nu-name">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email *</label>
+              <input class="form-input" type="email" placeholder="user@example.com" id="nu-email">
+            </div>
+          </div>
+          <div class="form-row cols-2">
+            <div class="form-group">
+              <label class="form-label">Role *</label>
+              <select class="form-input" id="nu-role">
+                <option>Training Administrator</option>
+                <option>Money Agent</option>
+                <option>Instructor</option>
+                <option>Seafarer</option>
+                <option>Training Center Staff</option>
+                <option>CFO / Accounting</option>
+                <option>System Admin</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Training Center</label>
+              <select class="form-input" id="nu-center">
+                <option>Wima Training Center</option>
+                <option>STI Maritime Center</option>
+                <option>Compass Training</option>
+                <option>External / N/A</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone</label>
+            <input class="form-input" type="tel" placeholder="+30 210 ...">
+          </div>
+          <div style="background:var(--wima-navy-light);border:1px solid var(--wima-navy-border);border-radius:8px;padding:12px;margin-top:4px;font-size:12px;color:var(--wima-muted)">
+            ℹ️ A temporary password will be sent automatically to the user's email. The user will be required to change it on first login.
+          </div>
+        </div>
+        <div class="modal-footer" style="padding:14px 22px;border-top:1px solid var(--wima-navy-border);display:flex;justify-content:flex-end;gap:10px">
+          <button class="btn btn-ghost" onclick="document.getElementById('create-user-modal').classList.remove('open')">Cancel</button>
+          <button class="btn btn-primary" onclick="doCreateUser()">✓ Create User & Send Email</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function doCreateUser() {
+  const name = document.getElementById('nu-name')?.value;
+  const email = document.getElementById('nu-email')?.value;
+  if (!name || !email) { showToast('Please fill in name and email','orange'); return; }
+  document.getElementById('create-user-modal').classList.remove('open');
+  showToast(`✓ User "${name}" created — welcome email sent to ${email}`, 'green');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   GLOBAL TOAST HELPER
+═══════════════════════════════════════════════════════════════ */
+function showToast(msg, type) {
+  const colors = {green:'var(--wima-green)',teal:'var(--wima-teal)',orange:'var(--wima-orange)',red:'var(--wima-red)',purple:'var(--wima-purple)'};
+  const banner = document.createElement('div');
+  banner.style.cssText = `position:fixed;bottom:24px;right:24px;background:${colors[type]||colors.teal};color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:600;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,0.3);animation:modalIn 0.2s ease;max-width:360px`;
+  banner.textContent = msg;
+  document.body.appendChild(banner);
+  setTimeout(() => banner.remove(), 3500);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   EXTRA CSS for new sections (stat-card red, badge-muted, etc.)
+═══════════════════════════════════════════════════════════════ */
+(function injectStyles() {
+  const style = document.createElement('style');
+  style.textContent = `
+    .stat-card.red .stat-icon.red, .stat-icon.red { background:rgba(239,68,68,0.12); color:var(--wima-red); }
+    .stat-card.red { border-color:rgba(239,68,68,0.2); }
+    .stat-card.red:hover { border-color:rgba(239,68,68,0.4); }
+    .stat-card.purple .stat-icon.purple, .stat-icon.purple { background:rgba(139,92,246,0.12); color:var(--wima-purple); }
+    .stat-card.purple { border-color:rgba(139,92,246,0.2); }
+    .badge-muted { background:rgba(100,116,139,0.15); color:var(--wima-muted-light); }
+    .badge-purple { background:rgba(139,92,246,0.15); color:var(--wima-purple); }
+    .w-full { width:100%; }
+    .text-small { font-size:11px; }
+    .text-muted { color:var(--wima-muted); }
+    #create-user-modal.open, #upload-cert-modal.open { display:flex; }
+  `;
+  document.head.appendChild(style);
+})();
+
   const centerName = selected ? selected.textContent : 'Wima Training Center';
   closeModal();
   // Show success feedback
