@@ -40,7 +40,7 @@
     body { font-family: var(--font-main); background: var(--wima-navy); color: var(--wima-white); height: 100%; }
 
     #page-login { display: flex; width:100%; min-height:100vh; }
-    #page-app   { display: none; width:100%; }
+    #page-app   { display: none; width:100%; flex-direction:row; overflow:hidden; height:100vh; }
 
     /* ============================================================
        SHARED COMPONENTS
@@ -113,10 +113,10 @@
     /* ============================================================
        APP SHELL (Sidebar + Header)
     ============================================================ */
-    .app-shell { display:flex; flex-direction:row; min-height:100vh; width:100%; }
+    .app-shell { display:contents; }
 
     /* Sidebar */
-    .sidebar { width:var(--sidebar-width); min-width:var(--sidebar-width); background:var(--wima-navy-mid); border-right:1px solid var(--wima-navy-border); display:flex; flex-direction:column; min-height:100vh; position:sticky; top:0; height:100vh; transition:all 0.25s cubic-bezier(0.4,0,0.2,1); z-index:100; flex-shrink:0; }
+    .sidebar { width:var(--sidebar-width); min-width:var(--sidebar-width); background:var(--wima-navy-mid); border-right:1px solid var(--wima-navy-border); display:flex; flex-direction:column; height:100vh; overflow-y:auto; transition:all 0.25s cubic-bezier(0.4,0,0.2,1); z-index:100; flex-shrink:0; }
     .sidebar.collapsed { width:64px; min-width:64px; }
     .sidebar-logo { height:var(--header-height); display:flex; align-items:center; padding:0 16px; border-bottom:1px solid var(--wima-navy-border); gap:10px; overflow:hidden; flex-shrink:0; }
     .logo-icon { width:32px; height:32px; background:var(--wima-teal); border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; color:white; flex-shrink:0; }
