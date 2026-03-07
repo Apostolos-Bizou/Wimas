@@ -333,6 +333,76 @@
     .matrix-table th { padding:10px 14px; text-align:left; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.8px; color:var(--wima-muted); border-bottom:1px solid var(--wima-navy-border); }
     .matrix-table td { padding:11px 14px; border-bottom:1px solid rgba(30,47,74,0.4); color:var(--wima-muted-light); }
     .matrix-table tbody tr:hover { background:var(--wima-navy-light); }
+
+    /* ============================================================
+       OTR DETAIL PAGE
+    ============================================================ */
+    .otr-hero { background:var(--wima-navy-mid); border-bottom:1px solid var(--wima-navy-border); padding:24px 32px; position:relative; overflow:hidden; }
+    .otr-hero::before { content:''; position:absolute; top:0; right:0; width:500px; height:100%; background:radial-gradient(circle at top right,rgba(14,165,233,0.05),transparent 70%); pointer-events:none; }
+    .otr-number { font-family:var(--font-mono); font-size:13px; color:var(--wima-teal); margin-bottom:6px; letter-spacing:0.5px; }
+    .otr-title  { font-size:20px; font-weight:700; letter-spacing:-0.3px; margin-bottom:12px; }
+    .otr-meta   { display:flex; gap:20px; flex-wrap:wrap; font-size:12px; color:var(--wima-muted-light); }
+
+    /* Status timeline */
+    .status-track { display:flex; align-items:center; margin:24px 0 8px; }
+    .st-step { display:flex; flex-direction:column; align-items:center; min-width:100px; position:relative; }
+    .st-circle { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; border:2px solid; z-index:1; }
+    .st-circle.done    { background:rgba(16,185,129,0.15); border-color:var(--wima-green); color:var(--wima-green); }
+    .st-circle.active  { background:var(--wima-teal-glow); border-color:var(--wima-teal); color:var(--wima-teal); box-shadow:0 0 16px rgba(14,165,233,0.3); }
+    .st-circle.pending { background:var(--wima-navy-light); border-color:var(--wima-navy-border); color:var(--wima-muted); }
+    .st-label { font-size:10px; margin-top:6px; text-align:center; text-transform:uppercase; letter-spacing:0.5px; font-weight:600; }
+    .st-label.done    { color:var(--wima-green); }
+    .st-label.active  { color:var(--wima-teal); }
+    .st-label.pending { color:var(--wima-muted); }
+    .st-line { flex:1; height:2px; margin-bottom:22px; }
+    .st-line.done   { background:var(--wima-green); }
+    .st-line.active { background:linear-gradient(90deg,var(--wima-teal),var(--wima-navy-border)); }
+    .st-line.pending{ background:var(--wima-navy-border); }
+
+    /* OTR two-column layout */
+    .otr-layout { display:grid; grid-template-columns:1fr 320px; gap:20px; padding:24px 32px; }
+    .otr-main   { display:flex; flex-direction:column; gap:16px; }
+    .otr-aside  { display:flex; flex-direction:column; gap:16px; }
+
+    /* Course request items */
+    .course-req { display:flex; align-items:center; gap:12px; padding:12px; background:var(--wima-navy-light); border:1px solid var(--wima-navy-border); border-radius:8px; margin-bottom:8px; }
+    .course-req-icon { width:36px; height:36px; border-radius:8px; background:var(--wima-teal-glow); display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+    .course-req-name { font-size:13px; font-weight:500; color:var(--wima-white); }
+    .course-req-meta { font-size:11px; color:var(--wima-muted); margin-top:2px; }
+
+    /* Activity log */
+    .activity-item { display:flex; gap:12px; padding:10px 0; border-bottom:1px solid rgba(30,47,74,0.4); }
+    .activity-item:last-child { border-bottom:none; }
+    .act-dot { width:8px; height:8px; border-radius:50%; margin-top:5px; flex-shrink:0; }
+    .act-text { font-size:12px; color:var(--wima-muted-light); line-height:1.5; flex:1; }
+    .act-text strong { color:var(--wima-white); }
+    .act-time { font-size:10px; color:var(--wima-muted); font-family:var(--font-mono); white-space:nowrap; }
+
+    /* Notes panel */
+    .notes-area { background:var(--wima-navy-light); border:1px solid var(--wima-navy-border); border-radius:8px; padding:10px 12px; width:100%; font-family:var(--font-main); font-size:12px; color:var(--wima-white); resize:vertical; min-height:80px; outline:none; }
+    .notes-area:focus { border-color:var(--wima-teal); }
+    .notes-area::placeholder { color:var(--wima-muted); }
+
+    /* ── MODAL ── */
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(4px); z-index:1000; display:none; align-items:center; justify-content:center; }
+    .modal-overlay.open { display:flex; }
+    .modal-box { background:var(--wima-navy-mid); border:1px solid var(--wima-navy-border); border-radius:16px; width:540px; max-width:95vw; overflow:hidden; box-shadow:0 24px 80px rgba(0,0,0,0.5); animation:modalIn 0.2s ease; }
+    @keyframes modalIn { from { opacity:0; transform:translateY(16px) scale(0.97); } to { opacity:1; transform:none; } }
+    .modal-header { padding:18px 22px; border-bottom:1px solid var(--wima-navy-border); display:flex; align-items:center; justify-content:space-between; }
+    .modal-title  { font-size:15px; font-weight:600; }
+    .modal-close  { width:28px; height:28px; border-radius:6px; background:var(--wima-navy-light); border:none; cursor:pointer; color:var(--wima-muted); font-size:14px; display:flex; align-items:center; justify-content:center; transition:all 0.15s; }
+    .modal-close:hover { background:rgba(239,68,68,0.1); color:var(--wima-red); }
+    .modal-body   { padding:20px 22px; }
+    .modal-footer { padding:14px 22px; border-top:1px solid var(--wima-navy-border); display:flex; justify-content:flex-end; gap:8px; }
+    .select-input { width:100%; background:var(--wima-surface); border:1px solid var(--wima-navy-border); border-radius:8px; padding:10px 12px; font-family:var(--font-main); font-size:13px; color:var(--wima-white); outline:none; transition:border-color 0.15s; }
+    .select-input:focus { border-color:var(--wima-teal); }
+    .center-option { display:flex; align-items:center; gap:12px; padding:10px 12px; border:1px solid var(--wima-navy-border); border-radius:8px; cursor:pointer; transition:all 0.15s; margin-bottom:8px; }
+    .center-option:hover   { border-color:var(--wima-teal); background:var(--wima-teal-glow2); }
+    .center-option.selected{ border-color:var(--wima-teal); background:var(--wima-teal-glow); }
+    .center-option-icon { width:36px; height:36px; border-radius:8px; background:var(--wima-navy-light); display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+    .center-option-name { font-size:13px; font-weight:500; color:var(--wima-white); }
+    .center-option-meta { font-size:11px; color:var(--wima-muted); margin-top:1px; }
+    .center-option.selected .center-option-name { color:var(--wima-teal); }
   </style>
 </head>
 <body>
@@ -514,6 +584,48 @@
       </div>
     </div>
 
+  </div>
+</div>
+
+<!-- ── ASSIGN MODAL ── -->
+<div class="modal-overlay" id="assign-modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title">🔀 Assign Training Center</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;color:var(--wima-muted);margin-bottom:10px">Select Training Center</div>
+      <div id="center-options">
+        <div class="center-option selected" onclick="selectCenter(this)">
+          <div class="center-option-icon">🏫</div>
+          <div><div class="center-option-name">Wima Training Center</div><div class="center-option-meta">Internal · Piraeus · Available seats: 4</div></div>
+          <span class="badge badge-green" style="margin-left:auto">Internal</span>
+        </div>
+        <div class="center-option" onclick="selectCenter(this)">
+          <div class="center-option-icon">⚓</div>
+          <div><div class="center-option-name">STI Maritime Center</div><div class="center-option-meta">External · Piraeus · Available seats: 8</div></div>
+          <span class="badge badge-muted" style="margin-left:auto">External</span>
+        </div>
+        <div class="center-option" onclick="selectCenter(this)">
+          <div class="center-option-icon">🧭</div>
+          <div><div class="center-option-name">Compass Training Center</div><div class="center-option-meta">External · Athens · Available seats: 6</div></div>
+          <span class="badge badge-muted" style="margin-left:auto">External</span>
+        </div>
+      </div>
+      <div style="margin-top:14px">
+        <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;color:var(--wima-muted);margin-bottom:6px">Preferred Start Date</div>
+        <input type="date" class="select-input" value="2026-03-15" />
+      </div>
+      <div style="margin-top:12px">
+        <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;color:var(--wima-muted);margin-bottom:6px">Internal Notes (not visible to Money Agent)</div>
+        <textarea class="notes-area" placeholder="Add notes for the training center…"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="doAssign()">✓ Confirm Assignment</button>
+    </div>
   </div>
 </div>
 
@@ -856,7 +968,7 @@ function renderOTRs() {
         <thead><tr><th>OTR Number</th><th>Seafarer</th><th>Courses</th><th>Principal</th><th>Training Center</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
         <tbody>
           ${rows.map(r=>`
-            <tr>
+            <tr onclick="showOTRDetail('${r.num}')">
               <td class="td-mono">${r.num}${r.urgent?' <span class="badge badge-red" style="font-size:9px;padding:1px 5px">🔴</span>':''}</td>
               <td><div style="display:flex;align-items:center;gap:8px"><div class="avatar avatar-sm">${r.init}</div><span class="td-primary">${r.name}</span></div></td>
               <td>${r.courses.map(c=>`<span class="badge badge-muted" style="margin:1px">${c}</span>`).join('')}</td>
@@ -864,9 +976,9 @@ function renderOTRs() {
               <td style="font-size:12px">${r.center}</td>
               <td><span class="badge ${statusStyle[r.status]}">${r.status}</span></td>
               <td class="td-mono">${r.date}</td>
-              <td><div style="display:flex;gap:4px">
-                <button class="btn btn-ghost btn-sm">View</button>
-                ${r.status==='pending'?'<button class="btn btn-primary btn-sm">Assign</button>':''}
+              <td onclick="event.stopPropagation()"><div style="display:flex;gap:4px">
+                <button class="btn btn-ghost btn-sm" onclick="showOTRDetail('${r.num}')">View</button>
+                ${r.status==='pending'?`<button class="btn btn-primary btn-sm" onclick="showOTRDetail('${r.num}')">Assign</button>`:''}
               </div></td>
             </tr>
           `).join('')}
@@ -1140,6 +1252,258 @@ function showProfileTab(el, id) {
   el.classList.add('active');
   document.querySelectorAll('.ptab-content').forEach(c => c.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+}
+
+/* ── RENDER: OTR DETAIL ── */
+function showOTRDetail(otrNum, role) {
+  role = role || currentUser.role;
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('nav-otrs').classList.add('active');
+  document.getElementById('breadcrumb').innerHTML = `
+    <span class="crumb-link" onclick="showSection('dashboard')">Dashboard</span>
+    <span class="sep">›</span>
+    <span class="crumb-link" onclick="showSection('otrs')">OTR Requests</span>
+    <span class="sep">›</span>
+    <span class="current">${otrNum}</span>`;
+
+  const isAdmin = role === 'Training Administrator' || role === 'System Admin';
+
+  // Status steps
+  const steps = [
+    {label:'Submitted',   icon:'📥', state:'done'},
+    {label:'Under Review',icon:'👁️',  state:'done'},
+    {label:'Scheduled',   icon:'📅', state:'active'},
+    {label:'In Progress', icon:'🎓', state:'pending'},
+    {label:'Completed',   icon:'✅', state:'pending'},
+  ];
+
+  const html = `
+    <div class="otr-hero">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;position:relative;z-index:1">
+        <div>
+          <div class="otr-number">${otrNum} ${true?'<span class="badge badge-red" style="font-size:10px;vertical-align:middle">🔴 URGENT</span>':''}</div>
+          <div class="otr-title">STCW Basic Safety Training + Medical First Aid</div>
+          <div class="otr-meta">
+            <span>🚢 Shell Crewing — Money Agent</span>
+            <span>⚓ Petros Nikolaou — Captain</span>
+            <span>📅 Submitted 06 Mar 2026</span>
+            <span>⏱ 1 day ago</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-shrink:0">
+          ${isAdmin ? `<button class="btn btn-secondary">📄 Export PDF</button>
+          <button class="btn btn-primary" onclick="openAssignModal()">🔀 Assign Center</button>` :
+          `<button class="btn btn-ghost">📄 Download Brief</button>`}
+        </div>
+      </div>
+
+      <!-- Status Timeline -->
+      <div class="status-track">
+        ${steps.map((s,i) => `
+          <div class="st-step">
+            <div class="st-circle ${s.state}">${s.icon}</div>
+            <div class="st-label ${s.state}">${s.label}</div>
+          </div>
+          ${i < steps.length-1 ? `<div class="st-line ${steps[i+1].state === 'pending' && s.state !== 'done' ? 'active' : s.state}"></div>` : ''}
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="otr-layout">
+      <!-- MAIN COLUMN -->
+      <div class="otr-main">
+
+        <!-- Seafarer card -->
+        <div class="card" style="margin-bottom:0">
+          <div class="card-header"><span class="card-title">⚓ Seafarer</span><button class="btn btn-ghost" onclick="showSeafarerProfile('Petros Nikolaou','PN','green')">View Full Profile →</button></div>
+          <div class="card-body">
+            <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
+              <div class="avatar avatar-lg">PN</div>
+              <div>
+                <div style="font-size:16px;font-weight:700;margin-bottom:4px">Petros Nikolaou</div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap">
+                  <span class="badge badge-purple">Captain</span>
+                  <span class="badge badge-teal">Shell Fleet</span>
+                  <span class="badge badge-green">96% Compliant</span>
+                </div>
+              </div>
+            </div>
+            <div class="info-grid">
+              <div><div class="info-label">Passport</div><div class="info-value mono">AE4821934</div></div>
+              <div><div class="info-label">Nationality</div><div class="info-value">Greek 🇬🇷</div></div>
+              <div><div class="info-label">Flag State</div><div class="info-value">Marshall Islands</div></div>
+              <div><div class="info-label">Seafarer's Book</div><div class="info-value mono">GR-2021-04821</div></div>
+            </div>
+
+            <!-- Compliance warning banner -->
+            <div style="margin-top:14px;padding:10px 14px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:8px">
+              <div style="font-size:12px;font-weight:600;color:var(--wima-orange);margin-bottom:4px">⚠ Compliance Check — 2 issues found</div>
+              <div style="font-size:11px;color:var(--wima-muted-light);line-height:1.6">
+                • <strong style="color:var(--wima-white)">GMDSS GOC</strong> — expires in 24 days (03 Mar 2026)<br>
+                • <strong style="color:var(--wima-white)">Medical First Aid Adv.</strong> — expires in 34 days (10 Apr 2026)
+              </div>
+              ${isAdmin ? `<button class="btn btn-ghost btn-sm" style="margin-top:6px;color:var(--wima-orange)">＋ Add to this OTR</button>` : ''}
+            </div>
+          </div>
+        </div>
+
+        <!-- Requested Courses -->
+        <div class="card" style="margin-bottom:0">
+          <div class="card-header">
+            <span class="card-title">📚 Requested Courses</span>
+            ${isAdmin ? '<button class="btn btn-ghost btn-sm">＋ Add Course</button>' : ''}
+          </div>
+          <div class="card-body">
+            ${[
+              {icon:'🛟',name:'STCW Basic Safety Training — Refresher',duration:'5 days',freq:'Every 5 years',price:'€320'},
+              {icon:'🏥',name:'Medical First Aid — Advanced',duration:'3 days',freq:'Biennial',price:'€180'},
+            ].map(c=>`
+              <div class="course-req">
+                <div class="course-req-icon">${c.icon}</div>
+                <div style="flex:1">
+                  <div class="course-req-name">${c.name}</div>
+                  <div class="course-req-meta">${c.duration} · ${c.freq}</div>
+                </div>
+                ${isAdmin ? `<div style="font-family:var(--font-mono);font-size:13px;color:var(--wima-teal);font-weight:600">${c.price}</div>` : ''}
+              </div>
+            `).join('')}
+            ${isAdmin ? `
+            <div style="border-top:1px solid var(--wima-navy-border);margin-top:8px;padding-top:12px;display:flex;justify-content:flex-end;gap:16px">
+              <span style="font-size:12px;color:var(--wima-muted)">Total Estimate</span>
+              <span style="font-family:var(--font-mono);font-size:15px;font-weight:700;color:var(--wima-teal)">€500</span>
+            </div>` : ''}
+          </div>
+        </div>
+
+        <!-- Training Center assignment (Admin only) -->
+        ${isAdmin ? `
+        <div class="card" style="margin-bottom:0">
+          <div class="card-header"><span class="card-title">🏫 Training Center Assignment</span><span class="badge badge-orange">Pending Assignment</span></div>
+          <div class="card-body">
+            <div style="text-align:center;padding:20px;color:var(--wima-muted)">
+              <div style="font-size:32px;margin-bottom:10px;opacity:0.3">🏫</div>
+              <div style="font-size:13px;margin-bottom:14px">No training center assigned yet</div>
+              <button class="btn btn-primary" onclick="openAssignModal()">🔀 Assign Training Center</button>
+            </div>
+          </div>
+        </div>` : `
+        <div class="card" style="margin-bottom:0">
+          <div class="card-header"><span class="card-title">🏫 Training Center</span></div>
+          <div class="card-body">
+            <div style="text-align:center;padding:20px;color:var(--wima-muted)">
+              <div style="font-size:13px">Assignment pending — Wima is reviewing your request</div>
+              <div style="margin-top:10px"><span class="badge badge-orange">Under Review</span></div>
+            </div>
+          </div>
+        </div>`}
+
+        <!-- Activity Log -->
+        <div class="card" style="margin-bottom:0">
+          <div class="card-header"><span class="card-title">🕐 Activity Log</span></div>
+          <div class="card-body" style="padding:14px 18px">
+            ${[
+              {dot:'teal',  text:'<strong>OTR submitted</strong> by Shell Crewing Agent',    time:'06 Mar 16:24'},
+              {dot:'green', text:'<strong>Compliance check</strong> completed — 2 warnings', time:'06 Mar 16:24'},
+              {dot:'teal',  text:'<strong>Notification sent</strong> to Νίκη Βαριά',         time:'06 Mar 16:24'},
+              {dot:'orange',text:'<strong>Status updated</strong> to Under Review',           time:'06 Mar 16:30'},
+            ].map(a=>`
+              <div class="activity-item">
+                <div class="act-dot" style="background:var(--wima-${a.dot})"></div>
+                <div class="act-text">${a.text}</div>
+                <div class="act-time">${a.time}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ASIDE COLUMN -->
+      <div class="otr-aside">
+
+        <!-- OTR Info -->
+        <div class="card" style="margin-bottom:0">
+          <div class="card-header"><span class="card-title">ℹ️ OTR Details</span></div>
+          <div class="card-body">
+            <div style="display:flex;flex-direction:column;gap:10px">
+              ${[
+                ['OTR Number',   otrNum,          'mono'],
+                ['Status',       '<span class="badge badge-orange">Under Review</span>', ''],
+                ['Priority',     '<span class="badge badge-red">🔴 Urgent</span>', ''],
+                ['Principal',    'Shell International', ''],
+                ['Submitted by', 'Shell Crewing Agent', ''],
+                ['Submitted on', '06 Mar 2026 · 16:24', 'mono'],
+                ['Preferred dates','15–30 Mar 2026',''],
+              ].map(r=>`
+                <div>
+                  <div class="info-label">${r[0]}</div>
+                  <div class="info-value ${r[2]}" style="font-size:12px">${r[1]}</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+
+        <!-- Notes -->
+        <div class="card" style="margin-bottom:0">
+          <div class="card-header"><span class="card-title">💬 Notes</span></div>
+          <div class="card-body">
+            <div style="font-size:11px;color:var(--wima-muted);margin-bottom:8px">From Money Agent:</div>
+            <div style="font-size:12px;color:var(--wima-muted-light);line-height:1.6;padding:10px;background:var(--wima-navy-light);border-radius:6px;margin-bottom:12px">
+              "Petros needs to complete before joining vessel on 1 April. Please prioritize."
+            </div>
+            ${isAdmin ? `
+            <div style="font-size:11px;color:var(--wima-muted);margin-bottom:8px">Internal notes (not visible to agent):</div>
+            <textarea class="notes-area" placeholder="Add internal notes…">Check availability at STI for 15 March slot.</textarea>
+            <button class="btn btn-ghost btn-sm w-full" style="justify-content:center;margin-top:8px">Save Notes</button>
+            ` : ''}
+          </div>
+        </div>
+
+        <!-- Quick actions -->
+        <div class="card" style="margin-bottom:0">
+          <div class="card-header"><span class="card-title">⚡ Quick Actions</span></div>
+          <div class="card-body" style="display:flex;flex-direction:column;gap:8px">
+            ${isAdmin ? `
+            <button class="btn btn-primary w-full" style="justify-content:center" onclick="openAssignModal()">🔀 Assign Training Center</button>
+            <button class="btn btn-secondary w-full" style="justify-content:center">📧 Email Money Agent</button>
+            <button class="btn btn-secondary w-full" style="justify-content:center">📄 Generate Invoice Draft</button>
+            <button class="btn btn-danger w-full" style="justify-content:center">✕ Cancel OTR</button>
+            ` : `
+            <button class="btn btn-secondary w-full" style="justify-content:center">📧 Contact Wima</button>
+            <button class="btn btn-danger w-full" style="justify-content:center">✕ Cancel Request</button>
+            `}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  `;
+
+  document.getElementById('main-content').innerHTML = html;
+}
+
+/* ── MODAL FUNCTIONS ── */
+function openAssignModal() {
+  document.getElementById('assign-modal').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('assign-modal').classList.remove('open');
+}
+function selectCenter(el) {
+  document.querySelectorAll('.center-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function doAssign() {
+  const selected = document.querySelector('.center-option.selected .center-option-name');
+  const centerName = selected ? selected.textContent : 'Wima Training Center';
+  closeModal();
+  // Show success feedback in current page
+  const banner = document.createElement('div');
+  banner.style.cssText = 'position:fixed;top:80px;right:24px;background:var(--wima-green);color:white;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:600;z-index:999;box-shadow:0 8px 32px rgba(16,185,129,0.3);animation:modalIn 0.2s ease';
+  banner.textContent = `✓ Assigned to ${centerName}`;
+  document.body.appendChild(banner);
+  setTimeout(() => banner.remove(), 3000);
 }
 
 /* ── INIT ── */
