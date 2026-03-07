@@ -2742,16 +2742,6 @@ function showToast(msg, type) {
   document.head.appendChild(style);
 })();
 
-  const centerName = selected ? selected.textContent : 'Wima Training Center';
-  closeModal();
-  // Show success feedback
-  const banner = document.createElement('div');
-  banner.style.cssText = 'position:fixed;bottom:24px;right:24px;background:var(--wima-teal);color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:600;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,0.4);animation:modalIn 0.2s ease';
-  banner.textContent = '✓ Assigned to ' + centerName;
-  document.body.appendChild(banner);
-  setTimeout(() => banner.remove(), 3000);
-}
-});
 </script>
 </head>
 <body>
