@@ -1,0 +1,1872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WIMA ERP — Training Management Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   WIMA ERP — Design System
+   Navy · Teal · Maritime Professional
+============================================================ */
+:root {
+  --navy-900: #080f1c;
+  --navy-800: #0d1626;
+  --navy-700: #111e30;
+  --navy-600: #162438;
+  --navy-500: #1c2d45;
+  --navy-400: #243552;
+  --navy-border: #1e3050;
+  --teal:       #0ea5e9;
+  --teal-dim:   #0284c7;
+  --teal-glow:  rgba(14,165,233,0.12);
+  --teal-glow2: rgba(14,165,233,0.06);
+  --green:      #10b981;
+  --green-glow: rgba(16,185,129,0.12);
+  --orange:     #f59e0b;
+  --orange-glow:rgba(245,158,11,0.12);
+  --red:        #ef4444;
+  --red-glow:   rgba(239,68,68,0.12);
+  --purple:     #8b5cf6;
+  --purple-glow:rgba(139,92,246,0.12);
+  --white:      #f0f6ff;
+  --muted:      #5a7394;
+  --muted-light:#7a93b4;
+  --font:       'Sora', sans-serif;
+  --mono:       'JetBrains Mono', monospace;
+  --sidebar-w:  248px;
+  --header-h:   58px;
+  --radius:     10px;
+  --radius-sm:  7px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; font-family: var(--font); background: var(--navy-900); color: var(--white); -webkit-font-smoothing: antialiased; }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--navy-border); border-radius: 10px; }
+
+/* ── Buttons ── */
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: var(--radius-sm); font-family: var(--font); font-size: 13px; font-weight: 500; cursor: pointer; border: none; transition: all .15s; white-space: nowrap; }
+.btn-primary   { background: var(--teal); color: #fff; }
+.btn-primary:hover { background: var(--teal-dim); }
+.btn-secondary { background: var(--navy-500); color: var(--muted-light); border: 1px solid var(--navy-border); }
+.btn-secondary:hover { background: var(--navy-400); color: var(--white); }
+.btn-ghost     { background: transparent; color: var(--muted-light); border: 1px solid var(--navy-border); }
+.btn-ghost:hover { background: var(--navy-500); color: var(--white); }
+.btn-danger    { background: var(--red-glow); color: var(--red); border: 1px solid rgba(239,68,68,.25); }
+.btn-sm        { padding: 5px 10px; font-size: 11px; }
+
+/* ── Badges ── */
+.badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+.badge-teal    { background: var(--teal-glow);   color: var(--teal); }
+.badge-green   { background: var(--green-glow);  color: var(--green); }
+.badge-orange  { background: var(--orange-glow); color: var(--orange); }
+.badge-red     { background: var(--red-glow);    color: var(--red); }
+.badge-purple  { background: var(--purple-glow); color: var(--purple); }
+.badge-muted   { background: rgba(90,115,148,.15); color: var(--muted-light); }
+
+/* ── Cards ── */
+.card { background: var(--navy-700); border: 1px solid var(--navy-border); border-radius: var(--radius); overflow: hidden; }
+.card-header { padding: 14px 18px; border-bottom: 1px solid var(--navy-border); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.card-title  { font-size: 13px; font-weight: 600; color: var(--white); }
+.card-body   { padding: 16px 18px; }
+
+/* ── Tables ── */
+.tbl { width: 100%; border-collapse: collapse; font-size: 12px; }
+.tbl thead tr { border-bottom: 1px solid var(--navy-border); }
+.tbl th { padding: 10px 14px; text-align: left; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); }
+.tbl td { padding: 11px 14px; border-bottom: 1px solid rgba(30,48,80,.4); color: var(--muted-light); vertical-align: middle; }
+.tbl tbody tr:hover { background: var(--navy-600); }
+.tbl tbody tr:last-child td { border-bottom: none; }
+
+/* ── Forms ── */
+.form-group  { margin-bottom: 14px; }
+.form-label  { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .7px; color: var(--muted); margin-bottom: 6px; }
+.form-input  { width: 100%; background: var(--navy-800); border: 1px solid var(--navy-border); border-radius: var(--radius-sm); padding: 9px 12px; font-family: var(--font); font-size: 13px; color: var(--white); outline: none; transition: border-color .15s; }
+.form-input:focus { border-color: var(--teal); }
+.form-input::placeholder { color: var(--muted); }
+.form-row    { display: grid; gap: 12px; }
+.form-row.cols-2 { grid-template-columns: 1fr 1fr; }
+.form-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+/* ── Modals ── */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(8,15,28,.8); backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center; }
+.modal-overlay.open { display: flex; }
+.modal-box { background: var(--navy-700); border: 1px solid var(--navy-border); border-radius: var(--radius); width: 520px; max-width: 95vw; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 24px 80px rgba(0,0,0,.6); animation: modalIn .2s ease; }
+.modal-box-lg { width: 720px; }
+.modal-header { padding: 16px 20px; border-bottom: 1px solid var(--navy-border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+.modal-title  { font-size: 15px; font-weight: 600; }
+.modal-close  { background: none; border: none; color: var(--muted); font-size: 18px; cursor: pointer; padding: 2px 6px; border-radius: 4px; transition: all .15s; }
+.modal-close:hover { background: var(--navy-500); color: var(--white); }
+.modal-body   { padding: 20px; overflow-y: auto; flex: 1; }
+.modal-footer { padding: 14px 20px; border-top: 1px solid var(--navy-border); display: flex; justify-content: flex-end; gap: 8px; flex-shrink: 0; }
+
+/* ── Progress ── */
+.progress { background: var(--navy-500); border-radius: 4px; height: 5px; overflow: hidden; }
+.progress-bar { height: 100%; border-radius: 4px; transition: width .4s ease; }
+
+/* ── Stat Cards ── */
+.stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 22px; }
+.stat-card { background: var(--navy-700); border: 1px solid var(--navy-border); border-radius: var(--radius); padding: 18px; position: relative; overflow: hidden; transition: border-color .2s; }
+.stat-card:hover { border-color: var(--navy-400); }
+.stat-card::before { content: ''; position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; border-radius: 50%; opacity: .06; }
+.stat-card.teal::before { background: var(--teal); border-color: rgba(14,165,233,.25); }
+.stat-card.green::before { background: var(--green); border-color: rgba(16,185,129,.25); }
+.stat-card.orange::before { background: var(--orange); border-color: rgba(245,158,11,.25); }
+.stat-card.red::before { background: var(--red); border-color: rgba(239,68,68,.25); }
+.stat-card.purple::before { background: var(--purple); }
+.stat-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; margin-bottom: 12px; }
+.stat-icon.teal   { background: var(--teal-glow);   }
+.stat-icon.green  { background: var(--green-glow);  }
+.stat-icon.orange { background: var(--orange-glow); }
+.stat-icon.red    { background: var(--red-glow);    }
+.stat-icon.purple { background: var(--purple-glow); }
+.stat-val   { font-size: 26px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+.stat-label { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+.stat-delta { font-size: 11px; }
+.stat-delta.up   { color: var(--green); }
+.stat-delta.warn { color: var(--orange); }
+
+/* ── Layout ── */
+#app { display: none; height: 100vh; flex-direction: row; }
+#login { display: flex; min-height: 100vh; }
+
+/* ── Sidebar ── */
+.sidebar { width: var(--sidebar-w); min-width: var(--sidebar-w); background: var(--navy-800); border-right: 1px solid var(--navy-border); display: flex; flex-direction: column; height: 100vh; overflow-y: auto; scrollbar-width: none; flex-shrink: 0; }
+.sidebar::-webkit-scrollbar { display: none; }
+.sidebar-logo { height: var(--header-h); display: flex; align-items: center; padding: 0 18px; border-bottom: 1px solid var(--navy-border); gap: 10px; flex-shrink: 0; }
+.logo-icon { width: 32px; height: 32px; background: var(--teal); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; color: #fff; flex-shrink: 0; }
+.logo-text  { font-size: 14px; font-weight: 700; letter-spacing: -.2px; }
+.logo-sub   { font-size: 9px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); margin-top: 1px; }
+.nav-section { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.4px; color: var(--muted); padding: 18px 18px 6px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 14px; margin: 1px 8px; border-radius: 8px; cursor: pointer; transition: all .15s; position: relative; text-decoration: none; color: var(--muted-light); }
+.nav-item:hover { background: var(--navy-600); color: var(--white); }
+.nav-item.active { background: var(--teal-glow); color: var(--teal); }
+.nav-item.active::before { content: ''; position: absolute; left: -8px; top: 25%; bottom: 25%; width: 3px; background: var(--teal); border-radius: 0 3px 3px 0; }
+.nav-icon  { width: 30px; height: 30px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+.nav-label { font-size: 13px; font-weight: 500; flex: 1; }
+.nav-badge { background: var(--teal); color: #fff; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 10px; font-family: var(--mono); }
+.sidebar-footer { border-top: 1px solid var(--navy-border); padding: 12px 8px; flex-shrink: 0; margin-top: auto; }
+.user-pill { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; cursor: pointer; transition: all .15s; }
+.user-pill:hover { background: var(--navy-600); }
+.user-av { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #fff; flex-shrink: 0; }
+.user-name { font-size: 12px; font-weight: 600; color: var(--white); }
+.user-role { font-size: 10px; color: var(--muted); }
+
+/* ── Main ── */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { height: var(--header-h); background: var(--navy-800); border-bottom: 1px solid var(--navy-border); display: flex; align-items: center; padding: 0 24px; gap: 14px; flex-shrink: 0; }
+.breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+.breadcrumb .sep   { color: var(--navy-border); }
+.breadcrumb .link  { color: var(--muted); cursor: pointer; }
+.breadcrumb .link:hover { color: var(--white); }
+.breadcrumb .current { color: var(--white); font-weight: 500; }
+.search-bar { flex: 1; max-width: 340px; margin-left: 16px; background: var(--navy-600); border: 1px solid var(--navy-border); border-radius: 8px; display: flex; align-items: center; gap: 8px; padding: 0 12px; }
+.search-bar input { background: none; border: none; color: var(--white); font-family: var(--font); font-size: 13px; outline: none; padding: 8px 0; flex: 1; }
+.search-bar input::placeholder { color: var(--muted); }
+.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.icon-btn { width: 34px; height: 34px; border-radius: 8px; background: var(--navy-600); border: 1px solid var(--navy-border); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 15px; color: var(--muted); transition: all .15s; position: relative; }
+.icon-btn:hover { background: var(--navy-500); color: var(--white); }
+.notif-dot { position: absolute; top: 5px; right: 5px; width: 7px; height: 7px; background: var(--red); border-radius: 50%; border: 2px solid var(--navy-800); }
+.page-area { flex: 1; overflow-y: auto; padding: 26px 28px; }
+.page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; }
+.page-title    { font-size: 20px; font-weight: 700; letter-spacing: -.3px; }
+.page-subtitle { font-size: 12px; color: var(--muted); margin-top: 3px; }
+.page-actions  { display: flex; gap: 8px; flex-shrink: 0; }
+
+/* ── Grid layouts ── */
+.grid-2   { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.grid-3   { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.grid-3-1 { display: grid; grid-template-columns: 1fr 340px; gap: 16px; margin-bottom: 16px; }
+.grid-2-1 { display: grid; grid-template-columns: 1fr 320px; gap: 16px; }
+
+/* ── Tabs ── */
+.tabs { display: flex; border-bottom: 1px solid var(--navy-border); margin-bottom: 20px; }
+.tab  { padding: 10px 16px; font-size: 13px; font-weight: 500; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all .15s; }
+.tab:hover  { color: var(--white); }
+.tab.active { color: var(--teal); border-bottom-color: var(--teal); }
+
+/* ── Toast ── */
+.toast { position: fixed; bottom: 24px; right: 24px; padding: 12px 18px; border-radius: var(--radius); font-size: 13px; font-weight: 600; z-index: 9999; box-shadow: 0 8px 32px rgba(0,0,0,.4); animation: slideUp .25s ease; max-width: 360px; }
+
+/* ── Animations ── */
+@keyframes modalIn   { from { opacity:0; transform: scale(.96) translateY(-8px); } to { opacity:1; transform: scale(1) translateY(0); } }
+@keyframes slideUp   { from { opacity:0; transform: translateY(16px); } to { opacity:1; transform: translateY(0); } }
+@keyframes fadeIn    { from { opacity:0; } to { opacity:1; } }
+@keyframes spin      { to { transform: rotate(360deg); } }
+
+/* ── Login Page ── */
+.login-left { flex: 1; background: var(--navy-800); border-right: 1px solid var(--navy-border); display: flex; flex-direction: column; justify-content: space-between; padding: 48px; position: relative; overflow: hidden; }
+.login-left::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(var(--navy-border) 1px, transparent 1px), linear-gradient(90deg, var(--navy-border) 1px, transparent 1px); background-size: 44px 44px; opacity: .35; pointer-events: none; }
+.login-right { width: 460px; flex-shrink: 0; display: flex; flex-direction: column; justify-content: center; padding: 48px; }
+.login-tagline { font-size: 36px; font-weight: 700; line-height: 1.2; letter-spacing: -.5px; position: relative; z-index: 1; }
+.login-tagline span { color: var(--teal); }
+.login-desc { font-size: 14px; color: var(--muted-light); line-height: 1.6; margin-top: 16px; max-width: 400px; position: relative; z-index: 1; }
+.login-stats { display: flex; gap: 32px; margin-top: 48px; position: relative; z-index: 1; padding-top: 32px; border-top: 1px solid var(--navy-border); }
+.ls-num   { font-size: 28px; font-weight: 700; color: var(--white); }
+.ls-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .8px; }
+.login-form-title { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+.login-form-sub   { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+.demo-accounts { margin-bottom: 24px; }
+.demo-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); margin-bottom: 8px; }
+.demo-btn { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: var(--navy-700); border: 1px solid var(--navy-border); border-radius: var(--radius-sm); cursor: pointer; margin-bottom: 6px; transition: all .15s; }
+.demo-btn:hover { border-color: var(--teal); background: var(--teal-glow2); }
+.demo-av  { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; flex-shrink: 0; }
+.demo-name { font-size: 12px; font-weight: 600; color: var(--white); }
+.demo-role { font-size: 10px; color: var(--muted); }
+.field-wrap { position: relative; margin-bottom: 14px; }
+.field-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 14px; pointer-events: none; }
+.field-input { width: 100%; background: var(--navy-700); border: 1px solid var(--navy-border); border-radius: var(--radius-sm); padding: 11px 12px 11px 38px; font-family: var(--font); font-size: 14px; color: var(--white); outline: none; transition: border-color .15s; }
+.field-input:focus { border-color: var(--teal); box-shadow: 0 0 0 3px var(--teal-glow2); }
+.field-input::placeholder { color: var(--muted); }
+.field-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--muted); cursor: pointer; font-size: 14px; padding: 2px; }
+.login-btn { width: 100%; padding: 13px; background: var(--teal); color: #fff; border: none; border-radius: var(--radius-sm); font-family: var(--font); font-size: 14px; font-weight: 600; cursor: pointer; transition: all .15s; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 6px; }
+.login-btn:hover { background: var(--teal-dim); }
+.login-err { background: var(--red-glow); border: 1px solid rgba(239,68,68,.3); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 13px; color: var(--red); margin-bottom: 14px; display: none; }
+.login-err.show { display: block; }
+
+/* ── Timeline ── */
+.timeline { position: relative; padding-left: 24px; }
+.timeline::before { content: ''; position: absolute; left: 8px; top: 4px; bottom: 4px; width: 2px; background: var(--navy-border); border-radius: 2px; }
+.tl-item { position: relative; margin-bottom: 16px; }
+.tl-dot  { position: absolute; left: -20px; top: 12px; width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--navy-800); }
+.tl-card { background: var(--navy-600); border: 1px solid var(--navy-border); border-radius: 8px; padding: 12px 14px; transition: border-color .15s; cursor: pointer; }
+.tl-card:hover { border-color: var(--navy-400); }
+
+/* ── Misc ── */
+.divider-text { display: flex; align-items: center; gap: 12px; margin: 16px 0; color: var(--muted); font-size: 12px; }
+.divider-text::before, .divider-text::after { content: ''; flex: 1; height: 1px; background: var(--navy-border); }
+.empty-state { text-align: center; padding: 60px 24px; color: var(--muted); }
+.empty-state-icon { font-size: 48px; opacity: .3; margin-bottom: 12px; }
+.empty-state-text { font-size: 15px; font-weight: 500; color: var(--muted-light); margin-bottom: 6px; }
+.section-mb { margin-bottom: 16px; }
+
+/* ── Status colors ── */
+.text-teal   { color: var(--teal); }
+.text-green  { color: var(--green); }
+.text-orange { color: var(--orange); }
+.text-red    { color: var(--red); }
+.text-muted  { color: var(--muted); }
+.text-white  { color: var(--white); }
+.text-mono   { font-family: var(--mono); }
+.fw-600      { font-weight: 600; }
+.fw-700      { font-weight: 700; }
+.fs-11       { font-size: 11px; }
+.fs-12       { font-size: 12px; }
+.fs-13       { font-size: 13px; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     LOGIN PAGE
+============================================================ -->
+<div id="login">
+  <div class="login-left">
+    <div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:48px">
+        <div class="logo-icon">W</div>
+        <div><div class="logo-text">WIMA ERP</div><div class="logo-sub">Training Management</div></div>
+      </div>
+      <div class="login-tagline">Nurturing Every<br><span>Seafarer's</span><br>Potential.</div>
+      <div class="login-desc">The central platform for managing training requests, certificates, compliance and career development across your entire fleet.</div>
+    </div>
+    <div class="login-stats">
+      <div><div class="ls-num">214</div><div class="ls-label">Seafarers</div></div>
+      <div><div class="ls-num">138</div><div class="ls-label">Certs Issued</div></div>
+      <div><div class="ls-num">8</div><div class="ls-label">Partners</div></div>
+      <div><div class="ls-num">96%</div><div class="ls-label">Compliance</div></div>
+    </div>
+  </div>
+
+  <div class="login-right">
+    <div class="login-form-title">Welcome back</div>
+    <div class="login-form-sub">Sign in to continue to WIMA ERP</div>
+
+    <div class="demo-accounts">
+      <div class="demo-label">Quick Demo Access</div>
+      <div class="demo-btn" onclick="fillDemo('charlene@wimas.io','Training Administrator','CW','#0ea5e9')">
+        <div class="demo-av" style="background:#0ea5e9">CW</div>
+        <div><div class="demo-name">Charlene Wima</div><div class="demo-role">Training Administrator</div></div>
+        <div style="margin-left:auto;font-size:11px;color:var(--muted)">→</div>
+      </div>
+      <div class="demo-btn" onclick="fillDemo('agent@shell.com','Money Agent','SA','#10b981')">
+        <div class="demo-av" style="background:#10b981">SA</div>
+        <div><div class="demo-name">Shell Agent</div><div class="demo-role">Money Agent</div></div>
+        <div style="margin-left:auto;font-size:11px;color:var(--muted)">→</div>
+      </div>
+      <div class="demo-btn" onclick="fillDemo('admin@wimas.io','System Admin','AD','#8b5cf6')">
+        <div class="demo-av" style="background:#8b5cf6">AD</div>
+        <div><div class="demo-name">System Admin</div><div class="demo-role">Administrator</div></div>
+        <div style="margin-left:auto;font-size:11px;color:var(--muted)">→</div>
+      </div>
+    </div>
+
+    <div class="divider-text">or sign in manually</div>
+
+    <div id="login-err" class="login-err">Invalid email or password. Please try again.</div>
+
+    <div class="field-wrap">
+      <span class="field-icon">✉</span>
+      <input class="field-input" type="email" id="li-email" placeholder="Email address" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div class="field-wrap">
+      <span class="field-icon">🔒</span>
+      <input class="field-input" type="password" id="li-pass" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()">
+      <button class="field-toggle" type="button" onclick="togglePass()">👁</button>
+    </div>
+
+    <button class="login-btn" onclick="doLogin()">
+      <span id="li-btn-text">Sign In</span>
+    </button>
+  </div>
+</div>
+
+<!-- ============================================================
+     APP SHELL
+============================================================ -->
+<div id="app">
+
+  <!-- Sidebar -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">W</div>
+      <div><div class="logo-text">WIMA ERP</div><div class="logo-sub">Training Management</div></div>
+    </div>
+
+    <div id="nav-menu"></div>
+
+    <div class="sidebar-footer">
+      <div class="user-pill" onclick="showSection('settings')">
+        <div class="user-av" id="nav-user-av" style="background:#0ea5e9">CW</div>
+        <div>
+          <div class="user-name" id="nav-user-name">Charlene Wima</div>
+          <div class="user-role" id="nav-user-role">Training Administrator</div>
+        </div>
+        <div style="margin-left:auto;font-size:11px;color:var(--muted)">⚙</div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main">
+    <div class="topbar">
+      <div class="breadcrumb" id="breadcrumb">
+        <span class="current">Dashboard</span>
+      </div>
+      <div class="search-bar">
+        <span style="color:var(--muted);font-size:13px">🔍</span>
+        <input type="text" placeholder="Search seafarers, OTRs, courses...">
+      </div>
+      <div class="topbar-right">
+        <div class="icon-btn" onclick="showToast('No new messages','teal')">✉<span class="notif-dot"></span></div>
+        <div class="icon-btn" onclick="showSection('compliance')">🔔<span class="notif-dot"></span></div>
+        <button class="btn btn-secondary btn-sm" onclick="doLogout()">Sign Out</button>
+      </div>
+    </div>
+    <div class="page-area" id="page-area"></div>
+  </div>
+</div>
+
+<!-- ============================================================
+     MODALS
+============================================================ -->
+
+<!-- OTR Detail Modal -->
+<div class="modal-overlay" id="modal-otr-detail">
+  <div class="modal-box modal-box-lg">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-otr-title">OTR Details</span>
+      <button class="modal-close" onclick="closeModal('modal-otr-detail')">✕</button>
+    </div>
+    <div class="modal-body" id="modal-otr-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-otr-detail')">Close</button>
+      <button class="btn btn-primary" onclick="closeModal('modal-otr-detail');showToast('OTR assigned successfully','green')">Assign & Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- Create OTR Modal -->
+<div class="modal-overlay" id="modal-create-otr">
+  <div class="modal-box modal-box-lg">
+    <div class="modal-header">
+      <span class="modal-title">📋 Create New OTR</span>
+      <button class="modal-close" onclick="closeModal('modal-create-otr')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label class="form-label">Seafarer *</label>
+          <select class="form-input" id="otr-seafarer">
+            <option value="">Select seafarer...</option>
+            <option>Petros Nikolaou — AB</option>
+            <option>Vasilis Katsaros — 3rd Officer</option>
+            <option>Ioannis Stefanou — 2nd Officer</option>
+            <option>Maria Papadaki — AB</option>
+            <option>Nikos Drakos — 2nd Officer</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Principal *</label>
+          <select class="form-input" id="otr-principal">
+            <option>Shell</option><option>Pioneer</option><option>Crossover</option><option>Global Marine</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Required Courses *</label>
+        <select class="form-input" id="otr-courses" multiple style="height:90px">
+          <option>STCW Basic Safety Training</option>
+          <option>Advanced Firefighting</option>
+          <option>GMDSS / Radio Operator</option>
+          <option>Medical First Aid Advanced</option>
+          <option>ECDIS Type Specific</option>
+          <option>Bridge Resource Management</option>
+          <option>Crowd & Crisis Management</option>
+          <option>Oil Tanker Familiarization</option>
+        </select>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">Hold Ctrl/Cmd to select multiple</div>
+      </div>
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label class="form-label">Preferred Start Date</label>
+          <input class="form-input" type="date" id="otr-date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Priority</label>
+          <select class="form-input" id="otr-priority">
+            <option>Normal</option><option>Urgent</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Notes</label>
+        <textarea class="form-input" id="otr-notes" rows="3" placeholder="Additional notes for the Training Administrator..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-create-otr')">Cancel</button>
+      <button class="btn btn-primary" onclick="submitOTR()">Submit OTR</button>
+    </div>
+  </div>
+</div>
+
+<!-- Create User Modal -->
+<div class="modal-overlay" id="modal-create-user">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title">👤 Create New User</span>
+      <button class="modal-close" onclick="closeModal('modal-create-user')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label class="form-label">Full Name *</label>
+          <input class="form-input" type="text" id="nu-name" placeholder="Full name">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email *</label>
+          <input class="form-input" type="email" id="nu-email" placeholder="email@example.com">
+        </div>
+      </div>
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label class="form-label">Role *</label>
+          <select class="form-input" id="nu-role">
+            <option>Training Administrator</option>
+            <option>Money Agent</option>
+            <option>Instructor</option>
+            <option>Seafarer</option>
+            <option>Training Center Staff</option>
+            <option>CFO / Accounting</option>
+            <option>System Admin</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Training Center</label>
+          <select class="form-input">
+            <option>Wima Training Center</option>
+            <option>STI Maritime</option>
+            <option>Compass Training</option>
+            <option>External / N/A</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone</label>
+        <input class="form-input" type="tel" placeholder="+30 210...">
+      </div>
+      <div style="background:var(--navy-600);border:1px solid var(--navy-border);border-radius:var(--radius-sm);padding:10px 12px;font-size:12px;color:var(--muted)">
+        ℹ A temporary password will be emailed automatically. User must change on first login.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-create-user')">Cancel</button>
+      <button class="btn btn-primary" onclick="createUser()">Create User & Send Email</button>
+    </div>
+  </div>
+</div>
+
+<!-- Upload Certificate Modal -->
+<div class="modal-overlay" id="modal-upload-cert">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title">📤 Upload External Certificate</span>
+      <button class="modal-close" onclick="closeModal('modal-upload-cert')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Seafarer *</label>
+        <select class="form-input">
+          <option>Petros Nikolaou</option><option>Vasilis Katsaros</option><option>Ioannis Stefanou</option>
+        </select>
+      </div>
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label class="form-label">Course Type *</label>
+          <select class="form-input">
+            <option>STCW BST</option><option>GMDSS GOC</option><option>ECDIS</option><option>Medical First Aid</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Training Center *</label>
+          <input class="form-input" type="text" placeholder="e.g. STI Maritime">
+        </div>
+      </div>
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label class="form-label">Issue Date *</label>
+          <input class="form-input" type="date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Expiry Date</label>
+          <input class="form-input" type="date">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Certificate PDF</label>
+        <div style="border:2px dashed var(--navy-border);border-radius:8px;padding:28px;text-align:center;cursor:pointer;color:var(--muted);transition:border-color .15s" onmouseover="this.style.borderColor='var(--teal)'" onmouseout="this.style.borderColor='var(--navy-border)'">
+          <div style="font-size:32px;margin-bottom:8px">📎</div>
+          <div style="font-size:13px">Click to upload or drag & drop</div>
+          <div style="font-size:11px;margin-top:3px">PDF · max 10MB</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-upload-cert')">Cancel</button>
+      <button class="btn btn-primary" onclick="closeModal('modal-upload-cert');showToast('Certificate uploaded successfully','green')">Upload Certificate</button>
+    </div>
+  </div>
+</div>
+
+<!-- Create Session Modal -->
+<div class="modal-overlay" id="modal-create-session">
+  <div class="modal-box modal-box-lg">
+    <div class="modal-header">
+      <span class="modal-title">📅 Create Course Session</span>
+      <button class="modal-close" onclick="closeModal('modal-create-session')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label class="form-label">Course Type *</label>
+          <select class="form-input">
+            <option>STCW Basic Safety Training</option>
+            <option>Advanced Firefighting</option>
+            <option>GMDSS / Radio Operator</option>
+            <option>Medical First Aid Advanced</option>
+            <option>ECDIS Type Specific</option>
+            <option>Bridge Resource Management</option>
+            <option>Crowd & Crisis Management</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Training Center *</label>
+          <select class="form-input">
+            <option>Wima Training Center (Internal)</option>
+            <option>STI Maritime Center</option>
+            <option>Compass Training</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label class="form-label">Start Date *</label>
+          <input class="form-input" type="date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">End Date *</label>
+          <input class="form-input" type="date">
+        </div>
+      </div>
+      <div class="form-row cols-3">
+        <div class="form-group">
+          <label class="form-label">Max Capacity</label>
+          <input class="form-input" type="number" value="12">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Instructor</label>
+          <select class="form-input">
+            <option>K. Papadopoulos</option>
+            <option>M. Stavridou</option>
+            <option>A. Theodorou</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Room</label>
+          <input class="form-input" type="text" placeholder="e.g. Room A">
+        </div>
+      </div>
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label class="form-label">Visibility</label>
+          <select class="form-input">
+            <option>Public (visible to agents)</option>
+            <option>Private (internal only)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Recurrence</label>
+          <select class="form-input">
+            <option>No recurrence</option>
+            <option>Weekly</option>
+            <option>Monthly</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-create-session')">Cancel</button>
+      <button class="btn btn-primary" onclick="closeModal('modal-create-session');showToast('Session created successfully','green')">Create Session</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   WIMA ERP — Application Logic
+   All functions are global scope — no wrappers
+============================================================ */
+
+/* ── AUTH DATA ── */
+var USERS = {
+  'charlene@wimas.io': { name:'Charlene Wima',    role:'Training Administrator', pass:'demo123', av:'CW', color:'#0ea5e9' },
+  'agent@shell.com':   { name:'Shell Agent',       role:'Money Agent',            pass:'demo123', av:'SA', color:'#10b981' },
+  'admin@wimas.io':    { name:'System Admin',      role:'System Admin',           pass:'demo123', av:'AD', color:'#8b5cf6' }
+};
+
+var currentUser = null;
+
+/* ── NAV MENUS per role ── */
+var NAV_MENUS = {
+  'Training Administrator': [
+    { section: 'MAIN' },
+    { id:'dashboard',   label:'Dashboard',        icon:'⬛', badge:null },
+    { id:'seafarers',   label:'Seafarers',         icon:'⚓', badge:null },
+    { id:'otrs',        label:'OTR Requests',      icon:'📋', badge:'7'  },
+    { section: 'TRAINING' },
+    { id:'schedule',    label:'Course Schedule',   icon:'📅', badge:null },
+    { id:'attendance',  label:'Attendance',        icon:'✅', badge:null },
+    { id:'certificates',label:'Certificates',      icon:'🎓', badge:null },
+    { section: 'MANAGEMENT' },
+    { id:'compliance',  label:'Compliance Matrix', icon:'🛡', badge:null },
+    { id:'invoices',    label:'Invoices',          icon:'💳', badge:'3'  },
+    { id:'reports',     label:'Reports',           icon:'📊', badge:null },
+    { section: 'SETTINGS' },
+    { id:'centers',     label:'Training Centers',  icon:'🏢', badge:null },
+    { id:'users',       label:'Users',             icon:'👥', badge:null },
+  ],
+  'Money Agent': [
+    { section: 'MAIN' },
+    { id:'dashboard',   label:'Dashboard',         icon:'⬛', badge:null },
+    { id:'otrs',        label:'My OTR Requests',   icon:'📋', badge:'3'  },
+    { id:'seafarers',   label:'My Seafarers',      icon:'⚓', badge:null },
+    { section: 'TRAINING' },
+    { id:'schedule',    label:'Course Schedule',   icon:'📅', badge:null },
+    { id:'certificates',label:'Certificates',      icon:'🎓', badge:null },
+    { section: 'COMPLIANCE' },
+    { id:'compliance',  label:'Compliance Report', icon:'🛡', badge:null },
+  ],
+  'System Admin': [
+    { section: 'MAIN' },
+    { id:'dashboard',   label:'Dashboard',         icon:'⬛', badge:null },
+    { id:'users',       label:'Users',             icon:'👥', badge:null },
+    { id:'centers',     label:'Training Centers',  icon:'🏢', badge:null },
+    { section: 'MANAGEMENT' },
+    { id:'seafarers',   label:'Seafarers',         icon:'⚓', badge:null },
+    { id:'otrs',        label:'OTR Requests',      icon:'📋', badge:'7'  },
+    { id:'reports',     label:'Reports',           icon:'📊', badge:null },
+  ]
+};
+
+/* ── LOGIN ── */
+function fillDemo(email, role, av, color) {
+  document.getElementById('li-email').value = email;
+  document.getElementById('li-pass').value  = 'demo123';
+  document.getElementById('login-err').classList.remove('show');
+}
+
+function togglePass() {
+  var f = document.getElementById('li-pass');
+  f.type = f.type === 'password' ? 'text' : 'password';
+}
+
+function doLogin() {
+  var email = document.getElementById('li-email').value.trim().toLowerCase();
+  var pass  = document.getElementById('li-pass').value;
+  var err   = document.getElementById('login-err');
+  if (!email || !pass) { err.classList.add('show'); return; }
+  var u = USERS[email];
+  if (!u || u.pass !== pass) { err.classList.add('show'); return; }
+  err.classList.remove('show');
+  currentUser = u;
+  bootApp();
+}
+
+function doLogout() {
+  currentUser = null;
+  document.getElementById('app').style.display   = 'none';
+  document.getElementById('login').style.display = 'flex';
+  document.getElementById('li-email').value = '';
+  document.getElementById('li-pass').value  = '';
+}
+
+/* ── BOOT ── */
+function bootApp() {
+  document.getElementById('login').style.display = 'none';
+  document.getElementById('app').style.display   = 'flex';
+  document.getElementById('nav-user-av').textContent           = currentUser.av;
+  document.getElementById('nav-user-av').style.background      = currentUser.color;
+  document.getElementById('nav-user-name').textContent         = currentUser.name;
+  document.getElementById('nav-user-role').textContent         = currentUser.role;
+  buildNav();
+  showSection('dashboard');
+}
+
+function buildNav() {
+  var items = NAV_MENUS[currentUser.role] || NAV_MENUS['Training Administrator'];
+  var html  = '';
+  items.forEach(function(item) {
+    if (item.section) {
+      html += '<div class="nav-section">' + item.section + '</div>';
+    } else {
+      html += '<div class="nav-item" id="nav-' + item.id + '" onclick="showSection(\'' + item.id + '\')">';
+      html += '<div class="nav-icon">' + item.icon + '</div>';
+      html += '<span class="nav-label">' + item.label + '</span>';
+      if (item.badge) html += '<span class="nav-badge">' + item.badge + '</span>';
+      html += '</div>';
+    }
+  });
+  document.getElementById('nav-menu').innerHTML = html;
+}
+
+/* ── NAVIGATION ── */
+var activeSection = 'dashboard';
+
+function showSection(id) {
+  activeSection = id;
+  document.querySelectorAll('.nav-item').forEach(function(el) { el.classList.remove('active'); });
+  var nav = document.getElementById('nav-' + id);
+  if (nav) nav.classList.add('active');
+
+  var renderers = {
+    dashboard:    renderDashboard,
+    seafarers:    renderSeafarers,
+    otrs:         renderOTRs,
+    schedule:     renderSchedule,
+    attendance:   renderAttendance,
+    certificates: renderCertificates,
+    compliance:   renderCompliance,
+    invoices:     renderInvoices,
+    reports:      renderReports,
+    centers:      renderCenters,
+    users:        renderUsers,
+    settings:     renderSettings
+  };
+
+  var labels = {
+    dashboard:'Dashboard', seafarers:'Seafarers', otrs:'OTR Requests',
+    schedule:'Course Schedule', attendance:'Attendance & Grades', certificates:'Certificates',
+    compliance:'Compliance Matrix', invoices:'Invoices', reports:'Reports',
+    centers:'Training Centers', users:'Users', settings:'Settings'
+  };
+
+  var bc = document.getElementById('breadcrumb');
+  if (id === 'dashboard') {
+    bc.innerHTML = '<span class="current">Dashboard</span>';
+  } else {
+    bc.innerHTML = '<span class="link" onclick="showSection(\'dashboard\')">Dashboard</span><span class="sep">›</span><span class="current">' + (labels[id] || id) + '</span>';
+  }
+
+  var render = renderers[id] || renderDashboard;
+  document.getElementById('page-area').innerHTML = render();
+}
+
+/* ── MODALS ── */
+function openModal(id)  { document.getElementById(id).classList.add('open');    }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+/* ── TOAST ── */
+function showToast(msg, type) {
+  var colors = { teal:'var(--teal)', green:'var(--green)', orange:'var(--orange)', red:'var(--red)', purple:'var(--purple)' };
+  var t = document.createElement('div');
+  t.className = 'toast';
+  t.style.background = colors[type] || colors.teal;
+  t.style.color = '#fff';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(function() { t.remove(); }, 3500);
+}
+
+/* ── OTR Actions ── */
+function submitOTR() {
+  closeModal('modal-create-otr');
+  showToast('OTR submitted — OTR-2026-0155 created', 'green');
+}
+
+function createUser() {
+  var name  = document.getElementById('nu-name').value;
+  var email = document.getElementById('nu-email').value;
+  if (!name || !email) { showToast('Please fill in name and email', 'orange'); return; }
+  closeModal('modal-create-user');
+  showToast('User "' + name + '" created — welcome email sent', 'green');
+  document.getElementById('nu-name').value  = '';
+  document.getElementById('nu-email').value = '';
+}
+
+function openOTRDetail(num, seafarer, principal, courses) {
+  document.getElementById('modal-otr-title').textContent = 'OTR ' + num;
+  document.getElementById('modal-otr-body').innerHTML =
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">' +
+    '<div style="background:var(--navy-800);border:1px solid var(--navy-border);border-radius:8px;padding:14px">' +
+    '<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">Seafarer</div>' +
+    '<div style="font-size:14px;font-weight:600;color:var(--white)">' + seafarer + '</div>' +
+    '<div style="font-size:12px;color:var(--muted);margin-top:4px">' + principal + '</div></div>' +
+    '<div style="background:var(--navy-800);border:1px solid var(--navy-border);border-radius:8px;padding:14px">' +
+    '<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">Courses Required</div>' +
+    '<div style="font-size:13px;color:var(--white)">' + courses + '</div></div></div>' +
+    '<div class="form-group"><label class="form-label">Assign to Training Center</label>' +
+    '<select class="form-input"><option>Wima Training Center (Internal)</option><option>STI Maritime Center</option><option>Compass Training</option></select></div>' +
+    '<div class="form-row cols-2"><div class="form-group"><label class="form-label">Scheduled Date</label><input class="form-input" type="date"></div>' +
+    '<div class="form-group"><label class="form-label">Internal Notes</label><input class="form-input" type="text" placeholder="Notes for training center..."></div></div>';
+  openModal('modal-otr-detail');
+}
+
+/* ============================================================
+   SECTION RENDERERS
+============================================================ */
+
+/* ── MOCK DATA ── */
+var DATA = {
+  otrs: [
+    { num:'OTR-2026-0154', seafarer:'Petros Nikolaou',      rank:'AB',           principal:'Shell',     courses:'STCW BST, Advanced Firefighting', status:'pending',   urgent:true,  date:'07 Mar 2026' },
+    { num:'OTR-2026-0153', seafarer:'Vasilis Katsaros',     rank:'3rd Officer',  principal:'Pioneer',   courses:'GMDSS GOC',                       status:'scheduled', urgent:false, date:'06 Mar 2026' },
+    { num:'OTR-2026-0152', seafarer:'Ioannis Stefanou',     rank:'2nd Officer',  principal:'Crossover', courses:'ECDIS Type Specific',             status:'pending',   urgent:true,  date:'05 Mar 2026' },
+    { num:'OTR-2026-0151', seafarer:'Maria Papadaki',       rank:'AB',           principal:'Shell',     courses:'Medical First Aid Adv.',          status:'completed', urgent:false, date:'01 Mar 2026' },
+    { num:'OTR-2026-0150', seafarer:'Nikos Drakos',         rank:'2nd Officer',  principal:'Pioneer',   courses:'Bridge Resource Mgmt',            status:'scheduled', urgent:false, date:'28 Feb 2026' },
+    { num:'OTR-2026-0149', seafarer:'Elena Voulgari',       rank:'3rd Officer',  principal:'Crossover', courses:'Crowd & Crisis Mgmt',             status:'completed', urgent:false, date:'25 Feb 2026' },
+    { num:'OTR-2026-0148', seafarer:'Stavros Hatzis',       rank:'Chief Officer',principal:'Shell',     courses:'STCW BST Refresher',              status:'pending',   urgent:false, date:'24 Feb 2026' },
+  ],
+  seafarers: [
+    { name:'Petros Nikolaou',   rank:'AB',           principal:'Shell',     passport:'AE4821934', nat:'Greek',   compliance:85,  status:'active' },
+    { name:'Vasilis Katsaros',  rank:'3rd Officer',  principal:'Pioneer',   passport:'GR1923847', nat:'Greek',   compliance:100, status:'active' },
+    { name:'Ioannis Stefanou',  rank:'2nd Officer',  principal:'Crossover', passport:'GR8273641', nat:'Greek',   compliance:72,  status:'active' },
+    { name:'Maria Papadaki',    rank:'AB',           principal:'Shell',     passport:'GR0293847', nat:'Greek',   compliance:95,  status:'active' },
+    { name:'Nikos Drakos',      rank:'2nd Officer',  principal:'Pioneer',   passport:'CY2938471', nat:'Cypriot', compliance:90,  status:'active' },
+    { name:'Elena Voulgari',    rank:'3rd Officer',  principal:'Crossover', passport:'GR1847392', nat:'Greek',   compliance:100, status:'active' },
+    { name:'Stavros Hatzis',    rank:'Chief Officer',principal:'Shell',     passport:'GR2938471', nat:'Greek',   compliance:68,  status:'active' },
+    { name:'Thanasis Pappas',   rank:'2nd Officer',  principal:'Pioneer',   passport:'GR4827193', nat:'Greek',   compliance:80,  status:'inactive' },
+  ],
+  certs: [
+    { id:'CERT-2026-0841', seafarer:'Petros Nikolaou',  course:'STCW BST',             center:'Wima',     issued:'15 Jan 2026', expiry:'15 Jan 2031', status:'valid'    },
+    { id:'CERT-2026-0840', seafarer:'Ioannis Stefanou', course:'GMDSS GOC',            center:'STI',      issued:'03 Sep 2025', expiry:'03 Mar 2026', status:'expired'  },
+    { id:'CERT-2026-0839', seafarer:'Maria Papadaki',   course:'Advanced Firefighting',center:'Wima',     issued:'20 Jun 2025', expiry:'20 Jun 2030', status:'valid'    },
+    { id:'CERT-2026-0838', seafarer:'Vasilis Katsaros', course:'ECDIS Type Specific',  center:'Compass',  issued:'08 Jan 2026', expiry:'08 Jan 2031', status:'valid'    },
+    { id:'CERT-2026-0837', seafarer:'Nikos Drakos',     course:'Medical First Aid',    center:'Wima',     issued:'10 Apr 2024', expiry:'10 Apr 2026', status:'expiring' },
+    { id:'CERT-2026-0836', seafarer:'Elena Voulgari',   course:'Oil Tanker',           center:'Wima',     issued:'01 Mar 2026', expiry:'01 Mar 2031', status:'valid'    },
+    { id:'CERT-2026-0835', seafarer:'Stavros Hatzis',   course:'Crowd & Crisis Mgmt',  center:'STI',      issued:'14 Feb 2025', expiry:'14 Feb 2030', status:'valid'    },
+    { id:'CERT-2026-0834', seafarer:'Thanasis Pappas',  course:'Bridge Resource Mgmt', center:'Wima',     issued:'28 Jan 2026', expiry:'28 Jan 2031', status:'valid'    },
+  ],
+  invoices: [
+    { id:'INV-2026-0084', agent:'Aegean Crew Mgmt',    principal:'Shell',     date:'01 Mar 2026', due:'31 Mar 2026', total:5626, status:'sent'    },
+    { id:'INV-2026-0083', agent:'Maritime Partners',   principal:'Pioneer',   date:'25 Feb 2026', due:'25 Mar 2026', total:2784, status:'paid'    },
+    { id:'INV-2026-0082', agent:'Crossover Shipping',  principal:'Crossover', date:'20 Feb 2026', due:'20 Mar 2026', total:3712, status:'overdue' },
+    { id:'INV-2026-0081', agent:'Aegean Crew Mgmt',    principal:'Shell',     date:'15 Feb 2026', due:'15 Mar 2026', total:1856, status:'paid'    },
+    { id:'INV-2026-0080', agent:'Global Marine',       principal:'Crossover', date:'10 Feb 2026', due:'10 Mar 2026', total:1102, status:'draft'   },
+  ],
+  sessions: [
+    { id:1, course:'STCW Basic Safety Training', center:'Wima',    instructor:'K. Papadopoulos', start:'2026-03-07', end:'2026-03-11', capacity:12, enrolled:8,  room:'Room A',    status:'ongoing',   pub:true  },
+    { id:2, course:'GMDSS Radio Operator',       center:'Wima',    instructor:'M. Stavridou',    start:'2026-03-08', end:'2026-03-10', capacity:8,  enrolled:5,  room:'Room B',    status:'ongoing',   pub:true  },
+    { id:3, course:'Medical First Aid Adv.',     center:'Compass', instructor:'External',        start:'2026-03-10', end:'2026-03-11', capacity:10, enrolled:6,  room:'Compass HQ',status:'scheduled', pub:true  },
+    { id:4, course:'ECDIS Type Specific',        center:'STI',     instructor:'External',        start:'2026-03-14', end:'2026-03-18', capacity:10, enrolled:3,  room:'STI Lab',   status:'scheduled', pub:true  },
+    { id:5, course:'Bridge Resource Mgmt',       center:'Wima',    instructor:'A. Theodorou',    start:'2026-03-20', end:'2026-03-22', capacity:15, enrolled:12, room:'Room C',    status:'scheduled', pub:false },
+    { id:6, course:'Advanced Firefighting',      center:'Wima',    instructor:'K. Papadopoulos', start:'2026-03-25', end:'2026-03-27', capacity:12, enrolled:12, room:'Simulation',status:'full',      pub:true  },
+  ]
+};
+
+/* ─────────────────────────────────────────────
+   DASHBOARD
+───────────────────────────────────────────── */
+function renderDashboard() {
+  var role = currentUser.role;
+  if (role === 'Money Agent')  return renderDashboardAgent();
+  if (role === 'System Admin') return renderDashboardAdmin();
+
+  return '<div class="page-header">' +
+    '<div><div class="page-title">Good morning, ' + currentUser.name.split(' ')[0] + ' 👋</div>' +
+    '<div class="page-subtitle">Saturday, 7 March 2026 — Here\'s what\'s happening today</div></div>' +
+    '<div class="page-actions">' +
+    '<button class="btn btn-secondary" onclick="openModal(\'modal-create-session\')">📅 New Session</button>' +
+    '<button class="btn btn-primary" onclick="openModal(\'modal-create-otr\')">＋ New OTR</button>' +
+    '</div></div>' +
+
+    '<div class="stat-grid">' +
+    '<div class="stat-card teal"><div class="stat-icon teal">📋</div><div class="stat-val text-teal">24</div><div class="stat-label">Active OTRs</div><div class="stat-delta up">↑ 4 this week</div></div>' +
+    '<div class="stat-card green"><div class="stat-icon green">🎓</div><div class="stat-val text-green">138</div><div class="stat-label">Certificates Issued</div><div class="stat-delta up">↑ 12 this month</div></div>' +
+    '<div class="stat-card orange"><div class="stat-icon orange">⚠️</div><div class="stat-val text-orange">17</div><div class="stat-label">Expiring (30 days)</div><div class="stat-delta warn">⚠ Action needed</div></div>' +
+    '<div class="stat-card teal"><div class="stat-icon teal">📅</div><div class="stat-val text-teal">6</div><div class="stat-label">Courses Today</div><div class="stat-delta up">3 internal · 3 ext.</div></div>' +
+    '</div>' +
+
+    '<div class="grid-3-1">' +
+    '<div>' +
+    '<div class="card section-mb">' +
+    '<div class="card-header"><span class="card-title">📅 Upcoming Schedule — Next 7 Days</span>' +
+    '<button class="btn btn-ghost btn-sm" onclick="showSection(\'schedule\')">View all →</button></div>' +
+    '<div class="card-body" style="padding:0">' +
+    renderSchedulePreview() +
+    '</div></div>' +
+
+    '<div class="card">' +
+    '<div class="card-header"><span class="card-title">📊 Top Courses (30 days)</span></div>' +
+    '<div class="card-body" style="padding:14px">' +
+    renderBarChart() +
+    '</div></div></div>' +
+
+    '<div style="display:flex;flex-direction:column;gap:14px">' +
+    '<div class="card">' +
+    '<div class="card-header"><span class="card-title">🕐 Pending OTRs</span><span class="badge badge-orange">7 waiting</span></div>' +
+    '<div style="padding:4px 0">' +
+    DATA.otrs.filter(function(o){return o.status==='pending';}).slice(0,3).map(function(o) {
+      return '<div style="display:flex;align-items:center;gap:8px;padding:9px 16px;border-bottom:1px solid var(--navy-border)">' +
+      '<div style="flex:1"><div style="display:flex;align-items:center;gap:6px;margin-bottom:2px">' +
+      '<span class="text-mono fs-11 text-teal">' + o.num + '</span>' +
+      (o.urgent ? '<span class="badge badge-red" style="font-size:9px">URGENT</span>' : '') +
+      '</div><div class="fs-12 fw-600 text-white">' + o.seafarer + '</div>' +
+      '<div class="fs-11 text-muted">' + o.principal + '</div></div>' +
+      '<button class="btn btn-primary btn-sm" onclick="openOTRDetail(\'' + o.num + '\',\'' + o.seafarer + '\',\'' + o.principal + '\',\'' + o.courses + '\')">Assign</button>' +
+      '</div>';
+    }).join('') +
+    '<button class="btn btn-ghost btn-sm" style="width:100%;justify-content:center;margin:8px 0" onclick="showSection(\'otrs\')">View all 7 →</button>' +
+    '</div></div>' +
+
+    '<div class="card">' +
+    '<div class="card-header"><span class="card-title">🔴 Expiry Alerts</span><span class="badge badge-red">17 expiring</span></div>' +
+    '<div style="padding:8px 14px">' +
+    '<div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--navy-border)">' +
+    '<div style="width:8px;height:8px;border-radius:50%;background:var(--red);margin-top:4px;flex-shrink:0"></div>' +
+    '<div><div class="fs-12 fw-600 text-white">STCW BST — 3 seafarers expired</div><div class="fs-11 text-muted">Shell fleet · Immediate action</div></div></div>' +
+    '<div style="display:flex;gap:10px;padding:10px 0">' +
+    '<div style="width:8px;height:8px;border-radius:50%;background:var(--orange);margin-top:4px;flex-shrink:0"></div>' +
+    '<div><div class="fs-12 fw-600 text-white">GMDSS — expiring in 14 days</div><div class="fs-11 text-muted">5 seafarers · Pioneer fleet</div></div></div>' +
+    '<button class="btn btn-ghost btn-sm" style="width:100%;justify-content:center;margin-bottom:8px" onclick="showSection(\'compliance\')">View all alerts →</button>' +
+    '</div></div>' +
+
+    '</div></div>';
+}
+
+function renderSchedulePreview() {
+  var items = [
+    { day:'07', mon:'MAR', color:'#0ea5e9', course:'STCW Basic Safety Training', meta:'Room A · K. Papadopoulos', seats:'8/12' },
+    { day:'08', mon:'MAR', color:'#10b981', course:'GMDSS Radio Operator',       meta:'Room B · M. Stavridou',   seats:'5/8'  },
+    { day:'10', mon:'MAR', color:'#f59e0b', course:'Medical First Aid Adv.',     meta:'Compass Center · External',seats:'6/10' },
+    { day:'14', mon:'MAR', color:'#8b5cf6', course:'ECDIS Type Specific',        meta:'STI Center · External',   seats:'3/10' },
+    { day:'20', mon:'MAR', color:'#0ea5e9', course:'Bridge Resource Mgmt',       meta:'Room C · A. Theodorou',   seats:'12/15'},
+  ];
+  return items.map(function(i) {
+    return '<div style="display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid rgba(30,48,80,.3)">' +
+      '<div style="width:36px;text-align:center;flex-shrink:0">' +
+      '<div style="font-size:18px;font-weight:700;font-family:var(--mono);color:var(--white);line-height:1">' + i.day + '</div>' +
+      '<div style="font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)">' + i.mon + '</div></div>' +
+      '<div style="width:2px;height:32px;border-radius:2px;flex-shrink:0;background:' + i.color + '"></div>' +
+      '<div style="flex:1"><div class="fs-13 fw-600 text-white">' + i.course + '</div>' +
+      '<div class="fs-11 text-muted" style="margin-top:1px">' + i.meta + '</div></div>' +
+      '<div class="text-mono fs-11 text-muted">' + i.seats + '</div></div>';
+  }).join('');
+}
+
+function renderBarChart() {
+  var courses = [
+    { name:'STCW BST', val:38 }, { name:'GMDSS', val:28 }, { name:'ECDIS', val:24 },
+    { name:'Med First Aid', val:20 }, { name:'Firefighting', val:16 }
+  ];
+  var max = 38;
+  return courses.map(function(c) {
+    var pct = Math.round(c.val / max * 100);
+    return '<div style="margin-bottom:10px">' +
+      '<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">' +
+      '<span class="text-muted-light">' + c.name + '</span>' +
+      '<span class="text-mono fs-11 text-teal">' + c.val + '</span></div>' +
+      '<div class="progress"><div class="progress-bar" style="width:' + pct + '%;background:var(--teal);opacity:.8"></div></div>' +
+      '</div>';
+  }).join('');
+}
+
+function renderDashboardAgent() {
+  return '<div class="page-header"><div><div class="page-title">Welcome back, ' + currentUser.name.split(' ')[0] + ' 👋</div>' +
+    '<div class="page-subtitle">Saturday, 7 March 2026 — Your fleet overview</div></div>' +
+    '<div class="page-actions"><button class="btn btn-primary" onclick="openModal(\'modal-create-otr\')">＋ Submit OTR</button></div></div>' +
+
+    '<div class="stat-grid">' +
+    '<div class="stat-card teal"><div class="stat-icon teal">⚓</div><div class="stat-val text-teal">42</div><div class="stat-label">My Seafarers</div></div>' +
+    '<div class="stat-card orange"><div class="stat-icon orange">📋</div><div class="stat-val text-orange">3</div><div class="stat-label">Pending OTRs</div></div>' +
+    '<div class="stat-card green"><div class="stat-icon green">🎓</div><div class="stat-val text-green">18</div><div class="stat-label">Certs This Month</div></div>' +
+    '<div class="stat-card red"><div class="stat-icon red">⚠️</div><div class="stat-val text-red">5</div><div class="stat-label">Expiring Soon</div></div>' +
+    '</div>' +
+
+    '<div class="card"><div class="card-header"><span class="card-title">📋 My Recent OTRs</span><button class="btn btn-ghost btn-sm" onclick="showSection(\'otrs\')">View all →</button></div>' +
+    renderOTRTable(DATA.otrs.slice(0,4)) + '</div>';
+}
+
+function renderDashboardAdmin() {
+  return '<div class="page-header"><div><div class="page-title">System Admin Dashboard</div>' +
+    '<div class="page-subtitle">Platform health and user management overview</div></div></div>' +
+
+    '<div class="stat-grid">' +
+    '<div class="stat-card teal"><div class="stat-icon teal">👥</div><div class="stat-val text-teal">28</div><div class="stat-label">Total Users</div></div>' +
+    '<div class="stat-card green"><div class="stat-icon green">✅</div><div class="stat-val text-green">25</div><div class="stat-label">Active Users</div></div>' +
+    '<div class="stat-card purple"><div class="stat-icon purple">🏢</div><div class="stat-val text-purple">4</div><div class="stat-label">Training Centers</div></div>' +
+    '<div class="stat-card orange"><div class="stat-icon orange">⚓</div><div class="stat-val text-orange">214</div><div class="stat-label">Seafarers</div></div>' +
+    '</div>' +
+
+    '<div class="grid-2">' +
+    '<div class="card"><div class="card-header"><span class="card-title">👥 Recent Users</span>' +
+    '<button class="btn btn-primary btn-sm" onclick="openModal(\'modal-create-user\')">＋ Add User</button></div>' +
+    renderUsersTable(3) + '</div>' +
+    '<div class="card"><div class="card-header"><span class="card-title">📋 Recent OTRs</span></div>' +
+    renderOTRTable(DATA.otrs.slice(0,3)) + '</div>' +
+    '</div>';
+}
+
+/* ─────────────────────────────────────────────
+   SEAFARERS
+───────────────────────────────────────────── */
+function renderSeafarers() {
+  return '<div class="page-header">' +
+    '<div><div class="page-title">⚓ Seafarers</div>' +
+    '<div class="page-subtitle">Manage seafarer profiles, training history and compliance</div></div>' +
+    '<div class="page-actions">' +
+    '<button class="btn btn-secondary">📤 Export</button>' +
+    '<button class="btn btn-primary">＋ New Seafarer</button>' +
+    '</div></div>' +
+
+    '<div class="card">' +
+    '<div class="card-header">' +
+    '<div style="display:flex;gap:8px;align-items:center">' +
+    '<div style="background:var(--navy-600);border:1px solid var(--navy-border);border-radius:7px;display:flex;align-items:center;gap:8px;padding:0 12px">' +
+    '<span class="text-muted fs-13">🔍</span>' +
+    '<input type="text" placeholder="Search seafarers..." style="background:none;border:none;color:var(--white);font-family:var(--font);font-size:13px;outline:none;padding:8px 0;width:200px"></div>' +
+    '<select style="background:var(--navy-600);border:1px solid var(--navy-border);border-radius:7px;color:var(--white);padding:8px 10px;font-size:12px;outline:none">' +
+    '<option>All Principals</option><option>Shell</option><option>Pioneer</option><option>Crossover</option></select>' +
+    '</div>' +
+    '<span class="fs-12 text-muted">' + DATA.seafarers.length + ' seafarers</span>' +
+    '</div>' +
+    '<table class="tbl">' +
+    '<thead><tr><th>Seafarer</th><th>Rank</th><th>Principal</th><th>Passport</th><th>Nationality</th><th>Compliance</th><th>Status</th><th></th></tr></thead>' +
+    '<tbody>' +
+    DATA.seafarers.map(function(s) {
+      var initials = s.name.split(' ').map(function(n){return n[0];}).join('').slice(0,2);
+      var compColor = s.compliance>=90?'var(--green)':s.compliance>=70?'var(--orange)':'var(--red)';
+      return '<tr style="cursor:pointer" onclick="showSeafarerDetail(\'' + s.name.replace(/'/g,"\\'") + '\')">' +
+        '<td><div style="display:flex;align-items:center;gap:10px">' +
+        '<div style="width:32px;height:32px;border-radius:8px;background:var(--teal-glow);border:1px solid rgba(14,165,233,.2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--teal)">' + initials + '</div>' +
+        '<div class="fs-13 fw-600 text-white">' + s.name + '</div></div></td>' +
+        '<td><span class="badge badge-purple">' + s.rank + '</span></td>' +
+        '<td class="fs-12">' + s.principal + '</td>' +
+        '<td class="text-mono fs-11">' + s.passport + '</td>' +
+        '<td class="fs-12">' + s.nat + '</td>' +
+        '<td><div style="display:flex;align-items:center;gap:8px">' +
+        '<div class="progress" style="width:70px"><div class="progress-bar" style="width:' + s.compliance + '%;background:' + compColor + '"></div></div>' +
+        '<span style="font-size:11px;font-weight:600;color:' + compColor + '">' + s.compliance + '%</span></div></td>' +
+        '<td><span class="badge ' + (s.status==='active'?'badge-green':'badge-muted') + '">' + s.status + '</span></td>' +
+        '<td><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();showSeafarerDetail(\'' + s.name.replace(/'/g,"\\'") + '\')">View →</button></td>' +
+        '</tr>';
+    }).join('') +
+    '</tbody></table></div>';
+}
+
+function showSeafarerDetail(name) {
+  var s = DATA.seafarers.find(function(x){return x.name===name;});
+  if (!s) return;
+  var initials = s.name.split(' ').map(function(n){return n[0];}).join('').slice(0,2);
+  var compColor = s.compliance>=90?'var(--green)':s.compliance>=70?'var(--orange)':'var(--red)';
+
+  document.querySelectorAll('.nav-item').forEach(function(el){el.classList.remove('active');});
+  var nav = document.getElementById('nav-seafarers'); if(nav) nav.classList.add('active');
+  document.getElementById('breadcrumb').innerHTML =
+    '<span class="link" onclick="showSection(\'dashboard\')">Dashboard</span><span class="sep">›</span>' +
+    '<span class="link" onclick="showSection(\'seafarers\')">Seafarers</span><span class="sep">›</span>' +
+    '<span class="current">' + s.name + '</span>';
+
+  document.getElementById('page-area').innerHTML =
+    '<div style="background:var(--navy-800);border:1px solid var(--navy-border);border-radius:var(--radius);padding:24px 28px;margin-bottom:16px;position:relative;overflow:hidden">' +
+    '<div style="position:absolute;inset:0;background:linear-gradient(135deg,var(--teal-glow2),transparent);pointer-events:none"></div>' +
+    '<div style="display:flex;align-items:flex-start;gap:20px;position:relative">' +
+    '<div style="width:64px;height:64px;border-radius:14px;background:var(--teal-glow);border:2px solid rgba(14,165,233,.3);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:var(--teal);flex-shrink:0">' + initials + '</div>' +
+    '<div style="flex:1"><div style="font-size:22px;font-weight:700;margin-bottom:4px">' + s.name + '</div>' +
+    '<div style="display:flex;align-items:center;gap:10px">' +
+    '<span class="badge badge-purple">' + s.rank + '</span>' +
+    '<span class="badge badge-teal">' + s.principal + '</span>' +
+    '<span class="badge ' + (s.status==='active'?'badge-green':'badge-muted') + '">' + s.status + '</span>' +
+    '</div></div>' +
+    '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--navy-border);border:1px solid var(--navy-border);border-radius:8px;overflow:hidden;flex-shrink:0">' +
+    [['Passport', s.passport], ['Nationality', s.nat], ['Compliance', s.compliance+'%'], ['Status', s.status]].map(function(d) {
+      return '<div style="padding:12px 16px;background:var(--navy-700)"><div class="fs-11 text-muted" style="margin-bottom:3px">' + d[0] + '</div><div class="fs-12 fw-600 text-white">' + d[1] + '</div></div>';
+    }).join('') +
+    '</div></div></div>' +
+
+    '<div class="tabs">' +
+    '<div class="tab active" id="sf-tab-history"    onclick="sfTab(\'history\')">Training History</div>' +
+    '<div class="tab"       id="sf-tab-compliance"  onclick="sfTab(\'compliance\')">Compliance</div>' +
+    '<div class="tab"       id="sf-tab-docs"        onclick="sfTab(\'docs\')">Documents</div>' +
+    '<div class="tab"       id="sf-tab-career"      onclick="sfTab(\'career\')">Career Path</div>' +
+    '</div>' +
+    '<div id="sf-tab-content">' + renderSFHistory() + '</div>';
+}
+
+function sfTab(tab) {
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  var el = document.getElementById('sf-tab-' + tab); if(el) el.classList.add('active');
+  var renderers = { history: renderSFHistory, compliance: renderSFCompliance, docs: renderSFDocs, career: renderSFCareer };
+  document.getElementById('sf-tab-content').innerHTML = (renderers[tab] || renderSFHistory)();
+}
+
+function renderSFHistory() {
+  var items = [
+    { course:'STCW BST Refresher', center:'Wima Internal', date:'15 Jan 2026', grade:'88%', expiry:'15 Jan 2031', dot:'teal', tag:'valid' },
+    { course:'GMDSS GOC',          center:'STI Maritime',  date:'03 Sep 2025', grade:'91%', expiry:'03 Mar 2026', dot:'orange', tag:'expiring' },
+    { course:'ECDIS Type Specific',center:'Compass',       date:'20 Jun 2025', grade:'85%', expiry:'20 Jun 2030', dot:'teal', tag:'valid' },
+    { course:'Bridge Resource Mgmt',center:'Wima Internal',date:'08 Jan 2024', grade:'79%', expiry:'08 Jan 2029', dot:'teal', tag:'valid' },
+  ];
+  return '<div class="grid-3-1" style="align-items:flex-start">' +
+    '<div class="card"><div class="card-header"><span class="card-title">📚 Training Timeline</span><button class="btn btn-ghost btn-sm" onclick="openModal(\'modal-upload-cert\')">📤 Upload Cert</button></div>' +
+    '<div class="card-body"><div class="timeline">' +
+    items.map(function(t) {
+      return '<div class="tl-item"><div class="tl-dot" style="background:var(--' + t.dot + ')"></div>' +
+        '<div class="tl-card"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">' +
+        '<div><div class="fs-13 fw-600 text-white">' + t.course + '</div><div class="fs-11 text-muted">' + t.center + '</div></div>' +
+        '<div style="display:flex;gap:6px;align-items:center"><span class="badge badge-green fs-11">' + t.grade + '</span><span class="text-mono fs-11 text-muted">' + t.date + '</span></div></div>' +
+        '<div style="display:flex;justify-content:space-between;align-items:center">' +
+        '<span class="badge ' + (t.tag==='valid'?'badge-teal':t.tag==='expiring'?'badge-orange':'badge-red') + '">Expires ' + t.expiry + '</span>' +
+        '<button class="btn btn-ghost btn-sm">PDF ↓</button></div></div></div>';
+    }).join('') +
+    '</div></div></div>' +
+    '<div style="display:flex;flex-direction:column;gap:14px">' +
+    '<div class="card"><div class="card-header"><span class="card-title">📊 Quick Stats</span></div>' +
+    '<div class="card-body">' +
+    [['Courses Completed','12'],['Certificates Valid','9'],['Avg Grade','84%'],['Last Training','15 Jan 2026']].map(function(s){
+      return '<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(30,48,80,.4)">' +
+        '<span class="fs-12 text-muted">' + s[0] + '</span><span class="fs-12 fw-600 text-white">' + s[1] + '</span></div>';
+    }).join('') +
+    '</div></div>' +
+    '<div class="card"><div class="card-header"><span class="card-title">🚀 Quick Actions</span></div>' +
+    '<div class="card-body" style="display:flex;flex-direction:column;gap:8px">' +
+    '<button class="btn btn-primary" style="justify-content:center" onclick="openModal(\'modal-create-otr\')">＋ Create OTR</button>' +
+    '<button class="btn btn-ghost" style="justify-content:center" onclick="openModal(\'modal-upload-cert\')">📤 Upload Certificate</button>' +
+    '<button class="btn btn-ghost" style="justify-content:center" onclick="showToast(\'PDF report generated\',\'teal\')">📄 Export PDF Report</button>' +
+    '</div></div>' +
+    '</div></div>';
+}
+
+function renderSFCompliance() {
+  var rows = [
+    ['STCW BST','5yr','Jan 2026','Jan 2031','valid'],
+    ['GMDSS GOC','5yr','Sep 2025','Mar 2026','expiring'],
+    ['ECDIS Type Specific','5yr','Jun 2025','Jun 2030','valid'],
+    ['Medical First Aid','2yr','Apr 2024','Apr 2026','expiring'],
+    ['Bridge Resource Mgmt','5yr','Jan 2024','Jan 2029','valid'],
+    ['Shell HSSE Induction','Annual','Jan 2026','Jan 2027','valid'],
+    ['High Voltage Safety','5yr','—','—','missing'],
+  ];
+  return '<div class="card"><div class="card-header"><span class="card-title">🛡 Shell Principal — Compliance Matrix</span><span class="badge badge-orange">85% Compliant</span></div>' +
+    '<table class="tbl"><thead><tr><th>Course</th><th>Frequency</th><th>Last Done</th><th>Expiry</th><th>Status</th><th></th></tr></thead><tbody>' +
+    rows.map(function(r) {
+      return '<tr><td class="fw-600 text-white">' + r[0] + '</td><td class="fs-12">' + r[1] + '</td>' +
+        '<td class="text-mono fs-11">' + r[2] + '</td><td class="text-mono fs-11">' + r[3] + '</td>' +
+        '<td><span class="badge ' + (r[4]==='valid'?'badge-green':r[4]==='expiring'?'badge-orange':r[4]==='missing'?'badge-muted':'badge-red') + '">' + r[4] + '</span></td>' +
+        '<td>' + (r[4]!=='valid'?'<button class="btn btn-primary btn-sm" onclick="openModal(\'modal-create-otr\')">+ OTR</button>':'<button class="btn btn-ghost btn-sm">PDF ↓</button>') + '</td>' +
+        '</tr>';
+    }).join('') +
+    '</tbody></table></div>';
+}
+
+function renderSFDocs() {
+  var docs = [
+    {icon:'🪪', name:'Passport — AE4821934',         meta:'Expires Mar 2029', tag:'badge-green'},
+    {icon:'📘', name:"Seafarer's Book GR-2021-04821", meta:'Valid',            tag:'badge-green'},
+    {icon:'⭐', name:'CoC — Master (STCW II/2)',      meta:'Valid',            tag:'badge-green'},
+    {icon:'🏥', name:'Medical Certificate ENG1',      meta:'Expires Sep 2027', tag:'badge-teal'},
+    {icon:'🎓', name:'STCW BST Refresher',            meta:'15 Jan 2026',      tag:'badge-green'},
+    {icon:'🎓', name:'GMDSS GOC',                     meta:'Expires Mar 2026', tag:'badge-orange'},
+    {icon:'🎓', name:'ECDIS Type Specific',           meta:'20 Jun 2025',      tag:'badge-green'},
+  ];
+  return '<div class="grid-2">' + docs.map(function(d) {
+    return '<div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--navy-600);border:1px solid var(--navy-border);border-radius:8px;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor=\'var(--teal)\'" onmouseout="this.style.borderColor=\'var(--navy-border)\'">' +
+      '<span style="font-size:22px">' + d.icon + '</span>' +
+      '<div style="flex:1"><div class="fs-13 fw-600 text-white">' + d.name + '</div><div class="fs-11 text-muted">' + d.meta + '</div></div>' +
+      '<span class="badge ' + d.tag + '" style="font-size:10px">View</span>' +
+      '</div>';
+  }).join('') + '</div>';
+}
+
+function renderSFCareer() {
+  var steps = [
+    {code:'AB',  label:'Able Seaman',  state:'done'},
+    {code:'3/O', label:'3rd Officer',  state:'done'},
+    {code:'2/O', label:'2nd Officer',  state:'done'},
+    {code:'C/O', label:'Chief Officer',state:'done'},
+    {code:'CPT', label:'Captain ← Now',state:'current'},
+    {code:'DPA', label:'Designated PA',state:'future'},
+  ];
+  return '<div class="card"><div class="card-header"><span class="card-title">🚀 Career Progression Path</span></div>' +
+    '<div class="card-body">' +
+    '<div style="display:flex;align-items:flex-end;gap:8px;margin-bottom:24px;flex-wrap:wrap">' +
+    steps.map(function(s,i,arr) {
+      var bg = s.state==='done'?'var(--teal)':s.state==='current'?'var(--green)':'var(--navy-500)';
+      var cl = s.state==='done'?'#fff':s.state==='current'?'#fff':'var(--muted)';
+      return '<div style="display:flex;flex-direction:column;align-items:center;gap:6px">' +
+        '<div style="width:52px;height:52px;border-radius:12px;background:' + bg + ';display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:' + cl + (s.state==='current'?';box-shadow:0 0 20px rgba(16,185,129,.4)':'') + '">' + s.code + '</div>' +
+        '<div style="font-size:10px;color:' + (s.state==='current'?'var(--green)':'var(--muted)') + ';text-align:center;max-width:60px">' + s.label + '</div></div>' +
+        (i<arr.length-1?'<div style="font-size:16px;color:var(--navy-border);margin-bottom:28px">→</div>':'');
+    }).join('') +
+    '</div>' +
+    [['Training Readiness','78','var(--teal)'],['Sea Service','100','var(--green)'],['Promotion Score','85','var(--orange)']].map(function(p) {
+      return '<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">' +
+        '<span class="text-muted">' + p[0] + '</span><span style="font-weight:700;color:' + p[2] + '">' + p[1] + '%</span></div>' +
+        '<div class="progress"><div class="progress-bar" style="width:' + p[1] + '%;background:' + p[2] + '"></div></div></div>';
+    }).join('') +
+    '</div></div>';
+}
+
+/* ─────────────────────────────────────────────
+   OTRs
+───────────────────────────────────────────── */
+function renderOTRs() {
+  return '<div class="page-header">' +
+    '<div><div class="page-title">📋 OTR Requests</div>' +
+    '<div class="page-subtitle">Create, route and track training requests</div></div>' +
+    '<div class="page-actions">' +
+    '<button class="btn btn-secondary">📤 Export</button>' +
+    '<button class="btn btn-primary" onclick="openModal(\'modal-create-otr\')">＋ New OTR</button>' +
+    '</div></div>' +
+
+    '<div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">' +
+    ['All','pending','scheduled','completed'].map(function(f) {
+      return '<button class="btn ' + (f==='All'?'btn-primary':'btn-ghost') + ' btn-sm">' +
+        (f==='All'?'All ('+DATA.otrs.length+')':f.charAt(0).toUpperCase()+f.slice(1)) + '</button>';
+    }).join('') +
+    '</div>' +
+
+    '<div class="card">' +
+    renderOTRTable(DATA.otrs) +
+    '</div>';
+}
+
+function renderOTRTable(otrs) {
+  return '<table class="tbl"><thead><tr><th>OTR Number</th><th>Seafarer</th><th>Principal</th><th>Courses</th><th>Date</th><th>Status</th><th></th></tr></thead><tbody>' +
+    otrs.map(function(o) {
+      var statusBadge = o.status==='pending'?'badge-orange':o.status==='scheduled'?'badge-teal':'badge-green';
+      return '<tr><td class="text-mono fs-11 text-teal">' + o.num + (o.urgent?'<span class="badge badge-red" style="font-size:9px;margin-left:6px">URGENT</span>':'') + '</td>' +
+        '<td><div class="fs-13 fw-600 text-white">' + o.seafarer + '</div><span class="badge badge-purple" style="font-size:10px">' + o.rank + '</span></td>' +
+        '<td class="fs-12">' + o.principal + '</td>' +
+        '<td class="fs-12 text-muted" style="max-width:180px">' + o.courses + '</td>' +
+        '<td class="text-mono fs-11">' + o.date + '</td>' +
+        '<td><span class="badge ' + statusBadge + '">' + o.status + '</span></td>' +
+        '<td><button class="btn btn-ghost btn-sm" onclick="openOTRDetail(\'' + o.num + '\',\'' + o.seafarer + '\',\'' + o.principal + '\',\'' + o.courses.replace(/'/g,"\\'") + '\')">View →</button></td>' +
+        '</tr>';
+    }).join('') +
+    '</tbody></table>';
+}
+
+/* ─────────────────────────────────────────────
+   COURSE SCHEDULE
+───────────────────────────────────────────── */
+function renderSchedule() {
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return '<div class="page-header">' +
+    '<div><div class="page-title">📅 Course Schedule</div>' +
+    '<div class="page-subtitle">Manage sessions, enrollments and availability</div></div>' +
+    '<div class="page-actions">' +
+    '<button class="btn btn-secondary">← Feb 2026</button>' +
+    '<button class="btn btn-ghost">Mar 2026</button>' +
+    '<button class="btn btn-secondary">Apr 2026 →</button>' +
+    '<button class="btn btn-primary" onclick="openModal(\'modal-create-session\')">＋ New Session</button>' +
+    '</div></div>' +
+
+    '<div class="card section-mb">' +
+    '<div class="card-header">' +
+    '<span class="card-title">March 2026</span>' +
+    '<div style="display:flex;gap:6px">' +
+    '<select style="background:var(--navy-600);border:1px solid var(--navy-border);border-radius:7px;color:var(--white);padding:6px 10px;font-size:12px;outline:none"><option>All Centers</option><option>Wima</option><option>STI</option><option>Compass</option></select>' +
+    '</div></div>' +
+    renderCalendar() +
+    '</div>' +
+
+    '<div class="card">' +
+    '<div class="card-header"><span class="card-title">📋 All Sessions</span><span class="fs-12 text-muted">' + DATA.sessions.length + ' sessions</span></div>' +
+    '<table class="tbl"><thead><tr><th>Course</th><th>Center</th><th>Dates</th><th>Instructor</th><th>Enrollment</th><th>Status</th><th>Visibility</th><th></th></tr></thead>' +
+    '<tbody>' +
+    DATA.sessions.map(function(s) {
+      var pct = Math.round(s.enrolled/s.capacity*100);
+      var barColor = pct>=100?'var(--red)':pct>=80?'var(--orange)':'var(--teal)';
+      var statusBadge = s.status==='ongoing'?'badge-green':s.status==='full'?'badge-red':s.status==='completed'?'badge-muted':'badge-teal';
+      return '<tr>' +
+        '<td><div class="fs-13 fw-600 text-white">' + s.course + '</div>' +
+        '<div class="fs-11 text-muted">📍 ' + s.room + '</div></td>' +
+        '<td class="fs-12">' + s.center + '</td>' +
+        '<td class="text-mono fs-11">' + s.start.replace('2026-','').replace('-','/') + ' → ' + s.end.replace('2026-','').replace('-','/') + '</td>' +
+        '<td class="fs-12">' + s.instructor + '</td>' +
+        '<td style="min-width:110px"><div class="fs-12 fw-600">' + s.enrolled + '<span class="text-muted" style="font-weight:400"> / ' + s.capacity + '</span></div>' +
+        '<div class="progress" style="margin-top:4px"><div class="progress-bar" style="width:' + pct + '%;background:' + barColor + '"></div></div></td>' +
+        '<td><span class="badge ' + statusBadge + '">' + s.status + '</span></td>' +
+        '<td><span class="badge ' + (s.pub?'badge-teal':'badge-muted') + '">' + (s.pub?'Public':'Private') + '</span></td>' +
+        '<td><button class="btn btn-ghost btn-sm" onclick="showToast(\'Session detail — coming soon\',\'teal\')">View →</button></td>' +
+        '</tr>';
+    }).join('') +
+    '</tbody></table></div>';
+}
+
+function renderCalendar() {
+  var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  var events = {
+    7:  [{color:'#0ea5e9',text:'STCW BST'}],
+    8:  [{color:'#0ea5e9',text:'STCW BST'},{color:'#10b981',text:'GMDSS'}],
+    9:  [{color:'#0ea5e9',text:'STCW BST'},{color:'#10b981',text:'GMDSS'}],
+    10: [{color:'#0ea5e9',text:'STCW BST'},{color:'#10b981',text:'GMDSS'},{color:'#f59e0b',text:'Med FA'}],
+    11: [{color:'#0ea5e9',text:'STCW BST'},{color:'#f59e0b',text:'Med FA'}],
+    14: [{color:'#8b5cf6',text:'ECDIS'}],
+    15: [{color:'#8b5cf6',text:'ECDIS'}],
+    20: [{color:'#0ea5e9',text:'BRM'}],
+    21: [{color:'#0ea5e9',text:'BRM'}],
+    22: [{color:'#0ea5e9',text:'BRM'}],
+    25: [{color:'#ef4444',text:'Firefighting'}],
+    26: [{color:'#ef4444',text:'Firefighting'}],
+    27: [{color:'#ef4444',text:'Firefighting'}],
+  };
+  // March 2026 starts on Sunday (day 0)
+  var startDay = 0;
+  var totalDays = 31;
+  var html = '<div style="padding:14px"><table style="width:100%;border-collapse:collapse">';
+  html += '<tr>' + days.map(function(d){return '<th style="padding:8px;text-align:center;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)">' + d + '</th>';}).join('') + '</tr><tr>';
+  for (var i=0; i<startDay; i++) html += '<td style="padding:4px;vertical-align:top;height:80px"></td>';
+  for (var d=1; d<=totalDays; d++) {
+    var col = (d-1+startDay) % 7;
+    var isToday = d===7;
+    var ev = events[d] || [];
+    html += '<td style="padding:4px;vertical-align:top;height:80px;border:1px solid rgba(30,48,80,.3)">' +
+      '<div style="font-size:12px;font-weight:' + (isToday?'700':'400') + ';color:' + (isToday?'var(--teal)':'var(--muted-light)') + ';margin-bottom:4px' + (isToday?';background:var(--teal-glow);border-radius:4px;padding:1px 5px;display:inline-block':'') + '">' + d + '</div>' +
+      ev.map(function(e){return '<div style="background:' + e.color + '22;border-left:2px solid ' + e.color + ';border-radius:2px;padding:2px 5px;font-size:9px;color:' + e.color + ';white-space:nowrap;overflow:hidden;margin-bottom:2px;cursor:pointer" onclick="showToast(\'' + e.text + ' session\',\'teal\')">' + e.text + '</div>';}).join('') +
+      '</td>';
+    if (col === 6 && d < totalDays) html += '</tr><tr>';
+  }
+  var remaining = (7 - ((totalDays - 1 + startDay) % 7) - 1);
+  for (var r=0; r<remaining; r++) html += '<td style="padding:4px;vertical-align:top;height:80px;border:1px solid rgba(30,48,80,.3)"></td>';
+  html += '</tr></table></div>';
+  return html;
+}
+
+/* ─────────────────────────────────────────────
+   ATTENDANCE
+───────────────────────────────────────────── */
+function renderAttendance() {
+  var sessions = [
+    { id:1, course:'STCW Basic Safety Training', instructor:'K. Papadopoulos', dates:['07 Mar','08 Mar','09 Mar','10 Mar','11 Mar'],
+      seafarers:[
+        {name:'Petros Nikolaou',  rank:'AB',          days:[1,1,1,1,1], grade:88, passed:true},
+        {name:'Vasilis Katsaros', rank:'3rd Officer',  days:[1,1,0,1,1], grade:74, passed:false},
+        {name:'Ioannis Stefanou', rank:'2nd Officer',  days:[1,1,1,1,1], grade:92, passed:true},
+        {name:'Maria Papadaki',   rank:'AB',           days:[1,0,1,1,1], grade:81, passed:true},
+        {name:'Kostas Ant.',      rank:'Bosun',        days:[1,1,1,0,1], grade:77, passed:true},
+      ]},
+    { id:2, course:'GMDSS Radio Operator', instructor:'M. Stavridou', dates:['08 Mar','09 Mar','10 Mar'],
+      seafarers:[
+        {name:'Nikos Drakos',   rank:'2nd Officer', days:[1,1,1], grade:95, passed:true},
+        {name:'Elena Voulgari', rank:'3rd Officer',  days:[1,1,0], grade:60, passed:false},
+        {name:'Thanasis Pappas',rank:'2nd Officer',  days:[1,1,1], grade:85, passed:true},
+      ]},
+  ];
+
+  var s = sessions[0];
+
+  return '<div class="page-header">' +
+    '<div><div class="page-title">✅ Attendance & Grades</div>' +
+    '<div class="page-subtitle">Record attendance per day, submit grades and manage pass/fail</div></div>' +
+    '<div class="page-actions">' +
+    '<button class="btn btn-secondary" onclick="showToast(\'Sheet exported as PDF\',\'teal\')">📤 Export Sheet</button>' +
+    '<button class="btn btn-primary" onclick="showToast(\'Grades submitted — certificates generating...\',\'green\')">✓ Submit Grades</button>' +
+    '</div></div>' +
+
+    '<div style="display:flex;gap:10px;margin-bottom:16px">' +
+    sessions.map(function(ss,i) {
+      var active = i===0;
+      return '<div style="padding:12px 16px;background:' + (active?'var(--teal-glow)':'var(--navy-700)') + ';border:1px solid ' + (active?'var(--teal)':'var(--navy-border)') + ';border-radius:var(--radius);cursor:pointer;flex-shrink:0;transition:all .15s">' +
+        '<div class="fs-12 fw-600 ' + (active?'text-teal':'text-white') + '">' + ss.course + '</div>' +
+        '<div class="fs-11 text-muted">' + ss.instructor + ' · ' + ss.seafarers.length + ' seafarers</div>' +
+        '</div>';
+    }).join('') +
+    '</div>' +
+
+    '<div class="grid-2" style="align-items:flex-start">' +
+    '<div class="card"><div class="card-header"><span class="card-title">📋 Attendance Sheet — ' + s.course + '</span></div>' +
+    '<div style="overflow-x:auto"><table class="tbl" style="min-width:500px"><thead><tr><th>Seafarer</th><th>Rank</th>' +
+    s.dates.map(function(d){return '<th style="text-align:center">' + d + '</th>';}).join('') +
+    '<th style="text-align:center">Total</th><th style="text-align:center">%</th></tr></thead><tbody>' +
+    s.seafarers.map(function(sf) {
+      var present = sf.days.filter(function(d){return d===1;}).length;
+      var pct = Math.round(present/s.dates.length*100);
+      var pctColor = pct>=80?'var(--green)':pct>=60?'var(--orange)':'var(--red)';
+      return '<tr><td class="fw-600 text-white">' + sf.name + '</td>' +
+        '<td><span class="badge badge-purple" style="font-size:10px">' + sf.rank + '</span></td>' +
+        sf.days.map(function(d) {
+          return '<td style="text-align:center"><span style="font-size:16px">' + (d===1?'✅':'❌') + '</span></td>';
+        }).join('') +
+        '<td style="text-align:center;font-family:var(--mono);font-size:12px;font-weight:600">' + present + '/' + s.dates.length + '</td>' +
+        '<td style="text-align:center"><span style="font-size:11px;font-weight:700;color:' + pctColor + '">' + pct + '%</span></td></tr>';
+    }).join('') +
+    '</tbody></table></div></div>' +
+
+    '<div class="card"><div class="card-header"><span class="card-title">🎓 Grades & Results</span></div>' +
+    '<table class="tbl"><thead><tr><th>Seafarer</th><th>Grade</th><th>Result</th><th>Certificate</th></tr></thead><tbody>' +
+    s.seafarers.map(function(sf) {
+      return '<tr><td class="fw-600 text-white">' + sf.name + '</td>' +
+        '<td><div style="display:flex;align-items:center;gap:8px"><span class="text-mono fs-13 fw-700" style="color:' + (sf.passed?'var(--green)':'var(--red)') + '">' + sf.grade + '%</span>' +
+        '<div class="progress" style="width:60px"><div class="progress-bar" style="width:' + sf.grade + '%;background:' + (sf.passed?'var(--green)':'var(--red)') + '"></div></div></div></td>' +
+        '<td><span class="badge ' + (sf.passed?'badge-green':'badge-red') + '">' + (sf.passed?'PASS':'FAIL') + '</span></td>' +
+        '<td>' + (sf.passed?'<button class="btn btn-primary btn-sm" onclick="showToast(\'Certificate issued for ' + sf.name + '\',\'green\')">🎓 Issue</button>':'<span class="fs-11 text-muted">—</span>') + '</td></tr>';
+    }).join('') +
+    '</tbody></table></div></div>';
+}
+
+/* ─────────────────────────────────────────────
+   CERTIFICATES
+───────────────────────────────────────────── */
+function renderCertificates() {
+  var statusCounts = { valid:0, expiring:0, expired:0 };
+  DATA.certs.forEach(function(c){ statusCounts[c.status]++; });
+
+  return '<div class="page-header">' +
+    '<div><div class="page-title">🎓 Certificates</div>' +
+    '<div class="page-subtitle">View, download and manage all issued certificates</div></div>' +
+    '<div class="page-actions">' +
+    '<button class="btn btn-secondary" onclick="openModal(\'modal-upload-cert\')">📤 Upload External</button>' +
+    '<button class="btn btn-primary" onclick="showToast(\'Manual certificate issue — coming next sprint\',\'teal\')">🎓 Issue Certificate</button>' +
+    '</div></div>' +
+
+    '<div class="stat-grid">' +
+    '<div class="stat-card green"><div class="stat-icon green">🎓</div><div class="stat-val text-green">138</div><div class="stat-label">Total Issued</div><div class="stat-delta up">↑ 12 this month</div></div>' +
+    '<div class="stat-card teal"><div class="stat-icon teal">✅</div><div class="stat-val text-teal">119</div><div class="stat-label">Currently Valid</div></div>' +
+    '<div class="stat-card orange"><div class="stat-icon orange">⚠️</div><div class="stat-val text-orange">11</div><div class="stat-label">Expiring (90 days)</div></div>' +
+    '<div class="stat-card red"><div class="stat-icon red">❌</div><div class="stat-val text-red">8</div><div class="stat-label">Expired</div></div>' +
+    '</div>' +
+
+    '<div class="card">' +
+    '<div class="card-header"><span class="card-title">📋 Certificate Registry</span>' +
+    '<div style="display:flex;gap:6px">' +
+    ['All','valid','expiring','expired'].map(function(f){
+      return '<button class="btn ' + (f==='All'?'btn-primary':'btn-ghost') + ' btn-sm">' + (f==='All'?'All':f.charAt(0).toUpperCase()+f.slice(1)) + '</button>';
+    }).join('') +
+    '</div></div>' +
+    '<table class="tbl"><thead><tr><th>Certificate No.</th><th>Seafarer</th><th>Course</th><th>Center</th><th>Issued</th><th>Expires</th><th>Status</th><th></th></tr></thead><tbody>' +
+    DATA.certs.map(function(c) {
+      return '<tr>' +
+        '<td class="text-mono fs-11 text-teal">' + c.id + '</td>' +
+        '<td class="fw-600 text-white fs-13">' + c.seafarer + '</td>' +
+        '<td class="fs-12">' + c.course + '</td>' +
+        '<td class="fs-12 text-muted">' + c.center + '</td>' +
+        '<td class="text-mono fs-11">' + c.issued + '</td>' +
+        '<td class="text-mono fs-11" style="color:' + (c.status==='expired'?'var(--red)':c.status==='expiring'?'var(--orange)':'inherit') + '">' + c.expiry + '</td>' +
+        '<td><span class="badge ' + (c.status==='valid'?'badge-green':c.status==='expiring'?'badge-orange':'badge-red') + '">' + c.status + '</span></td>' +
+        '<td style="display:flex;gap:4px">' +
+        '<button class="btn btn-ghost btn-sm" onclick="showToast(\'Downloading PDF...\',\'teal\')">PDF ↓</button>' +
+        (c.status!=='valid'?'<button class="btn btn-primary btn-sm" onclick="openModal(\'modal-create-otr\')">+ OTR</button>':'') +
+        '</td></tr>';
+    }).join('') +
+    '</tbody></table></div>';
+}
+
+/* ─────────────────────────────────────────────
+   COMPLIANCE MATRIX
+───────────────────────────────────────────── */
+function renderCompliance() {
+  var matrix = [
+    {course:'STCW BST',             freq:'5yr',    last:'Jan 2026', expiry:'Jan 2031', status:'valid'},
+    {course:'GMDSS GOC',            freq:'5yr',    last:'Mar 2021', expiry:'Mar 2026', status:'expiring'},
+    {course:'ECDIS Type Specific',  freq:'5yr',    last:'Jun 2024', expiry:'Jun 2029', status:'valid'},
+    {course:'Medical First Aid',    freq:'2yr',    last:'Apr 2024', expiry:'Apr 2026', status:'expiring'},
+    {course:'Bridge Resource Mgmt', freq:'5yr',    last:'Jan 2024', expiry:'Jan 2029', status:'valid'},
+    {course:'Shell HSSE Induction', freq:'Annual', last:'Jan 2026', expiry:'Jan 2027', status:'valid'},
+    {course:'Crowd & Crisis Mgmt',  freq:'5yr',    last:'Feb 2025', expiry:'Feb 2030', status:'valid'},
+    {course:'High Voltage Safety',  freq:'5yr',    last:'—',        expiry:'—',        status:'missing'},
+  ];
+  var valid   = matrix.filter(function(r){return r.status==='valid';}).length;
+  var score   = Math.round(valid/matrix.length*100);
+  var scoreColor = score>=90?'var(--green)':score>=70?'var(--orange)':'var(--red)';
+
+  return '<div class="page-header">' +
+    '<div><div class="page-title">🛡 Training Matrix & Compliance</div>' +
+    '<div class="page-subtitle">Required courses per principal/rank, expiry tracking, compliance scores</div></div>' +
+    '<div class="page-actions">' +
+    '<button class="btn btn-secondary">📤 Export Report</button>' +
+    '<button class="btn btn-primary" onclick="showToast(\'Matrix builder coming next sprint\',\'teal\')">＋ Edit Matrix</button>' +
+    '</div></div>' +
+
+    '<div style="display:flex;gap:8px;margin-bottom:16px">' +
+    ['Shell','Pioneer','Crossover','Global Marine'].map(function(p,i) {
+      return '<button class="btn ' + (i===0?'btn-primary':'btn-ghost') + ' btn-sm">' + p + '</button>';
+    }).join('') +
+    '</div>' +
+
+    '<div class="grid-3-1" style="align-items:flex-start">' +
+    '<div>' +
+    '<div class="card section-mb"><div class="card-header">' +
+    '<div style="display:flex;align-items:center;gap:10px"><span class="card-title">🛡 Shell Principal — Captain</span>' +
+    '<span class="badge ' + (score>=90?'badge-green':score>=70?'badge-orange':'badge-red') + '">' + score + '% Compliant</span></div>' +
+    '<select style="background:var(--navy-600);border:1px solid var(--navy-border);border-radius:7px;color:var(--white);padding:6px 10px;font-size:12px;outline:none">' +
+    '<option>Captain</option><option>Chief Officer</option><option>2nd Officer</option><option>3rd Officer</option></select>' +
+    '</div>' +
+    '<table class="tbl"><thead><tr><th>Required Course</th><th>Frequency</th><th>Last Done</th><th>Expiry</th><th>Status</th><th>Action</th></tr></thead><tbody>' +
+    matrix.map(function(r) {
+      return '<tr><td class="fw-600 text-white">' + r.course + '</td>' +
+        '<td class="fs-12">' + r.freq + '</td>' +
+        '<td class="text-mono fs-11">' + r.last + '</td>' +
+        '<td class="text-mono fs-11" style="color:' + (r.status==='expiring'?'var(--orange)':r.status==='missing'||r.status==='expired'?'var(--red)':'inherit') + '">' + r.expiry + '</td>' +
+        '<td><span class="badge ' + (r.status==='valid'?'badge-green':r.status==='expiring'?'badge-orange':r.status==='missing'?'badge-muted':'badge-red') + '">' + r.status + '</span></td>' +
+        '<td>' + (r.status!=='valid'?'<button class="btn btn-primary btn-sm" onclick="openModal(\'modal-create-otr\')">+ OTR</button>':'<button class="btn btn-ghost btn-sm">PDF ↓</button>') + '</td>' +
+        '</tr>';
+    }).join('') +
+    '</tbody></table></div>' +
+
+    '<div class="card"><div class="card-header"><span class="card-title">⚠️ Fleet Expiry Alerts</span></div>' +
+    '<div style="padding:8px 0">' +
+    DATA.seafarers.slice(0,4).map(function(s) {
+      var compColor = s.compliance>=90?'var(--green)':s.compliance>=70?'var(--orange)':'var(--red)';
+      return '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid rgba(30,48,80,.3)">' +
+        '<div><div class="fs-12 fw-600 text-white">' + s.name + '</div><div class="fs-11 text-muted">' + s.principal + ' · ' + s.rank + '</div></div>' +
+        '<div style="display:flex;align-items:center;gap:8px">' +
+        '<div class="progress" style="width:50px"><div class="progress-bar" style="width:' + s.compliance + '%;background:' + compColor + '"></div></div>' +
+        '<span style="font-size:11px;font-weight:700;color:' + compColor + ';min-width:30px">' + s.compliance + '%</span>' +
+        '</div></div>';
+    }).join('') +
+    '</div></div></div>' +
+
+    '<div style="display:flex;flex-direction:column;gap:14px">' +
+    '<div class="card"><div class="card-header"><span class="card-title">📊 Compliance Score</span></div>' +
+    '<div style="padding:20px;text-align:center">' +
+    '<div style="position:relative;width:110px;height:110px;margin:0 auto 16px">' +
+    '<svg viewBox="0 0 110 110"><circle cx="55" cy="55" r="44" fill="none" stroke="var(--navy-500)" stroke-width="10"/>' +
+    '<circle cx="55" cy="55" r="44" fill="none" stroke="' + scoreColor + '" stroke-width="10" stroke-dasharray="' + Math.round(score*2.765) + ' 276.5" stroke-linecap="round" transform="rotate(-90 55 55)"/></svg>' +
+    '<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">' +
+    '<div style="font-size:24px;font-weight:700;color:var(--white)">' + score + '%</div>' +
+    '<div style="font-size:9px;color:var(--muted)">Compliant</div></div></div>' +
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px">' +
+    [['Valid',valid,'var(--green)'],['Expiring',matrix.filter(function(r){return r.status==='expiring';}).length,'var(--orange)'],['Expired',matrix.filter(function(r){return r.status==='expired';}).length,'var(--red)'],['Missing',matrix.filter(function(r){return r.status==='missing';}).length,'var(--muted)']].map(function(x){
+      return '<div style="padding:8px;background:rgba('+x[2].replace('var(--','').replace(')','')+',.08);border-radius:6px;text-align:center">' +
+        '<div style="font-size:18px;font-weight:700;color:' + x[2] + '">' + x[1] + '</div>' +
+        '<div style="font-size:10px;color:var(--muted)">' + x[0] + '</div></div>';
+    }).join('') +
+    '</div></div></div>' +
+    '<div class="card"><div class="card-header"><span class="card-title">🔔 Bulk Actions</span></div>' +
+    '<div class="card-body" style="display:flex;flex-direction:column;gap:8px">' +
+    '<button class="btn btn-primary" style="justify-content:center" onclick="showToast(\'OTRs created for all expiring certs\',\'green\')">Create Renewal OTRs</button>' +
+    '<button class="btn btn-ghost" style="justify-content:center" onclick="showToast(\'Reminders sent to 5 money agents\',\'teal\')">Send Agent Reminders</button>' +
+    '<button class="btn btn-ghost" style="justify-content:center" onclick="showToast(\'Compliance report exported\',\'teal\')">📤 Export PDF Report</button>' +
+    '</div></div>' +
+    '</div></div>';
+}
+
+/* ─────────────────────────────────────────────
+   INVOICES
+───────────────────────────────────────────── */
+function renderInvoices() {
+  var selected = DATA.invoices[0];
+
+  return '<div class="page-header">' +
+    '<div><div class="page-title">💳 Invoices</div>' +
+    '<div class="page-subtitle">Generate, track and export invoices per money agent</div></div>' +
+    '<div class="page-actions">' +
+    '<button class="btn btn-secondary">📤 Export CSV</button>' +
+    '<button class="btn btn-primary" onclick="showToast(\'Invoice builder — coming next sprint\',\'teal\')">＋ New Invoice</button>' +
+    '</div></div>' +
+
+    '<div class="stat-grid">' +
+    '<div class="stat-card teal"><div class="stat-icon teal">💰</div><div class="stat-val text-teal">€18,080</div><div class="stat-label">Total Invoiced (Mar)</div></div>' +
+    '<div class="stat-card green"><div class="stat-icon green">✅</div><div class="stat-val text-green">€4,640</div><div class="stat-label">Paid</div></div>' +
+    '<div class="stat-card orange"><div class="stat-icon orange">📤</div><div class="stat-val text-orange">€5,626</div><div class="stat-label">Sent / Pending</div></div>' +
+    '<div class="stat-card red"><div class="stat-icon red">⚠️</div><div class="stat-val text-red">€3,712</div><div class="stat-label">Overdue</div></div>' +
+    '</div>' +
+
+    '<div class="grid-2-1">' +
+    '<div class="card"><div class="card-header"><span class="card-title">📋 Invoice List</span>' +
+    '<div style="display:flex;gap:6px">' +
+    ['All','sent','paid','overdue','draft'].map(function(f){
+      return '<button class="btn ' + (f==='All'?'btn-primary':'btn-ghost') + ' btn-sm">' + (f==='All'?'All':f.charAt(0).toUpperCase()+f.slice(1)) + '</button>';
+    }).join('') +
+    '</div></div>' +
+    '<table class="tbl"><thead><tr><th>Invoice No.</th><th>Agent</th><th>Date</th><th>Amount</th><th>Status</th></tr></thead><tbody>' +
+    DATA.invoices.map(function(inv) {
+      var statusBadge = inv.status==='paid'?'badge-green':inv.status==='sent'?'badge-teal':inv.status==='overdue'?'badge-red':'badge-muted';
+      return '<tr style="cursor:pointer"><td class="text-mono fs-11 text-teal">' + inv.id + '</td>' +
+        '<td><div class="fs-13 fw-600 text-white">' + inv.agent + '</div><div class="fs-11 text-muted">' + inv.principal + '</div></td>' +
+        '<td class="text-mono fs-11">' + inv.date + '</td>' +
+        '<td class="fw-700 text-white">€' + inv.total.toLocaleString() + '</td>' +
+        '<td><span class="badge ' + statusBadge + '">' + inv.status + '</span></td></tr>';
+    }).join('') +
+    '</tbody></table></div>' +
+
+    '<div class="card" style="margin-bottom:0">' +
+    '<div class="card-header"><div>' +
+    '<div class="text-mono fs-11 text-teal">' + selected.id + '</div>' +
+    '<span class="badge badge-teal">' + selected.status + '</span></div>' +
+    '<div style="display:flex;gap:6px">' +
+    '<button class="btn btn-ghost btn-sm" onclick="showToast(\'Downloading PDF...\',\'teal\')">PDF ↓</button>' +
+    '<button class="btn btn-primary btn-sm" onclick="showToast(\'Invoice sent to '+selected.agent+'\',\'teal\')">Send →</button>' +
+    '</div></div>' +
+    '<div style="padding:16px">' +
+    '<div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--navy-border)">' +
+    '<div class="fs-11 text-muted" style="margin-bottom:6px">BILL TO</div>' +
+    '<div class="fw-600 text-white">' + selected.agent + '</div>' +
+    '<div class="fs-12 text-muted">' + selected.principal + ' Fleet</div></div>' +
+    '<div style="display:flex;justify-content:space-between;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--navy-border)">' +
+    '<div><div class="fs-11 text-muted">Issue Date</div><div class="fs-13">' + selected.date + '</div></div>' +
+    '<div><div class="fs-11 text-muted">Due Date</div><div class="fs-13 text-orange">' + selected.due + '</div></div>' +
+    '</div>' +
+    '<div style="margin-bottom:14px">' +
+    [['STCW BST x3 seafarers',2550],['GMDSS GOC x2 seafarers',2000],['Adv. Firefighting x1',300]].map(function(item){
+      return '<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(30,48,80,.4);font-size:12px">' +
+        '<span class="text-muted">' + item[0] + '</span><span class="text-mono">€' + item[1].toLocaleString() + '</span></div>';
+    }).join('') +
+    '</div>' +
+    '<div style="background:var(--navy-800);border-radius:8px;padding:12px">' +
+    '<div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:4px"><span>Subtotal</span><span>€4,850</span></div>' +
+    '<div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:8px"><span>VAT 16%</span><span>€776</span></div>' +
+    '<div style="display:flex;justify-content:space-between;font-size:16px;font-weight:700;border-top:1px solid var(--navy-border);padding-top:8px">' +
+    '<span>Total</span><span class="text-teal">€5,626</span></div></div>' +
+    '</div></div>' +
+    '</div>';
+}
+
+/* ─────────────────────────────────────────────
+   REPORTS
+───────────────────────────────────────────── */
+function renderReports() {
+  return '<div class="page-header">' +
+    '<div><div class="page-title">📊 Reports & Analytics</div>' +
+    '<div class="page-subtitle">Compliance reports, career development, market intelligence</div></div>' +
+    '<div class="page-actions"><button class="btn btn-secondary">📤 Export All</button></div></div>' +
+
+    '<div class="stat-grid">' +
+    '<div class="stat-card teal"><div class="stat-icon teal">📋</div><div class="stat-val text-teal">214</div><div class="stat-label">Total Seafarers</div><div class="stat-delta up">↑ 18 this quarter</div></div>' +
+    '<div class="stat-card green"><div class="stat-icon green">✅</div><div class="stat-val text-green">78%</div><div class="stat-label">Fully Compliant</div><div class="stat-delta up">↑ 6% vs last month</div></div>' +
+    '<div class="stat-card orange"><div class="stat-icon orange">⚠️</div><div class="stat-val text-orange">34</div><div class="stat-label">Expiring (90 days)</div></div>' +
+    '<div class="stat-card purple"><div class="stat-icon purple">🚀</div><div class="stat-val" style="color:var(--purple)">12</div><div class="stat-label">Promotable</div></div>' +
+    '</div>' +
+
+    '<div class="grid-2 section-mb">' +
+    '<div class="card"><div class="card-header"><span class="card-title">🛡 Compliance by Principal</span><span class="fs-12 text-muted">Mar 2026</span></div>' +
+    '<div class="card-body">' +
+    [['Shell',87,89,'var(--green)'],['Pioneer',64,76,'var(--teal)'],['Crossover',45,68,'var(--orange)'],['Global Marine',18,94,'var(--green)']].map(function(p) {
+      return '<div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;margin-bottom:5px">' +
+        '<div><span class="fs-13 fw-600 text-white">' + p[0] + '</span> <span class="fs-11 text-muted">' + p[1] + ' seafarers</span></div>' +
+        '<span style="font-size:13px;font-weight:700;color:' + p[3] + '">' + p[2] + '%</span></div>' +
+        '<div class="progress"><div class="progress-bar" style="width:' + p[2] + '%;background:' + p[3] + '"></div></div></div>';
+    }).join('') +
+    '</div></div>' +
+    '<div class="card"><div class="card-header"><span class="card-title">📈 Monthly Course Volume</span><span class="fs-12 text-muted">Last 6 months</span></div>' +
+    '<div class="card-body">' +
+    '<div style="display:flex;align-items:flex-end;gap:8px;height:100px;margin-bottom:10px">' +
+    [['Oct',24,12],['Nov',28,14],['Dec',18,8],['Jan',32,16],['Feb',38,18],['Mar',35,15]].map(function(m) {
+      var max=50, h1=Math.round(m[1]/max*100), h2=Math.round(m[2]/max*100);
+      return '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">' +
+        '<div style="width:100%;display:flex;flex-direction:column;gap:1px;align-items:center">' +
+        '<div style="width:80%;height:' + h1 + 'px;background:var(--teal);opacity:.85;border-radius:3px 3px 0 0"></div>' +
+        '<div style="width:80%;height:' + h2 + 'px;background:var(--purple);opacity:.7;border-radius:3px 3px 0 0"></div></div>' +
+        '<div style="font-size:10px;color:var(--muted);margin-top:4px">' + m[0] + '</div></div>';
+    }).join('') +
+    '</div>' +
+    '<div style="display:flex;gap:16px;justify-content:center;font-size:11px">' +
+    '<span><span style="display:inline-block;width:8px;height:8px;background:var(--teal);border-radius:2px;margin-right:4px"></span>Wima Internal</span>' +
+    '<span><span style="display:inline-block;width:8px;height:8px;background:var(--purple);border-radius:2px;margin-right:4px"></span>External</span></div>' +
+    '</div></div>' +
+    '</div>' +
+
+    '<div class="grid-2">' +
+    '<div class="card"><div class="card-header"><span class="card-title">🚀 Promotable Seafarers</span><span class="badge badge-green">12 ready</span></div>' +
+    '<table class="tbl"><thead><tr><th>Seafarer</th><th>Current</th><th>Target</th><th>Readiness</th><th></th></tr></thead><tbody>' +
+    [['Petros Nikolaou','AB','3rd Officer',92],['Ioannis Stefanou','3rd Officer','2nd Officer',88],['Maria Papadaki','2nd Officer','Chief Officer',79],['Nikos Drakos','Chief Officer','Captain',95]].map(function(s) {
+      return '<tr><td class="fw-600 text-white">' + s[0] + '</td>' +
+        '<td><span class="badge badge-purple fs-10">' + s[1] + '</span></td>' +
+        '<td><span class="badge badge-teal fs-10">' + s[2] + '</span></td>' +
+        '<td><div style="display:flex;align-items:center;gap:6px">' +
+        '<div class="progress" style="width:60px"><div class="progress-bar" style="width:' + s[3] + '%;background:var(--green)"></div></div>' +
+        '<span class="fs-11 fw-700 text-green">' + s[3] + '%</span></div></td>' +
+        '<td><button class="btn btn-ghost btn-sm" onclick="showToast(\'PDF generated\',\'teal\')">PDF</button></td></tr>';
+    }).join('') +
+    '</tbody></table></div>' +
+    '<div class="card"><div class="card-header"><span class="card-title">🏢 External Center Usage</span><span class="fs-12 text-muted">Market intelligence</span></div>' +
+    '<div class="card-body">' +
+    [['STI Maritime',48,'€24,000','↑','var(--red)'],['Compass Center',32,'€16,000','↓','var(--green)'],['Other External',18,'€9,000','→','var(--muted)']].map(function(c) {
+      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid rgba(30,48,80,.3)">' +
+        '<div><div class="fs-13 fw-600 text-white">' + c[0] + '</div><div class="fs-11 text-muted">' + c[1] + ' courses this quarter</div></div>' +
+        '<div style="text-align:right"><div style="font-size:13px;font-weight:700;color:var(--red)">-' + c[2] + '</div>' +
+        '<div style="font-size:11px;color:' + c[4] + '">' + c[3] + ' Revenue loss</div></div></div>';
+    }).join('') +
+    '</div></div>' +
+    '</div>';
+}
+
+/* ─────────────────────────────────────────────
+   TRAINING CENTERS
+───────────────────────────────────────────── */
+function renderCenters() {
+  var centers = [
+    { name:'Wima Training Center', type:'Internal', loc:'Piraeus, Greece', contact:'Charlene Wima', email:'training@wimas.io', status:'active', accred:['STCW','GMDSS','ISO 9001'], courses:7, sessions:8, logo:'🏫', color:'#0ea5e9' },
+    { name:'STI Maritime Center',  type:'External', loc:'Thessaloniki, GR', contact:'Andreas Stavros', email:'info@sti-maritime.gr', status:'active', accred:['STCW','DNV','MCA'], courses:5, sessions:5, logo:'⚓', color:'#10b981' },
+    { name:'Compass Training',     type:'External', loc:'Athens, Greece', contact:'Sofia Alexiou', email:'admin@compass.gr', status:'active', accred:['STCW','Flag State'], courses:4, sessions:3, logo:'🧭', color:'#8b5cf6' },
+    { name:'MarineEd Institute',   type:'External', loc:'Heraklion, Crete', contact:'Petros Manolis', email:'contact@marineed.gr', status:'review', accred:['STCW'], courses:1, sessions:0, logo:'🎓', color:'#f59e0b' },
+  ];
+
+  return '<div class="page-header">' +
+    '<div><div class="page-title">🏢 Training Centers</div>' +
+    '<div class="page-subtitle">Manage internal and external training center profiles and accreditations</div></div>' +
+    '<div class="page-actions"><button class="btn btn-primary" onclick="showToast(\'Add center form — coming next sprint\',\'teal\')">＋ Add Center</button></div></div>' +
+
+    '<div class="stat-grid">' +
+    '<div class="stat-card teal"><div class="stat-icon teal">🏢</div><div class="stat-val text-teal">4</div><div class="stat-label">Total Centers</div></div>' +
+    '<div class="stat-card green"><div class="stat-icon green">✅</div><div class="stat-val text-green">3</div><div class="stat-label">Active</div></div>' +
+    '<div class="stat-card teal"><div class="stat-icon teal">📅</div><div class="stat-val text-teal">16</div><div class="stat-label">Sessions This Month</div></div>' +
+    '<div class="stat-card orange"><div class="stat-icon orange">🔍</div><div class="stat-val text-orange">1</div><div class="stat-label">Under Review</div></div>' +
+    '</div>' +
+
+    '<div class="grid-2">' +
+    centers.map(function(c) {
+      return '<div class="card" style="cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor=\'' + c.color + '44\'" onmouseout="this.style.borderColor=\'var(--navy-border)\'">' +
+        '<div class="card-header"><div style="display:flex;align-items:center;gap:12px">' +
+        '<div style="width:44px;height:44px;border-radius:10px;background:' + c.color + '18;border:1px solid ' + c.color + '33;display:flex;align-items:center;justify-content:center;font-size:22px">' + c.logo + '</div>' +
+        '<div><div class="fs-14 fw-600 text-white">' + c.name + '</div><div class="fs-11 text-muted">' + c.type + ' · ' + c.loc + '</div></div></div>' +
+        '<span class="badge ' + (c.status==='active'?'badge-green':'badge-orange') + '">' + c.status + '</span></div>' +
+        '<div style="padding:14px">' +
+        '<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px">' +
+        c.accred.map(function(a){return '<span class="badge badge-teal fs-10">' + a + '</span>';}).join('') +
+        '</div>' +
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px">' +
+        '<div><span class="text-muted">Contact: </span>' + c.contact + '</div>' +
+        '<div><span class="text-muted">Email: </span><span class="text-teal">' + c.email + '</span></div>' +
+        '<div><span class="text-muted">Courses: </span><span class="fw-600">' + c.courses + ' offered</span></div>' +
+        '<div><span class="text-muted">This month: </span><span class="fw-600">' + c.sessions + ' sessions</span></div>' +
+        '</div>' +
+        '<div style="margin-top:12px;display:flex;gap:6px">' +
+        '<button class="btn btn-ghost btn-sm" onclick="showToast(\'Center details — coming next sprint\',\'teal\')">View Details</button>' +
+        '<button class="btn btn-ghost btn-sm" onclick="showToast(\'Edit center — coming next sprint\',\'teal\')">✏️ Edit</button>' +
+        '</div></div></div>';
+    }).join('') +
+    '</div>';
+}
+
+/* ─────────────────────────────────────────────
+   USERS
+───────────────────────────────────────────── */
+var USERS_LIST = [
+  { name:'Charlene Wima',     email:'charlene@wimas.io',   role:'Training Administrator', center:'Wima', status:'active',   av:'CW', color:'#0ea5e9', last:'07 Mar 2026, 08:14' },
+  { name:'Niki Varia',        email:'niki@wimas.io',        role:'System Admin',           center:'Wima', status:'active',   av:'NV', color:'#8b5cf6', last:'06 Mar 2026, 17:52' },
+  { name:'Andreas Stavros',   email:'a.stavros@aegean.gr',  role:'Money Agent',            center:'Aegean', status:'active', av:'AS', color:'#10b981', last:'07 Mar 2026, 09:30' },
+  { name:'Sofia Alexiou',     email:'s.alexiou@pioneer.com',role:'Money Agent',            center:'Pioneer', status:'active',av:'SA', color:'#f59e0b', last:'05 Mar 2026, 14:20' },
+  { name:'Kostas Papadopoulos',email:'k.papa@wimas.io',     role:'Instructor',             center:'Wima', status:'active',   av:'KP', color:'#0ea5e9', last:'07 Mar 2026, 07:58' },
+  { name:'Maria Stavridou',   email:'m.stavr@wimas.io',     role:'Instructor',             center:'Wima', status:'active',   av:'MS', color:'#ec4899', last:'06 Mar 2026, 15:10' },
+  { name:'Anna Theodorou',    email:'a.theo@wimas.io',      role:'Instructor',             center:'Wima', status:'active',   av:'AT', color:'#14b8a6', last:'07 Mar 2026, 08:45' },
+  { name:'Costas Tsoumas',    email:'c.tsoum@crossover.gr', role:'Money Agent',            center:'Crossover', status:'inactive', av:'CT', color:'#64748b', last:'10 Feb 2026, 09:20' },
+];
+
+function renderUsers() {
+  return '<div class="page-header">' +
+    '<div><div class="page-title">👥 User Management</div>' +
+    '<div class="page-subtitle">Create users, assign roles and manage platform access</div></div>' +
+    '<div class="page-actions"><button class="btn btn-primary" onclick="openModal(\'modal-create-user\')">＋ Create User</button></div></div>' +
+
+    '<div class="stat-grid">' +
+    '<div class="stat-card teal"><div class="stat-icon teal">👥</div><div class="stat-val text-teal">' + USERS_LIST.length + '</div><div class="stat-label">Total Users</div></div>' +
+    '<div class="stat-card green"><div class="stat-icon green">✅</div><div class="stat-val text-green">' + USERS_LIST.filter(function(u){return u.status==='active';}).length + '</div><div class="stat-label">Active</div></div>' +
+    '<div class="stat-card purple"><div class="stat-icon purple">🎓</div><div class="stat-val" style="color:var(--purple)">' + USERS_LIST.filter(function(u){return u.role==='Instructor';}).length + '</div><div class="stat-label">Instructors</div></div>' +
+    '<div class="stat-card orange"><div class="stat-icon orange">⚓</div><div class="stat-val text-orange">' + USERS_LIST.filter(function(u){return u.role==='Money Agent';}).length + '</div><div class="stat-label">Money Agents</div></div>' +
+    '</div>' +
+
+    '<div class="card">' +
+    '<div class="card-header">' +
+    '<div style="display:flex;gap:6px;flex-wrap:wrap">' +
+    [['All','all'],['Training Admin','administrator'],['Agents','agent'],['Instructors','instructor'],['Inactive','inactive']].map(function(f,i) {
+      return '<button class="btn ' + (i===0?'btn-primary':'btn-ghost') + ' btn-sm">' + f[0] + '</button>';
+    }).join('') +
+    '</div>' +
+    '<span class="fs-12 text-muted">' + USERS_LIST.length + ' users</span></div>' +
+    renderUsersTable() +
+    '</div>';
+}
+
+function renderUsersTable(limit) {
+  var users = limit ? USERS_LIST.slice(0,limit) : USERS_LIST;
+  return '<table class="tbl"><thead><tr><th>User</th><th>Role</th><th>Organization</th><th>Last Login</th><th>Status</th><th>Actions</th></tr></thead><tbody>' +
+    users.map(function(u) {
+      var roleBadge = u.role==='System Admin'?'badge-purple':u.role==='Training Administrator'?'badge-teal':u.role==='Instructor'?'badge-green':u.role==='Money Agent'?'badge-orange':'badge-muted';
+      return '<tr>' +
+        '<td><div style="display:flex;align-items:center;gap:10px">' +
+        '<div style="width:32px;height:32px;border-radius:8px;background:' + u.color + '22;border:1px solid ' + u.color + '44;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:' + u.color + '">' + u.av + '</div>' +
+        '<div><div class="fs-13 fw-600 text-white">' + u.name + '</div><div class="fs-11 text-muted">' + u.email + '</div></div></div></td>' +
+        '<td><span class="badge ' + roleBadge + ' fs-10">' + u.role + '</span></td>' +
+        '<td class="fs-12">' + u.center + '</td>' +
+        '<td class="text-mono fs-10 text-muted">' + u.last + '</td>' +
+        '<td><span class="badge ' + (u.status==='active'?'badge-green':'badge-muted') + '">' + u.status + '</span></td>' +
+        '<td><div style="display:flex;gap:4px">' +
+        '<button class="btn btn-ghost btn-sm" onclick="showToast(\'Edit user — coming next sprint\',\'teal\')">✏️ Edit</button>' +
+        '<button class="btn btn-ghost btn-sm" onclick="showToast(\'User ' + (u.status==='active'?'deactivated':'activated') + '\',\'' + (u.status==='active'?'orange':'green') + '\')">' + (u.status==='active'?'🔒':'🔓') + '</button>' +
+        '</div></td></tr>';
+    }).join('') +
+    '</tbody></table>';
+}
+
+/* ─────────────────────────────────────────────
+   SETTINGS
+───────────────────────────────────────────── */
+function renderSettings() {
+  return '<div class="page-header"><div><div class="page-title">⚙️ Settings</div>' +
+    '<div class="page-subtitle">Account settings, preferences and profile</div></div></div>' +
+    '<div class="grid-2">' +
+    '<div class="card"><div class="card-header"><span class="card-title">👤 My Profile</span></div><div class="card-body">' +
+    '<div style="display:flex;align-items:center;gap:14px;margin-bottom:20px">' +
+    '<div style="width:56px;height:56px;border-radius:12px;background:' + currentUser.color + ';display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#fff">' + currentUser.av + '</div>' +
+    '<div><div class="fs-16 fw-700">' + currentUser.name + '</div><div class="fs-12 text-muted">' + currentUser.email + '</div><span class="badge badge-teal" style="margin-top:4px">' + currentUser.role + '</span></div></div>' +
+    '<div class="form-group"><label class="form-label">Display Name</label><input class="form-input" value="' + currentUser.name + '"></div>' +
+    '<div class="form-group"><label class="form-label">Email (read-only)</label><input class="form-input" value="' + currentUser.email + '" disabled style="opacity:.5"></div>' +
+    '<button class="btn btn-primary" onclick="showToast(\'Profile updated\',\'green\')">Save Changes</button>' +
+    '</div></div>' +
+    '<div class="card"><div class="card-header"><span class="card-title">🔒 Change Password</span></div><div class="card-body">' +
+    '<div class="form-group"><label class="form-label">Current Password</label><input class="form-input" type="password" placeholder="••••••••"></div>' +
+    '<div class="form-group"><label class="form-label">New Password</label><input class="form-input" type="password" placeholder="••••••••"></div>' +
+    '<div class="form-group"><label class="form-label">Confirm New Password</label><input class="form-input" type="password" placeholder="••••••••"></div>' +
+    '<button class="btn btn-primary" onclick="showToast(\'Password changed successfully\',\'green\')">Update Password</button>' +
+    '</div></div></div>' +
+    '<div class="card"><div class="card-header"><span class="card-title">🔔 Notification Preferences</span></div><div class="card-body">' +
+    [['Email notifications for OTR status changes','checked'],['Email when certificate is issued','checked'],['SMS reminders for seafarers',''],['Expiry alerts 90 days before','checked'],['Expiry alerts 30 days before','checked'],['Weekly compliance digest','']].map(function(p) {
+      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(30,48,80,.3)">' +
+        '<span class="fs-13">' + p[0] + '</span>' +
+        '<div style="width:40px;height:22px;border-radius:11px;background:' + (p[1]?'var(--teal)':'var(--navy-500)') + ';cursor:pointer;position:relative;transition:background .2s" onclick="this.style.background=this.style.background===\'var(--teal)\'?\'var(--navy-500)\':\'var(--teal)\'">' +
+        '<div style="width:16px;height:16px;background:#fff;border-radius:50%;position:absolute;top:3px;' + (p[1]?'right:3px':'left:3px') + ';transition:all .2s"></div></div>' +
+        '</div>';
+    }).join('') +
+    '</div></div>';
+}
+</script>
+</body>
+</html>
