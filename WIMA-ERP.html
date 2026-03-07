@@ -459,8 +459,6 @@
     .center-option.selected .center-option-name { color:var(--wima-teal); }
   </style>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-
 /* ── STATE ── */
 let currentSection = 'dashboard';
 let currentUser = { name: 'Νίκη Βαριά', role: 'Training Administrator', email: 'niki@wimas.io' };
@@ -1806,7 +1804,6 @@ function doAssign() {
   document.body.appendChild(banner);
   setTimeout(() => banner.remove(), 3000);
 }
-});
 
 /* ═══════════════════════════════════════════════════════════════
    RENDER: ATTENDANCE (E05)
