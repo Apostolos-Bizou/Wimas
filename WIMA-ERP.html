@@ -382,6 +382,61 @@
     .notes-area:focus { border-color:var(--wima-teal); }
     .notes-area::placeholder { color:var(--wima-muted); }
 
+    /* ── COURSE SCHEDULE ── */
+    .cs-toolbar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+    .cs-view-toggle { display:flex; background:var(--wima-navy-light); border:1px solid var(--wima-navy-border); border-radius:8px; overflow:hidden; }
+    .cs-view-btn { padding:7px 16px; font-size:12px; font-weight:600; color:var(--wima-muted); cursor:pointer; border:none; background:transparent; transition:all 0.15s; font-family:inherit; }
+    .cs-view-btn.active { background:var(--wima-teal); color:#fff; }
+    .cs-filter-select { padding:7px 12px; font-size:12px; background:var(--wima-navy-light); border:1px solid var(--wima-navy-border); border-radius:8px; color:var(--wima-muted-light); font-family:inherit; cursor:pointer; }
+    .cs-filter-select:focus { outline:none; border-color:var(--wima-teal); }
+
+    /* Calendar */
+    .cal-nav { display:flex; align-items:center; gap:14px; }
+    .cal-nav-btn { width:32px; height:32px; border-radius:8px; background:var(--wima-navy-light); border:1px solid var(--wima-navy-border); color:var(--wima-muted); cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center; transition:all 0.15s; }
+    .cal-nav-btn:hover { border-color:var(--wima-teal); color:var(--wima-teal); }
+    .cal-month-label { font-size:15px; font-weight:700; color:var(--wima-white); min-width:160px; text-align:center; }
+    .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); border-left:1px solid var(--wima-navy-border); border-top:1px solid var(--wima-navy-border); }
+    .cal-dow { padding:10px 6px; text-align:center; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:var(--wima-muted); background:var(--wima-navy-mid); border-right:1px solid var(--wima-navy-border); border-bottom:1px solid var(--wima-navy-border); }
+    .cal-cell { min-height:110px; padding:6px; background:var(--wima-navy); border-right:1px solid var(--wima-navy-border); border-bottom:1px solid var(--wima-navy-border); vertical-align:top; position:relative; transition:background 0.12s; }
+    .cal-cell:hover { background:rgba(14,165,233,0.04); }
+    .cal-cell.other-month { background:rgba(11,17,32,0.5); }
+    .cal-cell.today { background:rgba(14,165,233,0.06); }
+    .cal-day-num { font-size:12px; font-weight:600; color:var(--wima-muted); margin-bottom:4px; display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:50%; }
+    .cal-cell.today .cal-day-num { background:var(--wima-teal); color:#fff; }
+    .cal-cell.other-month .cal-day-num { color:rgba(100,116,139,0.4); }
+    .cal-event { font-size:10px; font-weight:600; padding:3px 6px; border-radius:4px; margin-bottom:3px; cursor:pointer; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; transition:opacity 0.12s; line-height:1.4; }
+    .cal-event:hover { opacity:0.85; }
+    .cal-event.internal { background:rgba(14,165,233,0.18); color:var(--wima-teal); border-left:2px solid var(--wima-teal); }
+    .cal-event.external { background:rgba(139,92,246,0.18); color:var(--wima-purple); border-left:2px solid var(--wima-purple); }
+    .cal-event.full { background:rgba(239,68,68,0.12); color:var(--wima-red); border-left:2px solid var(--wima-red); }
+    .cal-event.completed { background:rgba(16,185,129,0.12); color:var(--wima-green); border-left:2px solid var(--wima-green); }
+    .cal-legend { display:flex; align-items:center; gap:16px; }
+    .cal-legend-item { display:flex; align-items:center; gap:5px; font-size:11px; color:var(--wima-muted); }
+    .cal-legend-dot { width:10px; height:10px; border-radius:2px; flex-shrink:0; }
+
+    /* Session detail popup */
+    .session-popup { position:absolute; left:50%; top:calc(100% + 4px); transform:translateX(-50%); z-index:200; background:var(--wima-navy-mid); border:1px solid var(--wima-navy-border); border-radius:10px; padding:12px 14px; min-width:200px; box-shadow:0 12px 40px rgba(0,0,0,0.5); font-size:12px; pointer-events:none; }
+    .session-popup-title { font-weight:700; color:var(--wima-white); margin-bottom:6px; font-size:13px; }
+    .session-popup-row { display:flex; align-items:center; gap:6px; color:var(--wima-muted); margin-bottom:3px; }
+
+    /* Sessions list */
+    .session-row-center { display:flex; align-items:center; gap:6px; }
+    .center-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+    .seats-bar { width:60px; height:5px; border-radius:3px; background:var(--wima-navy-border); overflow:hidden; margin-top:3px; }
+    .seats-fill { height:100%; border-radius:3px; background:var(--wima-teal); transition:width 0.3s; }
+    .seats-fill.warn { background:var(--wima-orange); }
+    .seats-fill.full { background:var(--wima-red); }
+
+    /* Create Session Modal */
+    .form-row { display:grid; gap:12px; margin-bottom:12px; }
+    .form-row.cols-2 { grid-template-columns:1fr 1fr; }
+    .form-group { display:flex; flex-direction:column; gap:5px; }
+    .form-label { font-size:11px; font-weight:600; color:var(--wima-muted); text-transform:uppercase; letter-spacing:0.6px; }
+    .form-input { padding:9px 12px; background:var(--wima-navy); border:1px solid var(--wima-navy-border); border-radius:8px; color:var(--wima-white); font-family:inherit; font-size:13px; transition:border 0.15s; }
+    .form-input:focus { outline:none; border-color:var(--wima-teal); }
+    .form-input::placeholder { color:var(--wima-muted); }
+    .modal-box-lg { width:640px; }
+
     /* ── MODAL ── */
     .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(4px); z-index:1000; display:none; align-items:center; justify-content:center; }
     .modal-overlay.open { display:flex; }
@@ -498,17 +553,17 @@
 
       <div class="demo-account" onclick="fillDemo('niki@wimas.io','Training Administrator')">
         <span>🎓</span>
-        <div style="flex:1"><div class="demo-name">Νίκη Βαριά — Training Administrator</div><div class="demo-email">niki@wimas.io</div></div>
+        <div style="flex:1"><div class="demo-name">Νίκη Βαριά — Training Administrator</div><div class="demo-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="224c4b494b62554b4f43510c4b4d">[email&#160;protected]</a></div></div>
         <span style="color:var(--wima-muted);font-size:12px">→</span>
       </div>
       <div class="demo-account" onclick="fillDemo('agent@shell.com','Money Agent')">
         <span>🚢</span>
-        <div style="flex:1"><div class="demo-name">Shell Crewing — Money Agent</div><div class="demo-email">agent@shell.com</div></div>
+        <div style="flex:1"><div class="demo-name">Shell Crewing — Money Agent</div><div class="demo-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="650402000b1125160d0009094b060a08">[email&#160;protected]</a></div></div>
         <span style="color:var(--wima-muted);font-size:12px">→</span>
       </div>
       <div class="demo-account" onclick="fillDemo('admin@wimas.io','System Admin')">
         <span>⚙️</span>
-        <div style="flex:1"><div class="demo-name">System Administrator</div><div class="demo-email">admin@wimas.io</div></div>
+        <div style="flex:1"><div class="demo-name">System Administrator</div><div class="demo-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a8c9ccc5c1c6e8dfc1c5c9db86c1c7">[email&#160;protected]</a></div></div>
         <span style="color:var(--wima-muted);font-size:12px">→</span>
       </div>
     </div>
@@ -631,7 +686,7 @@
 <!-- ============================================================
      JAVASCRIPT — Router + Pages
 ============================================================ -->
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 
 /* ── STATE ── */
 let currentSection = 'dashboard';
@@ -735,7 +790,7 @@ function showSection(id) {
     dashboard:    { bc: 'Dashboard',        html: renderDashboard() },
     seafarers:    { bc: 'Seafarers',        html: renderSeafarers() },
     otrs:         { bc: 'OTR Requests',     html: renderOTRs() },
-    courses:      { bc: 'Course Schedule',  html: renderPlaceholder('📅','Course Schedule','Sessions, calendar view, enrollment management — Sprint 5') },
+    courses:      { bc: 'Course Schedule',  html: '<div id="cs-shell"></div>' },
     attendance:   { bc: 'Attendance',       html: renderPlaceholder('✅','Attendance','Per-session attendance tracking, grades, pass/fail — Sprint 5') },
     certificates: { bc: 'Certificates',     html: renderPlaceholder('🎓','Certificates','Certificate generation, upload, download — Sprint 6') },
     compliance:   { bc: 'Compliance Matrix',html: renderPlaceholder('🛡️','Compliance Matrix','Matrix builder, expiry alerts, compliance scores — Sprint 7') },
@@ -747,6 +802,11 @@ function showSection(id) {
   const s = sections[id] || sections.dashboard;
   bc.innerHTML = `<span class="crumb-link" onclick="showSection('dashboard')">Dashboard</span><span class="sep">›</span><span class="current">${s.bc}</span>`;
   content.innerHTML = s.html;
+  if (id === 'courses') {
+    document.getElementById('cs-shell').outerHTML = renderCourseSchedule();
+    csView = 'calendar'; csMonth = 2; csYear = 2026;
+    setTimeout(csRender, 0);
+  }
 }
 
 function showSeafarerProfile(name, initials, compliance) {
@@ -1233,6 +1293,475 @@ function renderSeafarerProfile(name, initials, compliance) {
 }
 
 /* ── RENDER: PLACEHOLDER ── */
+function renderCourseSchedule() {
+  return `
+    <div class="page-header">
+      <div>
+        <div class="page-title">📅 Course Schedule</div>
+        <div class="page-subtitle">Manage sessions, view monthly calendar, track enrollments</div>
+      </div>
+      <div class="cs-toolbar">
+        <div class="cs-view-toggle">
+          <button class="cs-view-btn active" id="cs-btn-cal" onclick="csSetView('calendar')">📅 Calendar</button>
+          <button class="cs-view-btn" id="cs-btn-list" onclick="csSetView('list')">☰ List</button>
+        </div>
+        <select class="cs-filter-select" id="cs-filter-center" onchange="csRender()">
+          <option value="all">All Centers</option>
+          <option value="Wima">Wima (Internal)</option>
+          <option value="STI">STI Maritime</option>
+          <option value="Compass">Compass</option>
+        </select>
+        <select class="cs-filter-select" id="cs-filter-status" onchange="csRender()">
+          <option value="all">All Statuses</option>
+          <option value="scheduled">Scheduled</option>
+          <option value="ongoing">Ongoing</option>
+          <option value="completed">Completed</option>
+          <option value="full">Full</option>
+        </select>
+        <button class="btn btn-primary btn-sm" onclick="openCreateSessionModal()">＋ New Session</button>
+      </div>
+    </div>
+    <div id="cs-body"></div>
+
+    <!-- Create Session Modal -->
+    <div class="modal-overlay" id="create-session-modal">
+      <div class="modal-box modal-box-lg">
+        <div class="modal-header">
+          <span class="modal-title">📅 Create New Course Session</span>
+          <button class="modal-close" onclick="closeCreateSessionModal()">✕</button>
+        </div>
+        <div class="modal-body" style="padding:20px 22px">
+          <div class="form-row cols-2">
+            <div class="form-group">
+              <label class="form-label">Course Type *</label>
+              <select class="form-input" id="ns-course">
+                <option>STCW Basic Safety Training</option>
+                <option>Advanced Firefighting</option>
+                <option>Medical First Aid</option>
+                <option>GMDSS / Radio Operator</option>
+                <option>Oil Tanker Familiarization</option>
+                <option>Crowd &amp; Crisis Management</option>
+                <option>ECDIS Type-Specific</option>
+                <option>Dynamic Positioning (DP)</option>
+                <option>ISM / ISPS Awareness</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Training Center *</label>
+              <select class="form-input" id="ns-center">
+                <option value="Wima">🏫 Wima Training Center (Internal)</option>
+                <option value="STI">⚓ STI Maritime Center</option>
+                <option value="Compass">🧭 Compass Training Center</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row cols-2">
+            <div class="form-group">
+              <label class="form-label">Start Date *</label>
+              <input type="date" class="form-input" id="ns-start">
+            </div>
+            <div class="form-group">
+              <label class="form-label">End Date *</label>
+              <input type="date" class="form-input" id="ns-end">
+            </div>
+          </div>
+          <div class="form-row cols-2">
+            <div class="form-group">
+              <label class="form-label">Max Capacity</label>
+              <input type="number" class="form-input" id="ns-capacity" value="12" min="1" max="50">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Instructor</label>
+              <select class="form-input" id="ns-instructor">
+                <option>Kostas Papadopoulos</option>
+                <option>Maria Stavridou</option>
+                <option>Nikos Alexiou</option>
+                <option>Anna Theodorou</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Room / Location</label>
+              <input type="text" class="form-input" id="ns-room" placeholder="e.g. Room A, Simulation Lab, Online">
+            </div>
+          </div>
+          <div class="form-row cols-2">
+            <div class="form-group">
+              <label class="form-label">Visibility</label>
+              <select class="form-input" id="ns-visibility">
+                <option value="public">🌐 Public (visible to agents)</option>
+                <option value="private">🔒 Private (internal only)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Recurring</label>
+              <select class="form-input" id="ns-recurring">
+                <option value="none">No recurrence</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="padding:14px 22px;border-top:1px solid var(--wima-navy-border);display:flex;justify-content:flex-end;gap:10px">
+          <button class="btn btn-ghost" onclick="closeCreateSessionModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="doCreateSession()">✓ Create Session</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Session Detail Modal -->
+    <div class="modal-overlay" id="session-detail-modal">
+      <div class="modal-box modal-box-lg">
+        <div class="modal-header">
+          <span class="modal-title" id="sdm-title">Session Details</span>
+          <button class="modal-close" onclick="closeSessionDetailModal()">✕</button>
+        </div>
+        <div class="modal-body" id="sdm-body" style="padding:20px 22px"></div>
+        <div class="modal-footer" style="padding:14px 22px;border-top:1px solid var(--wima-navy-border);display:flex;justify-content:flex-end;gap:10px">
+          <button class="btn btn-ghost" onclick="closeSessionDetailModal()">Close</button>
+          <button class="btn btn-primary" onclick="closeSessionDetailModal()">✓ Enroll Seafarer</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* ═══════════════════════════════════════════════
+   COURSE SCHEDULE — STATE & DATA
+═══════════════════════════════════════════════ */
+let csView = 'calendar';
+let csYear = 2026;
+let csMonth = 2; // 0-based March
+
+const CS_SESSIONS = [
+  { id:1,  course:'STCW Basic Safety Training',   center:'Wima',   type:'internal', start:'2026-03-03', end:'2026-03-07', capacity:12, enrolled:10, instructor:'Kostas Papadopoulos', room:'Room A',          status:'ongoing',   public:true  },
+  { id:2,  course:'Advanced Firefighting',         center:'Wima',   type:'internal', start:'2026-03-10', end:'2026-03-12', capacity:8,  enrolled:8,  instructor:'Maria Stavridou',     room:'Simulation Lab',  status:'full',      public:true  },
+  { id:3,  course:'GMDSS / Radio Operator',        center:'STI',    type:'external', start:'2026-03-10', end:'2026-03-14', capacity:10, enrolled:6,  instructor:'STI Instructor',      room:'STI Lab 2',       status:'scheduled', public:true  },
+  { id:4,  course:'Medical First Aid',             center:'Wima',   type:'internal', start:'2026-03-17', end:'2026-03-18', capacity:12, enrolled:4,  instructor:'Anna Theodorou',      room:'Room B',          status:'scheduled', public:true  },
+  { id:5,  course:'Oil Tanker Familiarization',    center:'Compass',type:'external', start:'2026-03-17', end:'2026-03-19', capacity:15, enrolled:11, instructor:'Compass Staff',       room:'Compass Center',  status:'scheduled', public:true  },
+  { id:6,  course:'ECDIS Type-Specific',           center:'Wima',   type:'internal', start:'2026-03-24', end:'2026-03-25', capacity:8,  enrolled:3,  instructor:'Nikos Alexiou',       room:'Computer Lab',    status:'scheduled', public:true  },
+  { id:7,  course:'Crowd & Crisis Management',     center:'STI',    type:'external', start:'2026-03-27', end:'2026-03-28', capacity:20, enrolled:14, instructor:'STI Instructor',      room:'STI Room A',      status:'scheduled', public:false },
+  { id:8,  course:'STCW Basic Safety Training',   center:'Wima',   type:'internal', start:'2026-04-07', end:'2026-04-11', capacity:12, enrolled:2,  instructor:'Kostas Papadopoulos', room:'Room A',          status:'scheduled', public:true  },
+  { id:9,  course:'ISM / ISPS Awareness',          center:'Wima',   type:'internal', start:'2026-04-14', end:'2026-04-14', capacity:20, enrolled:9,  instructor:'Maria Stavridou',     room:'Conference Room', status:'scheduled', public:true  },
+  { id:10, course:'Dynamic Positioning (DP)',       center:'Compass',type:'external', start:'2026-04-20', end:'2026-04-24', capacity:6,  enrolled:6,  instructor:'Compass Staff',       room:'DP Simulator',    status:'full',      public:true  },
+  { id:11, course:'Advanced Firefighting',         center:'Wima',   type:'internal', start:'2026-02-17', end:'2026-02-19', capacity:8,  enrolled:8,  instructor:'Maria Stavridou',     room:'Simulation Lab',  status:'completed', public:true  },
+  { id:12, course:'STCW Basic Safety Training',   center:'Wima',   type:'internal', start:'2026-02-03', end:'2026-02-07', capacity:12, enrolled:12, instructor:'Kostas Papadopoulos', room:'Room A',          status:'completed', public:true  },
+];
+
+function csGetFiltered() {
+  const center = document.getElementById('cs-filter-center')?.value || 'all';
+  const status = document.getElementById('cs-filter-status')?.value || 'all';
+  return CS_SESSIONS.filter(s => {
+    if (center !== 'all' && s.center !== center) return false;
+    if (status !== 'all' && s.status !== status) return false;
+    return true;
+  });
+}
+
+function csSetView(v) {
+  csView = v;
+  document.getElementById('cs-btn-cal').classList.toggle('active', v === 'calendar');
+  document.getElementById('cs-btn-list').classList.toggle('active', v === 'list');
+  csRender();
+}
+
+function csRender() {
+  const body = document.getElementById('cs-body');
+  if (!body) return;
+  body.innerHTML = csView === 'calendar' ? csRenderCalendar() : csRenderList();
+}
+
+function csEventClass(s) {
+  if (s.status === 'completed') return 'completed';
+  if (s.status === 'full') return 'full';
+  return s.type === 'internal' ? 'internal' : 'external';
+}
+
+/* ─── CALENDAR VIEW ─── */
+function csRenderCalendar() {
+  const sessions = csGetFiltered();
+  const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const dows = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+  // Build calendar grid days
+  const firstDay = new Date(csYear, csMonth, 1);
+  const lastDay  = new Date(csYear, csMonth + 1, 0);
+  // Monday-first: 0=Mon..6=Sun
+  let startDow = (firstDay.getDay() + 6) % 7;
+  let cells = [];
+  // Prev month padding
+  const prevLast = new Date(csYear, csMonth, 0);
+  for (let i = startDow - 1; i >= 0; i--) cells.push({ day: prevLast.getDate() - i, cur: false });
+  // Current month
+  for (let d = 1; d <= lastDay.getDate(); d++) cells.push({ day: d, cur: true });
+  // Next month padding
+  const remainder = (7 - (cells.length % 7)) % 7;
+  for (let d = 1; d <= remainder; d++) cells.push({ day: d, cur: false });
+
+  const todayDate = new Date(); // March 7 2026
+
+  // Map sessions to days
+  function sessionsOnDay(d) {
+    if (!d.cur) return [];
+    const dateStr = `${csYear}-${String(csMonth+1).padStart(2,'0')}-${String(d.day).padStart(2,'0')}`;
+    return sessions.filter(s => s.start <= dateStr && s.end >= dateStr);
+  }
+
+  const calCells = cells.map(d => {
+    const isToday = d.cur && d.day === todayDate.getDate() && csMonth === todayDate.getMonth() && csYear === todayDate.getFullYear();
+    const daySessions = sessionsOnDay(d);
+    const eventsHtml = daySessions.slice(0,3).map(s => {
+      const shortName = s.course.length > 22 ? s.course.slice(0,20)+'…' : s.course;
+      return `<div class="cal-event ${csEventClass(s)}" onclick="openSessionDetail(${s.id})" title="${s.course} · ${s.center}">${shortName}</div>`;
+    }).join('');
+    const more = daySessions.length > 3 ? `<div style="font-size:10px;color:var(--wima-muted);padding:1px 4px">+${daySessions.length-3} more</div>` : '';
+    return `
+      <div class="cal-cell${!d.cur?' other-month':''}${isToday?' today':''}">
+        <div class="cal-day-num">${d.day}</div>
+        ${eventsHtml}${more}
+      </div>`;
+  }).join('');
+
+  // Month summary stats
+  const monthSessions = sessions.filter(s => {
+    const sm = parseInt(s.start.split('-')[1]) - 1;
+    const sy = parseInt(s.start.split('-')[0]);
+    return sm === csMonth && sy === csYear;
+  });
+  const totalEnrolled = monthSessions.reduce((a,s) => a+s.enrolled, 0);
+  const totalCapacity = monthSessions.reduce((a,s) => a+s.capacity, 0);
+
+  return `
+    <!-- Month nav + stats row -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:12px">
+      <div class="cal-nav">
+        <button class="cal-nav-btn" onclick="csChangeMonth(-1)">‹</button>
+        <div class="cal-month-label">${monthNames[csMonth]} ${csYear}</div>
+        <button class="cal-nav-btn" onclick="csChangeMonth(1)">›</button>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <div style="background:var(--wima-navy-mid);border:1px solid var(--wima-navy-border);border-radius:10px;padding:8px 16px;text-align:center">
+          <div style="font-size:18px;font-weight:700;color:var(--wima-white)">${monthSessions.length}</div>
+          <div style="font-size:10px;color:var(--wima-muted);text-transform:uppercase;letter-spacing:0.6px">Sessions</div>
+        </div>
+        <div style="background:var(--wima-navy-mid);border:1px solid var(--wima-navy-border);border-radius:10px;padding:8px 16px;text-align:center">
+          <div style="font-size:18px;font-weight:700;color:var(--wima-teal)">${totalEnrolled}</div>
+          <div style="font-size:10px;color:var(--wima-muted);text-transform:uppercase;letter-spacing:0.6px">Enrolled</div>
+        </div>
+        <div style="background:var(--wima-navy-mid);border:1px solid var(--wima-navy-border);border-radius:10px;padding:8px 16px;text-align:center">
+          <div style="font-size:18px;font-weight:700;color:var(--wima-green)">${totalCapacity > 0 ? Math.round(totalEnrolled/totalCapacity*100) : 0}%</div>
+          <div style="font-size:10px;color:var(--wima-muted);text-transform:uppercase;letter-spacing:0.6px">Fill Rate</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="cal-legend" style="margin-bottom:12px">
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--wima-teal);opacity:0.7"></div>Internal (Wima)</div>
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--wima-purple);opacity:0.7"></div>External</div>
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--wima-red);opacity:0.7"></div>Full</div>
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--wima-green);opacity:0.7"></div>Completed</div>
+    </div>
+
+    <!-- Calendar grid -->
+    <div class="card" style="padding:0;overflow:hidden">
+      <div class="cal-grid">
+        ${dows.map(d => `<div class="cal-dow">${d}</div>`).join('')}
+        ${calCells}
+      </div>
+    </div>
+  `;
+}
+
+function csChangeMonth(delta) {
+  csMonth += delta;
+  if (csMonth > 11) { csMonth = 0; csYear++; }
+  if (csMonth < 0)  { csMonth = 11; csYear--; }
+  csRender();
+}
+
+/* ─── LIST VIEW ─── */
+function csRenderList() {
+  const sessions = csGetFiltered();
+  if (!sessions.length) return `<div class="card" style="padding:40px;text-align:center;color:var(--wima-muted)">No sessions match the selected filters.</div>`;
+
+  const rows = sessions.map(s => {
+    const pct = Math.round(s.enrolled / s.capacity * 100);
+    const barClass = pct >= 100 ? 'full' : pct >= 80 ? 'warn' : '';
+    const statusBadge = {
+      scheduled: 'badge-teal',
+      ongoing:   'badge-orange',
+      completed: 'badge-green',
+      full:      'badge-red',
+    }[s.status] || 'badge-muted';
+    const centerDotColor = s.type === 'internal' ? 'var(--wima-teal)' : 'var(--wima-purple)';
+    return `
+      <tr onclick="openSessionDetail(${s.id})">
+        <td>
+          <div style="font-weight:600;color:var(--wima-white);font-size:13px">${s.course}</div>
+          <div style="font-size:11px;color:var(--wima-muted);margin-top:2px">👤 ${s.instructor}</div>
+        </td>
+        <td>
+          <div class="session-row-center">
+            <div class="center-dot" style="background:${centerDotColor}"></div>
+            <span>${s.center}</span>
+          </div>
+          <div style="font-size:11px;color:var(--wima-muted);margin-top:2px">📍 ${s.room}</div>
+        </td>
+        <td>
+          <div>${formatDateShort(s.start)}</div>
+          <div style="font-size:11px;color:var(--wima-muted)">${s.start === s.end ? '1 day' : '→ ' + formatDateShort(s.end)}</div>
+        </td>
+        <td>
+          <div style="font-size:13px;font-weight:600">${s.enrolled}<span style="color:var(--wima-muted);font-weight:400"> / ${s.capacity}</span></div>
+          <div class="seats-bar"><div class="seats-fill ${barClass}" style="width:${Math.min(pct,100)}%"></div></div>
+        </td>
+        <td><span class="badge ${statusBadge}">${s.status.charAt(0).toUpperCase()+s.status.slice(1)}</span></td>
+        <td><span class="badge ${s.public ? 'badge-green' : 'badge-muted'}">${s.public ? 'Public' : 'Private'}</span></td>
+        <td>
+          <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();openSessionDetail(${s.id})">View →</button>
+        </td>
+      </tr>`;
+  }).join('');
+
+  return `
+    <div class="card" style="padding:0;overflow:hidden">
+      <div class="card-header">
+        <span class="card-title">📋 All Sessions</span>
+        <span style="font-size:12px;color:var(--wima-muted)">${sessions.length} sessions</span>
+      </div>
+      <table class="wima-table">
+        <thead>
+          <tr>
+            <th>Course</th><th>Center</th><th>Dates</th><th>Enrollment</th><th>Status</th><th>Visibility</th><th></th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+}
+
+function formatDateShort(d) {
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const [y,m,day] = d.split('-');
+  return `${parseInt(day)} ${months[parseInt(m)-1]} ${y}`;
+}
+
+/* ─── SESSION DETAIL ─── */
+function openSessionDetail(id) {
+  const s = CS_SESSIONS.find(x => x.id === id);
+  if (!s) return;
+  const pct = Math.round(s.enrolled/s.capacity*100);
+  const barClass = pct >= 100 ? 'full' : pct >= 80 ? 'warn' : '';
+
+  const mockEnrollees = [
+    { name:'Petros Nikolaou',  rank:'AB',        status:'Confirmed', compliance:'✓' },
+    { name:'Vasilis Katsaros', rank:'3rd Officer',status:'Confirmed', compliance:'✓' },
+    { name:'Ioannis Stefanou', rank:'2nd Officer',status:'Confirmed', compliance:'⚠' },
+    { name:'Stavros Raptis',   rank:'Bosun',      status:'Waitlist',  compliance:'✓' },
+  ].slice(0, Math.min(s.enrolled, 4));
+
+  document.getElementById('sdm-title').textContent = `📅 ${s.course}`;
+  document.getElementById('sdm-body').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+      <div style="background:var(--wima-navy);border:1px solid var(--wima-navy-border);border-radius:10px;padding:14px">
+        <div style="font-size:10px;color:var(--wima-muted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:10px">Session Info</div>
+        <div style="display:flex;flex-direction:column;gap:7px;font-size:13px">
+          <div style="display:flex;gap:8px"><span style="color:var(--wima-muted);width:80px">Center</span><span style="color:var(--wima-white)">${s.center}</span></div>
+          <div style="display:flex;gap:8px"><span style="color:var(--wima-muted);width:80px">Location</span><span style="color:var(--wima-white)">${s.room}</span></div>
+          <div style="display:flex;gap:8px"><span style="color:var(--wima-muted);width:80px">Start</span><span>${formatDateShort(s.start)}</span></div>
+          <div style="display:flex;gap:8px"><span style="color:var(--wima-muted);width:80px">End</span><span>${formatDateShort(s.end)}</span></div>
+          <div style="display:flex;gap:8px"><span style="color:var(--wima-muted);width:80px">Instructor</span><span>${s.instructor}</span></div>
+        </div>
+      </div>
+      <div style="background:var(--wima-navy);border:1px solid var(--wima-navy-border);border-radius:10px;padding:14px">
+        <div style="font-size:10px;color:var(--wima-muted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:10px">Capacity</div>
+        <div style="font-size:28px;font-weight:700;color:var(--wima-white);margin-bottom:4px">${s.enrolled}<span style="font-size:16px;color:var(--wima-muted);font-weight:400"> / ${s.capacity}</span></div>
+        <div class="seats-bar" style="width:100%;margin-bottom:8px"><div class="seats-fill ${barClass}" style="width:${Math.min(pct,100)}%"></div></div>
+        <div style="font-size:12px;color:var(--wima-muted)">${s.capacity - s.enrolled > 0 ? `${s.capacity - s.enrolled} seats available` : '<span style="color:var(--wima-red)">Session full — waitlist active</span>'}</div>
+      </div>
+    </div>
+    <div style="background:var(--wima-navy);border:1px solid var(--wima-navy-border);border-radius:10px;padding:14px">
+      <div style="font-size:10px;color:var(--wima-muted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:10px">Enrolled Seafarers</div>
+      <table class="wima-table" style="margin:0">
+        <thead><tr><th>Name</th><th>Rank</th><th>Status</th><th>Compliance</th></tr></thead>
+        <tbody>
+          ${mockEnrollees.map(e=>`
+            <tr>
+              <td style="color:var(--wima-white)">${e.name}</td>
+              <td><span class="badge badge-purple">${e.rank}</span></td>
+              <td><span class="badge ${e.status==='Confirmed'?'badge-green':'badge-orange'}">${e.status}</span></td>
+              <td style="font-size:16px">${e.compliance}</td>
+            </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+  document.getElementById('session-detail-modal').classList.add('open');
+}
+
+function closeSessionDetailModal() {
+  document.getElementById('session-detail-modal').classList.remove('open');
+}
+
+function openCreateSessionModal() {
+  // Set default dates
+  const today = new Date();
+  const pad = n => String(n).padStart(2,'0');
+  const todayStr = `${today.getFullYear()}-${pad(today.getMonth()+1)}-${pad(today.getDate())}`;
+  const endDate = new Date(today); endDate.setDate(endDate.getDate()+4);
+  const endStr = `${endDate.getFullYear()}-${pad(endDate.getMonth()+1)}-${pad(endDate.getDate())}`;
+  document.getElementById('ns-start').value = todayStr;
+  document.getElementById('ns-end').value = endStr;
+  document.getElementById('create-session-modal').classList.add('open');
+}
+
+function closeCreateSessionModal() {
+  document.getElementById('create-session-modal').classList.remove('open');
+}
+
+function doCreateSession() {
+  const course = document.getElementById('ns-course').value;
+  const center = document.getElementById('ns-center').value;
+  const capacity = parseInt(document.getElementById('ns-capacity').value) || 12;
+  const start = document.getElementById('ns-start').value;
+  const end = document.getElementById('ns-end').value;
+  const instructor = document.getElementById('ns-instructor').value;
+  const room = document.getElementById('ns-room').value || 'TBD';
+  const isPublic = document.getElementById('ns-visibility').value === 'public';
+
+  const newSession = {
+    id: CS_SESSIONS.length + 1,
+    course, center, start, end, capacity, enrolled: 0,
+    instructor, room, status:'scheduled',
+    type: center === 'Wima' ? 'internal' : 'external',
+    public: isPublic
+  };
+  CS_SESSIONS.push(newSession);
+
+  // Navigate calendar to the new session's month
+  const [y, m] = start.split('-');
+  csYear = parseInt(y); csMonth = parseInt(m) - 1;
+  closeCreateSessionModal();
+  csRender();
+
+  // Success toast
+  const banner = document.createElement('div');
+  banner.style.cssText = 'position:fixed;bottom:24px;right:24px;background:var(--wima-green);color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:600;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,0.3);animation:modalIn 0.2s ease';
+  banner.textContent = `✓ Session created: ${course}`;
+  document.body.appendChild(banner);
+  setTimeout(() => banner.remove(), 3000);
+}
+
+/* ─── Init calendar on first render ─── */
+(function() {
+  const origShowSection = showSection;
+  // Patch: after rendering courses section, init the calendar
+  const _showSection = window.showSection;
+})();
+
 function renderPlaceholder(icon, title, desc) {
   return `
     <div class="page-header"><div><div class="page-title">${icon} ${title}</div><div class="page-subtitle">${desc}</div></div></div>
@@ -1499,14 +2028,4 @@ function doAssign() {
   closeModal();
   // Show success feedback in current page
   const banner = document.createElement('div');
-  banner.style.cssText = 'position:fixed;top:80px;right:24px;background:var(--wima-green);color:white;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:600;z-index:999;box-shadow:0 8px 32px rgba(16,185,129,0.3);animation:modalIn 0.2s ease';
-  banner.textContent = `✓ Assigned to ${centerName}`;
-  document.body.appendChild(banner);
-  setTimeout(() => banner.remove(), 3000);
-}
-
-/* ── INIT ── */
-// Start on login page — no auto-redirect
-</script>
-</body>
-</html>
+  banner.style.cssText = 'posi
