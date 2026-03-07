@@ -39,9 +39,8 @@
     body { font-family: var(--font-main); background: var(--wima-navy); color: var(--wima-white); min-height: 100vh; overflow-x: hidden; }
 
     /* ── PAGE ROUTER ── */
-    .page { display: none; }
-    .page.active { display: flex; }
-    #page-login.active { display: flex; }
+    #page-login { display: flex; }
+    #page-app   { display: none; }
 
     /* ============================================================
        SHARED COMPONENTS
@@ -695,8 +694,8 @@ function doLogin() {
     document.getElementById('sidebar-role').textContent = currentUser.role;
     document.getElementById('sidebar-avatar').textContent = currentUser.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
     // Go to app
-    document.getElementById('page-login').classList.remove('active');
-    document.getElementById('page-app').classList.add('active');
+    document.getElementById('page-login').style.display = 'none';
+    document.getElementById('page-app').style.display = 'flex';
     showSection('dashboard');
   }, 1000);
 }
@@ -707,8 +706,8 @@ function showLoginError(msg) {
 }
 
 function doLogout() {
-  document.getElementById('page-app').classList.remove('active');
-  document.getElementById('page-login').classList.add('active');
+  document.getElementById('page-app').style.display = 'none';
+  document.getElementById('page-login').style.display = 'flex';
   document.getElementById('login-email').value = '';
   document.getElementById('login-pass').value = '';
   document.getElementById('login-error').classList.remove('visible');
