@@ -458,235 +458,8 @@
     .center-option-meta { font-size:11px; color:var(--wima-muted); margin-top:1px; }
     .center-option.selected .center-option-name { color:var(--wima-teal); }
   </style>
-</head>
-<body>
-
-<!-- ============================================================
-     PAGE: LOGIN
-============================================================ -->
-<div id="page-login">
-
-  <!-- Left branding -->
-  <div class="login-left">
-    <div class="login-brand">
-      <div class="login-logo">
-        <div class="login-logo-icon">W</div>
-        <div>
-          <div class="login-logo-name">WIMA ERP</div>
-          <div class="login-logo-sub">Training Management Platform</div>
-        </div>
-      </div>
-      <div class="login-headline">Nurturing Every<br><span>Seafarer's</span><br>Potential.</div>
-      <div class="login-desc">The central hub for managing maritime training requests, compliance tracking, certificates and career development.</div>
-    </div>
-    <div class="login-features">
-      <div class="login-feature"><div class="login-feature-dot"></div>OTR workflow — from request to certificate in one flow</div>
-      <div class="login-feature"><div class="login-feature-dot"></div>Compliance matrix per principal, vessel type & rank</div>
-      <div class="login-feature"><div class="login-feature-dot"></div>Automated expiry alerts & renewal scheduling</div>
-      <div class="login-feature"><div class="login-feature-dot"></div>Career development tracking & promotion readiness</div>
-      <div class="login-feature"><div class="login-feature-dot"></div>Multi-center routing — Wima, STI, Compass & more</div>
-    </div>
-    <div class="login-stats">
-      <div><div class="login-stat-num">248</div><div class="login-stat-lbl">Seafarers</div></div>
-      <div><div class="login-stat-num">1,340</div><div class="login-stat-lbl">Certificates</div></div>
-      <div><div class="login-stat-num">96%</div><div class="login-stat-lbl">Compliance</div></div>
-    </div>
-  </div>
-
-  <!-- Right form -->
-  <div class="login-right">
-    <div class="login-form-wrap">
-      <div class="login-title">Welcome back</div>
-      <div class="login-subtitle">Sign in to your WIMA ERP account</div>
-
-      <div class="role-selector">
-        <div class="role-btn selected" onclick="selectRole(this,'Training Administrator')">
-          <div class="role-btn-icon">🎓</div>
-          <span class="role-btn-name">Training Admin</span>
-          <span class="role-btn-desc">Charlene / Νίκη</span>
-        </div>
-        <div class="role-btn" onclick="selectRole(this,'Money Agent')">
-          <div class="role-btn-icon">🚢</div>
-          <span class="role-btn-name">Money Agent</span>
-          <span class="role-btn-desc">Crewing Manager</span>
-        </div>
-        <div class="role-btn" onclick="selectRole(this,'Instructor')">
-          <div class="role-btn-icon">📋</div>
-          <span class="role-btn-name">Instructor</span>
-          <span class="role-btn-desc">Teacher / Staff</span>
-        </div>
-        <div class="role-btn" onclick="selectRole(this,'System Admin')">
-          <div class="role-btn-icon">⚙️</div>
-          <span class="role-btn-name">System Admin</span>
-          <span class="role-btn-desc">Full access</span>
-        </div>
-      </div>
-
-      <div class="login-error" id="login-error"><span>⚠️</span><span id="login-error-text">Invalid credentials.</span></div>
-
-      <div class="field-group">
-        <label class="field-label">Email Address</label>
-        <div class="field-wrap">
-          <span class="field-icon">✉️</span>
-          <input type="email" class="field-input" id="login-email" placeholder="you@wimas.io" />
-        </div>
-      </div>
-      <div class="field-group">
-        <label class="field-label">Password</label>
-        <div class="field-wrap">
-          <span class="field-icon">🔒</span>
-          <input type="password" class="field-input" id="login-pass" placeholder="Enter your password" onkeydown="if(event.key==='Enter')doLogin()" />
-          <button class="toggle-pass" onclick="toggleLoginPass()">👁️</button>
-        </div>
-      </div>
-      <div class="form-options">
-        <label class="remember-wrap"><input type="checkbox" checked /> Remember me</label>
-        <span class="forgot-link">Forgot password?</span>
-      </div>
-
-      <button class="login-btn" id="login-btn" onclick="doLogin()">
-        <div class="btn-spinner" id="login-spinner"></div>
-        <span>Sign In →</span>
-      </button>
-
-      <div class="login-divider"><div class="login-divider-line"></div><span class="login-divider-text">demo accounts</span><div class="login-divider-line"></div></div>
-
-      <div class="demo-account" onclick="fillDemo('niki@wimas.io','Training Administrator')">
-        <span>🎓</span>
-        <div style="flex:1"><div class="demo-name">Νίκη Βαριά — Training Administrator</div><div class="demo-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="224c4b494b62554b4f43510c4b4d">[email&#160;protected]</a></div></div>
-        <span style="color:var(--wima-muted);font-size:12px">→</span>
-      </div>
-      <div class="demo-account" onclick="fillDemo('agent@shell.com','Money Agent')">
-        <span>🚢</span>
-        <div style="flex:1"><div class="demo-name">Shell Crewing — Money Agent</div><div class="demo-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="650402000b1125160d0009094b060a08">[email&#160;protected]</a></div></div>
-        <span style="color:var(--wima-muted);font-size:12px">→</span>
-      </div>
-      <div class="demo-account" onclick="fillDemo('admin@wimas.io','System Admin')">
-        <span>⚙️</span>
-        <div style="flex:1"><div class="demo-name">System Administrator</div><div class="demo-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a8c9ccc5c1c6e8dfc1c5c9db86c1c7">[email&#160;protected]</a></div></div>
-        <span style="color:var(--wima-muted);font-size:12px">→</span>
-      </div>
-    </div>
-    <div class="login-footer">© 2026 Wimas Training Center · <span style="cursor:pointer;color:var(--wima-teal)">Privacy Policy</span></div>
-  </div>
-</div>
-
-<!-- ============================================================
-     PAGE: MAIN APP (Sidebar + Header + Content)
-============================================================ -->
-<div id="page-app">
-  <div class="app-shell">
-
-    <!-- SIDEBAR -->
-    <aside class="sidebar" id="sidebar">
-      <div class="sidebar-logo">
-        <div class="logo-icon">W</div>
-        <div class="logo-text">
-          <div class="logo-name">WIMA ERP</div>
-          <div class="logo-tagline">Training Management</div>
-        </div>
-      </div>
-      <div class="collapse-btn" onclick="toggleSidebar()" id="collapse-btn">◀</div>
-      <nav class="sidebar-nav">
-        <div class="nav-section-label">Main</div>
-        <div class="nav-item active" id="nav-dashboard" onclick="showSection('dashboard')"><div class="nav-icon">⬛</div><span class="nav-label">Dashboard</span></div>
-        <div class="nav-item" id="nav-seafarers" onclick="showSection('seafarers')"><div class="nav-icon">⚓</div><span class="nav-label">Seafarers</span></div>
-        <div class="nav-item" id="nav-otrs" onclick="showSection('otrs')"><div class="nav-icon">📋</div><span class="nav-label">OTR Requests</span><span class="nav-badge">7</span></div>
-        <div class="nav-section-label">Training</div>
-        <div class="nav-item" id="nav-courses" onclick="showSection('courses')"><div class="nav-icon">📅</div><span class="nav-label">Course Schedule</span></div>
-        <div class="nav-item" id="nav-attendance" onclick="showSection('attendance')"><div class="nav-icon">✅</div><span class="nav-label">Attendance</span></div>
-        <div class="nav-item" id="nav-certificates" onclick="showSection('certificates')"><div class="nav-icon">🎓</div><span class="nav-label">Certificates</span></div>
-        <div class="nav-section-label">Management</div>
-        <div class="nav-item" id="nav-compliance" onclick="showSection('compliance')"><div class="nav-icon">🛡️</div><span class="nav-label">Compliance Matrix</span></div>
-        <div class="nav-item" id="nav-invoices" onclick="showSection('invoices')"><div class="nav-icon">💳</div><span class="nav-label">Invoices</span><span class="nav-badge">3</span></div>
-        <div class="nav-item" id="nav-reports" onclick="showSection('reports')"><div class="nav-icon">📊</div><span class="nav-label">Reports</span></div>
-        <div class="nav-section-label">Settings</div>
-        <div class="nav-item" id="nav-centers" onclick="showSection('centers')"><div class="nav-icon">🏢</div><span class="nav-label">Training Centers</span></div>
-        <div class="nav-item" id="nav-users" onclick="showSection('users')"><div class="nav-icon">👥</div><span class="nav-label">Users</span></div>
-      </nav>
-      <div class="sidebar-footer">
-        <div class="user-card">
-          <div class="avatar avatar-sm" id="sidebar-avatar" style="width:32px;height:32px;font-size:12px">TA</div>
-          <div class="user-info">
-            <div class="user-name" id="sidebar-name">Νίκη Βαριά</div>
-            <div class="user-role" id="sidebar-role">Training Administrator</div>
-          </div>
-        </div>
-      </div>
-    </aside>
-
-    <!-- MAIN AREA -->
-    <div class="main-area">
-      <header class="header">
-        <div class="header-breadcrumb" id="breadcrumb">
-          <span class="current">Dashboard</span>
-        </div>
-        <div class="search-wrap">
-          <span style="color:var(--wima-muted)">🔍</span>
-          <input type="text" placeholder="Search seafarers, OTRs, certificates…" />
-        </div>
-        <div class="header-right">
-          <div class="header-btn">🔔<span class="notif-dot"></span></div>
-          <div class="header-btn">⚙️</div>
-          <div class="header-btn" onclick="doLogout()" title="Logout">🚪</div>
-        </div>
-      </header>
-
-      <!-- SECTIONS -->
-      <div class="page-content" id="main-content">
-        <!-- injected by JS -->
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<!-- ── ASSIGN MODAL ── -->
-<div class="modal-overlay" id="assign-modal">
-  <div class="modal-box">
-    <div class="modal-header">
-      <span class="modal-title">🔀 Assign Training Center</span>
-      <button class="modal-close" onclick="closeModal()">✕</button>
-    </div>
-    <div class="modal-body">
-      <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;color:var(--wima-muted);margin-bottom:10px">Select Training Center</div>
-      <div id="center-options">
-        <div class="center-option selected" onclick="selectCenter(this)">
-          <div class="center-option-icon">🏫</div>
-          <div><div class="center-option-name">Wima Training Center</div><div class="center-option-meta">Internal · Piraeus · Available seats: 4</div></div>
-          <span class="badge badge-green" style="margin-left:auto">Internal</span>
-        </div>
-        <div class="center-option" onclick="selectCenter(this)">
-          <div class="center-option-icon">⚓</div>
-          <div><div class="center-option-name">STI Maritime Center</div><div class="center-option-meta">External · Piraeus · Available seats: 8</div></div>
-          <span class="badge badge-muted" style="margin-left:auto">External</span>
-        </div>
-        <div class="center-option" onclick="selectCenter(this)">
-          <div class="center-option-icon">🧭</div>
-          <div><div class="center-option-name">Compass Training Center</div><div class="center-option-meta">External · Athens · Available seats: 6</div></div>
-          <span class="badge badge-muted" style="margin-left:auto">External</span>
-        </div>
-      </div>
-      <div style="margin-top:14px">
-        <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;color:var(--wima-muted);margin-bottom:6px">Preferred Start Date</div>
-        <input type="date" class="select-input" value="2026-03-15" />
-      </div>
-      <div style="margin-top:12px">
-        <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;color:var(--wima-muted);margin-bottom:6px">Internal Notes (not visible to Money Agent)</div>
-        <textarea class="notes-area" placeholder="Add notes for the training center…"></textarea>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-      <button class="btn btn-primary" onclick="doAssign()">✓ Confirm Assignment</button>
-    </div>
-  </div>
-</div>
-
-<!-- ============================================================
-     JAVASCRIPT — Router + Pages
-============================================================ -->
 <script>
+document.addEventListener('DOMContentLoaded', function() {
 
 /* ── STATE ── */
 let currentSection = 'dashboard';
@@ -2026,6 +1799,242 @@ function doAssign() {
   const selected = document.querySelector('.center-option.selected .center-option-name');
   const centerName = selected ? selected.textContent : 'Wima Training Center';
   closeModal();
-  // Show success feedback in current page
+  // Show success feedback
   const banner = document.createElement('div');
-  banner.style.cssText = 'posi
+  banner.style.cssText = 'position:fixed;bottom:24px;right:24px;background:var(--wima-teal);color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:600;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,0.4);animation:modalIn 0.2s ease';
+  banner.textContent = '✓ Assigned to ' + centerName;
+  document.body.appendChild(banner);
+  setTimeout(() => banner.remove(), 3000);
+}
+});
+</script>
+</head>
+<body>
+
+<!-- ============================================================
+     PAGE: LOGIN
+============================================================ -->
+<div id="page-login">
+
+  <!-- Left branding -->
+  <div class="login-left">
+    <div class="login-brand">
+      <div class="login-logo">
+        <div class="login-logo-icon">W</div>
+        <div>
+          <div class="login-logo-name">WIMA ERP</div>
+          <div class="login-logo-sub">Training Management Platform</div>
+        </div>
+      </div>
+      <div class="login-headline">Nurturing Every<br><span>Seafarer's</span><br>Potential.</div>
+      <div class="login-desc">The central hub for managing maritime training requests, compliance tracking, certificates and career development.</div>
+    </div>
+    <div class="login-features">
+      <div class="login-feature"><div class="login-feature-dot"></div>OTR workflow — from request to certificate in one flow</div>
+      <div class="login-feature"><div class="login-feature-dot"></div>Compliance matrix per principal, vessel type & rank</div>
+      <div class="login-feature"><div class="login-feature-dot"></div>Automated expiry alerts & renewal scheduling</div>
+      <div class="login-feature"><div class="login-feature-dot"></div>Career development tracking & promotion readiness</div>
+      <div class="login-feature"><div class="login-feature-dot"></div>Multi-center routing — Wima, STI, Compass & more</div>
+    </div>
+    <div class="login-stats">
+      <div><div class="login-stat-num">248</div><div class="login-stat-lbl">Seafarers</div></div>
+      <div><div class="login-stat-num">1,340</div><div class="login-stat-lbl">Certificates</div></div>
+      <div><div class="login-stat-num">96%</div><div class="login-stat-lbl">Compliance</div></div>
+    </div>
+  </div>
+
+  <!-- Right form -->
+  <div class="login-right">
+    <div class="login-form-wrap">
+      <div class="login-title">Welcome back</div>
+      <div class="login-subtitle">Sign in to your WIMA ERP account</div>
+
+      <div class="role-selector">
+        <div class="role-btn selected" onclick="selectRole(this,'Training Administrator')">
+          <div class="role-btn-icon">🎓</div>
+          <span class="role-btn-name">Training Admin</span>
+          <span class="role-btn-desc">Charlene / Νίκη</span>
+        </div>
+        <div class="role-btn" onclick="selectRole(this,'Money Agent')">
+          <div class="role-btn-icon">🚢</div>
+          <span class="role-btn-name">Money Agent</span>
+          <span class="role-btn-desc">Crewing Manager</span>
+        </div>
+        <div class="role-btn" onclick="selectRole(this,'Instructor')">
+          <div class="role-btn-icon">📋</div>
+          <span class="role-btn-name">Instructor</span>
+          <span class="role-btn-desc">Teacher / Staff</span>
+        </div>
+        <div class="role-btn" onclick="selectRole(this,'System Admin')">
+          <div class="role-btn-icon">⚙️</div>
+          <span class="role-btn-name">System Admin</span>
+          <span class="role-btn-desc">Full access</span>
+        </div>
+      </div>
+
+      <div class="login-error" id="login-error"><span>⚠️</span><span id="login-error-text">Invalid credentials.</span></div>
+
+      <div class="field-group">
+        <label class="field-label">Email Address</label>
+        <div class="field-wrap">
+          <span class="field-icon">✉️</span>
+          <input type="email" class="field-input" id="login-email" placeholder="you@wimas.io" />
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Password</label>
+        <div class="field-wrap">
+          <span class="field-icon">🔒</span>
+          <input type="password" class="field-input" id="login-pass" placeholder="Enter your password" onkeydown="if(event.key==='Enter')doLogin()" />
+          <button class="toggle-pass" onclick="toggleLoginPass()">👁️</button>
+        </div>
+      </div>
+      <div class="form-options">
+        <label class="remember-wrap"><input type="checkbox" checked /> Remember me</label>
+        <span class="forgot-link">Forgot password?</span>
+      </div>
+
+      <button class="login-btn" id="login-btn" onclick="doLogin()">
+        <div class="btn-spinner" id="login-spinner"></div>
+        <span>Sign In →</span>
+      </button>
+
+      <div class="login-divider"><div class="login-divider-line"></div><span class="login-divider-text">demo accounts</span><div class="login-divider-line"></div></div>
+
+      <div class="demo-account" onclick="fillDemo('niki@wimas.io','Training Administrator')">
+        <span>🎓</span>
+        <div style="flex:1"><div class="demo-name">Νίκη Βαριά — Training Administrator</div><div class="demo-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="224c4b494b62554b4f43510c4b4d">[email&#160;protected]</a></div></div>
+        <span style="color:var(--wima-muted);font-size:12px">→</span>
+      </div>
+      <div class="demo-account" onclick="fillDemo('agent@shell.com','Money Agent')">
+        <span>🚢</span>
+        <div style="flex:1"><div class="demo-name">Shell Crewing — Money Agent</div><div class="demo-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="650402000b1125160d0009094b060a08">[email&#160;protected]</a></div></div>
+        <span style="color:var(--wima-muted);font-size:12px">→</span>
+      </div>
+      <div class="demo-account" onclick="fillDemo('admin@wimas.io','System Admin')">
+        <span>⚙️</span>
+        <div style="flex:1"><div class="demo-name">System Administrator</div><div class="demo-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a8c9ccc5c1c6e8dfc1c5c9db86c1c7">[email&#160;protected]</a></div></div>
+        <span style="color:var(--wima-muted);font-size:12px">→</span>
+      </div>
+    </div>
+    <div class="login-footer">© 2026 Wimas Training Center · <span style="cursor:pointer;color:var(--wima-teal)">Privacy Policy</span></div>
+  </div>
+</div>
+
+<!-- ============================================================
+     PAGE: MAIN APP (Sidebar + Header + Content)
+============================================================ -->
+<div id="page-app">
+  <div class="app-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon">W</div>
+        <div class="logo-text">
+          <div class="logo-name">WIMA ERP</div>
+          <div class="logo-tagline">Training Management</div>
+        </div>
+      </div>
+      <div class="collapse-btn" onclick="toggleSidebar()" id="collapse-btn">◀</div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">Main</div>
+        <div class="nav-item active" id="nav-dashboard" onclick="showSection('dashboard')"><div class="nav-icon">⬛</div><span class="nav-label">Dashboard</span></div>
+        <div class="nav-item" id="nav-seafarers" onclick="showSection('seafarers')"><div class="nav-icon">⚓</div><span class="nav-label">Seafarers</span></div>
+        <div class="nav-item" id="nav-otrs" onclick="showSection('otrs')"><div class="nav-icon">📋</div><span class="nav-label">OTR Requests</span><span class="nav-badge">7</span></div>
+        <div class="nav-section-label">Training</div>
+        <div class="nav-item" id="nav-courses" onclick="showSection('courses')"><div class="nav-icon">📅</div><span class="nav-label">Course Schedule</span></div>
+        <div class="nav-item" id="nav-attendance" onclick="showSection('attendance')"><div class="nav-icon">✅</div><span class="nav-label">Attendance</span></div>
+        <div class="nav-item" id="nav-certificates" onclick="showSection('certificates')"><div class="nav-icon">🎓</div><span class="nav-label">Certificates</span></div>
+        <div class="nav-section-label">Management</div>
+        <div class="nav-item" id="nav-compliance" onclick="showSection('compliance')"><div class="nav-icon">🛡️</div><span class="nav-label">Compliance Matrix</span></div>
+        <div class="nav-item" id="nav-invoices" onclick="showSection('invoices')"><div class="nav-icon">💳</div><span class="nav-label">Invoices</span><span class="nav-badge">3</span></div>
+        <div class="nav-item" id="nav-reports" onclick="showSection('reports')"><div class="nav-icon">📊</div><span class="nav-label">Reports</span></div>
+        <div class="nav-section-label">Settings</div>
+        <div class="nav-item" id="nav-centers" onclick="showSection('centers')"><div class="nav-icon">🏢</div><span class="nav-label">Training Centers</span></div>
+        <div class="nav-item" id="nav-users" onclick="showSection('users')"><div class="nav-icon">👥</div><span class="nav-label">Users</span></div>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-card">
+          <div class="avatar avatar-sm" id="sidebar-avatar" style="width:32px;height:32px;font-size:12px">TA</div>
+          <div class="user-info">
+            <div class="user-name" id="sidebar-name">Νίκη Βαριά</div>
+            <div class="user-role" id="sidebar-role">Training Administrator</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN AREA -->
+    <div class="main-area">
+      <header class="header">
+        <div class="header-breadcrumb" id="breadcrumb">
+          <span class="current">Dashboard</span>
+        </div>
+        <div class="search-wrap">
+          <span style="color:var(--wima-muted)">🔍</span>
+          <input type="text" placeholder="Search seafarers, OTRs, certificates…" />
+        </div>
+        <div class="header-right">
+          <div class="header-btn">🔔<span class="notif-dot"></span></div>
+          <div class="header-btn">⚙️</div>
+          <div class="header-btn" onclick="doLogout()" title="Logout">🚪</div>
+        </div>
+      </header>
+
+      <!-- SECTIONS -->
+      <div class="page-content" id="main-content">
+        <!-- injected by JS -->
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── ASSIGN MODAL ── -->
+<div class="modal-overlay" id="assign-modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title">🔀 Assign Training Center</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;color:var(--wima-muted);margin-bottom:10px">Select Training Center</div>
+      <div id="center-options">
+        <div class="center-option selected" onclick="selectCenter(this)">
+          <div class="center-option-icon">🏫</div>
+          <div><div class="center-option-name">Wima Training Center</div><div class="center-option-meta">Internal · Piraeus · Available seats: 4</div></div>
+          <span class="badge badge-green" style="margin-left:auto">Internal</span>
+        </div>
+        <div class="center-option" onclick="selectCenter(this)">
+          <div class="center-option-icon">⚓</div>
+          <div><div class="center-option-name">STI Maritime Center</div><div class="center-option-meta">External · Piraeus · Available seats: 8</div></div>
+          <span class="badge badge-muted" style="margin-left:auto">External</span>
+        </div>
+        <div class="center-option" onclick="selectCenter(this)">
+          <div class="center-option-icon">🧭</div>
+          <div><div class="center-option-name">Compass Training Center</div><div class="center-option-meta">External · Athens · Available seats: 6</div></div>
+          <span class="badge badge-muted" style="margin-left:auto">External</span>
+        </div>
+      </div>
+      <div style="margin-top:14px">
+        <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;color:var(--wima-muted);margin-bottom:6px">Preferred Start Date</div>
+        <input type="date" class="select-input" value="2026-03-15" />
+      </div>
+      <div style="margin-top:12px">
+        <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;color:var(--wima-muted);margin-bottom:6px">Internal Notes (not visible to Money Agent)</div>
+        <textarea class="notes-area" placeholder="Add notes for the training center…"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="doAssign()">✓ Confirm Assignment</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     JAVASCRIPT — Router + Pages
+============================================================ -->
+</body>
+</html>
