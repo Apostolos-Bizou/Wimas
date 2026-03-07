@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WIMA ERP — Training Management Platform</title>
+<title>Wimas ERP — Training Management Platform</title>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /* ============================================================
@@ -139,7 +139,8 @@ html, body { height: 100%; font-family: var(--font); background: var(--navy-900)
 .sidebar { width: var(--sidebar-w); min-width: var(--sidebar-w); background: var(--navy-800); border-right: 1px solid var(--navy-border); display: flex; flex-direction: column; height: 100vh; overflow-y: auto; scrollbar-width: none; flex-shrink: 0; }
 .sidebar::-webkit-scrollbar { display: none; }
 .sidebar-logo { height: var(--header-h); display: flex; align-items: center; padding: 0 18px; border-bottom: 1px solid var(--navy-border); gap: 10px; flex-shrink: 0; }
-.logo-icon { width: 32px; height: 32px; background: var(--teal); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; color: #fff; flex-shrink: 0; }
+.logo-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }
+.logo-icon img { width: 100%; height: 100%; object-fit: contain; }
 .logo-text  { font-size: 14px; font-weight: 700; letter-spacing: -.2px; }
 .logo-sub   { font-size: 9px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); margin-top: 1px; }
 .nav-section { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.4px; color: var(--muted); padding: 18px 18px 6px; }
@@ -268,9 +269,9 @@ html, body { height: 100%; font-family: var(--font); background: var(--navy-900)
 <div id="login">
   <div class="login-left">
     <div>
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:48px">
-        <div class="logo-icon">W</div>
-        <div><div class="logo-text">WIMA ERP</div><div class="logo-sub">Training Management</div></div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:48px">
+        <div class="logo-icon" style="width:40px;height:40px"><img src="https://images.squarespace-cdn.com/content/v1/67af36e5c9155f1209a959d6/1abe1fde-4bb1-4e18-bfa6-d24c43c35b28/Wimas+Logo+White-01.png" alt="Wimas"></div>
+        <div><div class="logo-text" style="font-size:18px">Wimas</div><div class="logo-sub">Training Management</div></div>
       </div>
       <div class="login-tagline">Nurturing Every<br><span>Seafarer's</span><br>Potential.</div>
       <div class="login-desc">The central platform for managing training requests, certificates, compliance and career development across your entire fleet.</div>
@@ -334,8 +335,8 @@ html, body { height: 100%; font-family: var(--font); background: var(--navy-900)
   <!-- Sidebar -->
   <nav class="sidebar" id="sidebar">
     <div class="sidebar-logo">
-      <div class="logo-icon">W</div>
-      <div><div class="logo-text">WIMA ERP</div><div class="logo-sub">Training Management</div></div>
+      <div class="logo-icon"><img src="https://images.squarespace-cdn.com/content/v1/67af36e5c9155f1209a959d6/1abe1fde-4bb1-4e18-bfa6-d24c43c35b28/Wimas+Logo+White-01.png" alt="Wimas"></div>
+      <div><div class="logo-text">Wimas</div><div class="logo-sub">Training Management</div></div>
     </div>
 
     <div id="nav-menu"></div>
