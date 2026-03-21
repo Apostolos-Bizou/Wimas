@@ -259,6 +259,24 @@ html, body { height: 100%; font-family: var(--font); background: var(--navy-900)
 .fs-11       { font-size: 11px; }
 .fs-12       { font-size: 12px; }
 .fs-13       { font-size: 13px; }
+
+/* ── New: Workflow, Medals ── */
+.wf-steps { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.wf-step { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; padding: 3px 8px; border-radius: 5px; background: var(--navy-600); color: var(--muted); border: 1px solid var(--navy-border); white-space: nowrap; }
+.wf-step.done { background: var(--green-glow); color: var(--green); border-color: rgba(16,185,129,.3); }
+.wf-step.active { background: var(--teal-glow); color: var(--teal); border-color: rgba(14,165,233,.3); }
+.wf-arrow { color: var(--navy-border); font-size: 10px; }
+.btn-success { background: var(--green-glow); color: var(--green); border: 1px solid rgba(16,185,129,.25); }
+.btn-success:hover { background: rgba(16,185,129,.18); }
+.btn-danger:hover { background: rgba(239,68,68,.18); }
+.modal-box-xl { width: 900px; }
+.rank-medal { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+.rank-medal.gold { background: linear-gradient(135deg,#fbbf24,#f59e0b); color: #451a03; }
+.rank-medal.silver { background: linear-gradient(135deg,#d1d5db,#9ca3af); color: #1f2937; }
+.rank-medal.bronze { background: linear-gradient(135deg,#f59e0b,#d97706); color: #451a03; }
+.rank-medal.normal { background: var(--navy-500); color: var(--muted-light); }
+.text-muted-light { color: var(--muted-light); }
+.fs-10 { font-size: 10px; } .fs-14 { font-size: 14px; } .fs-16 { font-size: 16px; }
 </style>
 </head>
 <body>
@@ -648,6 +666,63 @@ html, body { height: 100%; font-family: var(--font); background: var(--navy-900)
   </div>
 </div>
 
+
+<!-- Invoice Approval Modal -->
+<div class="modal-overlay" id="modal-inv-approve">
+  <div class="modal-box modal-box-lg">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-approve-title">Invoice Approval</span>
+      <button class="modal-close" onclick="closeModal('modal-inv-approve')">✕</button>
+    </div>
+    <div class="modal-body" id="modal-approve-body"></div>
+    <div class="modal-footer" id="modal-approve-footer"></div>
+  </div>
+</div>
+
+<!-- OTR Lifecycle Modal -->
+<div class="modal-overlay" id="modal-lifecycle">
+  <div class="modal-box modal-box-xl">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-lc-title">OTR Lifecycle</span>
+      <button class="modal-close" onclick="closeModal('modal-lifecycle')">✕</button>
+    </div>
+    <div class="modal-body" id="modal-lc-body"></div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('modal-lifecycle')">Close</button></div>
+  </div>
+</div>
+
+<!-- Duplicate Invoice Warning -->
+<div class="modal-overlay" id="modal-dup-warn">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title">Duplicate Invoice Warning</span>
+      <button class="modal-close" onclick="closeModal('modal-dup-warn')">✕</button>
+    </div>
+    <div class="modal-body" style="text-align:center;padding:24px">
+      <div style="font-size:48px;margin-bottom:12px">⚠️</div>
+      <div style="font-size:14px;font-weight:700;color:var(--orange);margin-bottom:8px">This certificate already has an invoice</div>
+      <div style="font-size:12px;color:var(--muted)" id="dup-detail"></div>
+      <div style="margin-top:16px;background:var(--red-glow);border:1px solid rgba(239,68,68,.2);border-radius:8px;padding:12px;font-size:12px;color:var(--red)">Duplicate invoicing blocked. Contact admin for override.</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-dup-warn')">Cancel</button>
+      <button class="btn btn-secondary" onclick="closeModal('modal-dup-warn');showToast('Override request sent','orange')">Request Override</button>
+    </div>
+  </div>
+</div>
+
+<!-- Audit Log Modal -->
+<div class="modal-overlay" id="modal-audit">
+  <div class="modal-box modal-box-lg">
+    <div class="modal-header">
+      <span class="modal-title">Audit Trail</span>
+      <button class="modal-close" onclick="closeModal('modal-audit')">✕</button>
+    </div>
+    <div class="modal-body" id="modal-audit-body"></div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('modal-audit')">Close</button></div>
+  </div>
+</div>
+
 <script>
 /* ============================================================
    WIMA ERP — Application Logic
@@ -673,10 +748,11 @@ var NAV_MENUS = {
     { section: 'TRAINING' },
     { id:'schedule',    label:'Course Schedule',   icon:'📅', badge:null },
     { id:'attendance',  label:'Attendance',        icon:'✅', badge:null },
-    { id:'certificates',label:'Certificates',      icon:'🎓', badge:null },
+    { id:'certinvoices',label:'Certs & Invoices',  icon:'🎓', badge:'3' },
     { section: 'MANAGEMENT' },
     { id:'compliance',  label:'Compliance Matrix', icon:'🛡', badge:null },
-    { id:'invoices',    label:'Invoices',          icon:'💳', badge:'3'  },
+    { id:'traceability',label:'OTR Traceability',  icon:'🔗', badge:null },
+    { id:'promotions',  label:'Promotions',        icon:'🚀', badge:null },
     { id:'reports',     label:'Reports',           icon:'📊', badge:null },
     { section: 'SETTINGS' },
     { id:'centers',     label:'Training Centers',  icon:'🏢', badge:null },
@@ -689,7 +765,7 @@ var NAV_MENUS = {
     { id:'seafarers',   label:'My Seafarers',      icon:'⚓', badge:null },
     { section: 'TRAINING' },
     { id:'schedule',    label:'Course Schedule',   icon:'📅', badge:null },
-    { id:'certificates',label:'Certificates',      icon:'🎓', badge:null },
+    { id:'certinvoices',label:'Certs & Invoices',  icon:'🎓', badge:null },
     { section: 'COMPLIANCE' },
     { id:'compliance',  label:'Compliance Report', icon:'🛡', badge:null },
   ],
@@ -701,6 +777,9 @@ var NAV_MENUS = {
     { section: 'MANAGEMENT' },
     { id:'seafarers',   label:'Seafarers',         icon:'⚓', badge:null },
     { id:'otrs',        label:'OTR Requests',      icon:'📋', badge:'7'  },
+    { id:'certinvoices',label:'Certs & Invoices',  icon:'🎓', badge:null },
+    { id:'traceability',label:'OTR Traceability',  icon:'🔗', badge:null },
+    { id:'promotions',  label:'Promotions',        icon:'🚀', badge:null },
     { id:'reports',     label:'Reports',           icon:'📊', badge:null },
   ]
 };
@@ -781,9 +860,12 @@ function showSection(id) {
     otrs:         renderOTRs,
     schedule:     renderSchedule,
     attendance:   renderAttendance,
-    certificates: renderCertificates,
+    certinvoices: renderCertInvoices,
+    certificates: renderCertInvoices,
+    invoices:     renderCertInvoices,
     compliance:   renderCompliance,
-    invoices:     renderInvoices,
+    traceability: renderTraceability,
+    promotions:   renderPromotions,
     reports:      renderReports,
     centers:      renderCenters,
     users:        renderUsers,
@@ -792,8 +874,8 @@ function showSection(id) {
 
   var labels = {
     dashboard:'Dashboard', seafarers:'Seafarers', otrs:'OTR Requests',
-    schedule:'Course Schedule', attendance:'Attendance & Grades', certificates:'Certificates',
-    compliance:'Compliance Matrix', invoices:'Invoices', reports:'Reports',
+    schedule:'Course Schedule', attendance:'Attendance & Grades', certinvoices:'Certificates & Invoices',
+    compliance:'Compliance Matrix', traceability:'OTR Traceability', promotions:'Promotions & Rankings', reports:'Reports',
     centers:'Training Centers', users:'Users', settings:'Settings'
   };
 
@@ -894,11 +976,31 @@ var DATA = {
     { id:'CERT-2026-0834', seafarer:'Thanasis Pappas',  course:'Bridge Resource Mgmt', center:'Wima',     issued:'28 Jan 2026', expiry:'28 Jan 2031', status:'valid'    },
   ],
   invoices: [
-    { id:'INV-2026-0084', agent:'Aegean Crew Mgmt',    principal:'Shell',     date:'01 Mar 2026', due:'31 Mar 2026', total:5626, status:'sent'    },
-    { id:'INV-2026-0083', agent:'Maritime Partners',   principal:'Pioneer',   date:'25 Feb 2026', due:'25 Mar 2026', total:2784, status:'paid'    },
-    { id:'INV-2026-0082', agent:'Crossover Shipping',  principal:'Crossover', date:'20 Feb 2026', due:'20 Mar 2026', total:3712, status:'overdue' },
-    { id:'INV-2026-0081', agent:'Aegean Crew Mgmt',    principal:'Shell',     date:'15 Feb 2026', due:'15 Mar 2026', total:1856, status:'paid'    },
-    { id:'INV-2026-0080', agent:'Global Marine',       principal:'Crossover', date:'10 Feb 2026', due:'10 Mar 2026', total:1102, status:'draft'   },
+    { id:'INV-2026-0084', agent:'Aegean Crew Mgmt',   principal:'Shell',     date:'01 Mar 2026', due:'31 Mar 2026', total:5626, status:'sent',    wf:'issued', approver:'Niki Varia', appAt:'01 Mar 14:20' },
+    { id:'INV-2026-0083', agent:'Maritime Partners',   principal:'Pioneer',   date:'25 Feb 2026', due:'25 Mar 2026', total:2784, status:'paid',    wf:'issued', approver:'Niki Varia', appAt:'25 Feb 10:00' },
+    { id:'INV-2026-0082', agent:'Crossover Shipping',  principal:'Crossover', date:'20 Feb 2026', due:'20 Mar 2026', total:3712, status:'overdue', wf:'issued', approver:'Niki Varia', appAt:'20 Feb 09:45' },
+    { id:'INV-2026-0081', agent:'Aegean Crew Mgmt',    principal:'Shell',     date:'15 Feb 2026', due:'15 Mar 2026', total:1856, status:'paid',    wf:'issued', approver:'Niki Varia', appAt:'15 Feb 11:30' },
+    { id:'INV-2026-0080', agent:'Global Marine',       principal:'Crossover', date:'10 Feb 2026', due:'10 Mar 2026', total:1102, status:'draft',   wf:'draft',  approver:null, appAt:null },
+    { id:'INV-2026-0085', agent:'Aegean Crew Mgmt',    principal:'Shell',     date:'07 Mar 2026', due:'07 Apr 2026', total:3200, status:'pending', wf:'ready_for_approval', approver:null, appAt:null },
+  ],
+  ciLinks: [
+    {c:'CERT-2026-0841',i:'INV-2026-0084'},{c:'CERT-2026-0839',i:'INV-2026-0084'},
+    {c:'CERT-2026-0838',i:'INV-2026-0083'},{c:'CERT-2026-0835',i:'INV-2026-0082'},
+    {c:'CERT-2026-0834',i:'INV-2026-0081'},
+  ],
+  otrLC: {
+    'OTR-2026-0151':{att:'100%',cert:'CERT-2026-0837',inv:'INV-2026-0083'},
+    'OTR-2026-0149':{att:'100%',cert:'CERT-2026-0836',inv:'INV-2026-0082'},
+  },
+  promo: [
+    {n:'Nikos Drakos',     r:'2nd Officer',   t:'Chief Officer', d:18,tt:20,md:9, mt:10,cp:95, ok:true },
+    {n:'Vasilis Katsaros', r:'3rd Officer',   t:'2nd Officer',   d:15,tt:16,md:8, mt:8, cp:100,ok:true },
+    {n:'Maria Papadaki',   r:'AB',            t:'3rd Officer',   d:14,tt:15,md:7, mt:8, cp:95, ok:true },
+    {n:'Petros Nikolaou',  r:'AB',            t:'3rd Officer',   d:12,tt:15,md:6, mt:8, cp:85, ok:false},
+    {n:'Elena Voulgari',   r:'3rd Officer',   t:'2nd Officer',   d:11,tt:16,md:7, mt:8, cp:100,ok:false},
+    {n:'Ioannis Stefanou', r:'2nd Officer',   t:'Chief Officer', d:9, tt:20,md:5, mt:10,cp:72, ok:false},
+    {n:'Stavros Hatzis',   r:'Chief Officer', t:'Captain',       d:8, tt:22,md:4, mt:12,cp:68, ok:false},
+    {n:'Thanasis Pappas',  r:'2nd Officer',   t:'Chief Officer', d:7, tt:20,md:4, mt:10,cp:80, ok:false},
   ],
   sessions: [
     { id:1, course:'STCW Basic Safety Training', center:'Wima',    instructor:'K. Papadopoulos', start:'2026-03-07', end:'2026-03-11', capacity:12, enrolled:8,  room:'Room A',    status:'ongoing',   pub:true  },
@@ -930,7 +1032,7 @@ function renderDashboard() {
     '<div class="stat-card teal"><div class="stat-icon teal">📋</div><div class="stat-val text-teal">24</div><div class="stat-label">Active OTRs</div><div class="stat-delta up">↑ 4 this week</div></div>' +
     '<div class="stat-card green"><div class="stat-icon green">🎓</div><div class="stat-val text-green">138</div><div class="stat-label">Certificates Issued</div><div class="stat-delta up">↑ 12 this month</div></div>' +
     '<div class="stat-card orange"><div class="stat-icon orange">⚠️</div><div class="stat-val text-orange">17</div><div class="stat-label">Expiring (30 days)</div><div class="stat-delta warn">⚠ Action needed</div></div>' +
-    '<div class="stat-card teal"><div class="stat-icon teal">📅</div><div class="stat-val text-teal">6</div><div class="stat-label">Courses Today</div><div class="stat-delta up">3 internal · 3 ext.</div></div>' +
+    '<div class="stat-card purple"><div class="stat-icon purple">✅</div><div class="stat-val" style="color:var(--purple)">'+DATA.invoices.filter(function(i){return i.wf==="ready_for_approval";}).length+'</div><div class="stat-label">Pending Approval</div></div>' +
     '</div>' +
 
     '<div class="grid-3-1">' +
@@ -1287,7 +1389,9 @@ function renderOTRTable(otrs) {
         '<td class="fs-12 text-muted" style="max-width:180px">' + o.courses + '</td>' +
         '<td class="text-mono fs-11">' + o.date + '</td>' +
         '<td><span class="badge ' + statusBadge + '">' + o.status + '</span></td>' +
-        '<td><button class="btn btn-ghost btn-sm" onclick="openOTRDetail(\'' + o.num + '\',\'' + o.seafarer + '\',\'' + o.principal + '\',\'' + o.courses.replace(/'/g,"\\'") + '\')">View →</button></td>' +
+        '<td><div style="display:flex;gap:4px"><button class="btn btn-ghost btn-sm" onclick="openOTRDetail(\'' + o.num + '\',\'' + o.seafarer + '\',\'' + o.principal + '\',\'' + o.courses.replace(/'/g,"\\'") + '\')">View →</button>' +
+        (DATA.otrLC[o.num] ? '<button class="btn btn-ghost btn-sm" onclick="openLifecycle(\'' + o.num + '\')">🔗</button>' : '') +
+        '</div></td>' +
         '</tr>';
     }).join('') +
     '</tbody></table>';
@@ -1453,57 +1557,123 @@ function renderAttendance() {
 }
 
 /* ─────────────────────────────────────────────
-   CERTIFICATES
+   EPIC 1: UNIFIED CERTS & INVOICES (US1-US4)
 ───────────────────────────────────────────── */
-function renderCertificates() {
-  var statusCounts = { valid:0, expiring:0, expired:0 };
-  DATA.certs.forEach(function(c){ statusCounts[c.status]++; });
+function renderWF(wf){var s=["Draft","Ready for Approval","Approved","Issued"],x=wf==="draft"?0:wf==="ready_for_approval"?1:wf==="approved"?2:3;return '<div class="wf-steps">'+s.map(function(t,i){var cl=i<x?"done":i===x?"active":"";return(i>0?'<span class="wf-arrow">\u2192</span>':"")+('<span class="wf-step '+cl+'">'+(i<x?"\u2713 ":"")+t+"</span>");}).join("")+"</div>";}
 
-  return '<div class="page-header">' +
-    '<div><div class="page-title">🎓 Certificates</div>' +
-    '<div class="page-subtitle">View, download and manage all issued certificates</div></div>' +
-    '<div class="page-actions">' +
-    '<button class="btn btn-secondary" onclick="openModal(\'modal-upload-cert\')">📤 Upload External</button>' +
-    '<button class="btn btn-primary" onclick="showToast(\'Manual certificate issue — coming next sprint\',\'teal\')">🎓 Issue Certificate</button>' +
-    '</div></div>' +
+function checkDup(cid){var lk=DATA.ciLinks.find(function(l){return l.c===cid;});if(lk){document.getElementById("dup-detail").textContent="Certificate "+cid+" is already linked to "+lk.i;openModal("modal-dup-warn");return true;}return false;}
 
-    '<div class="stat-grid">' +
-    '<div class="stat-card green"><div class="stat-icon green">🎓</div><div class="stat-val text-green">138</div><div class="stat-label">Total Issued</div><div class="stat-delta up">↑ 12 this month</div></div>' +
-    '<div class="stat-card teal"><div class="stat-icon teal">✅</div><div class="stat-val text-teal">119</div><div class="stat-label">Currently Valid</div></div>' +
-    '<div class="stat-card orange"><div class="stat-icon orange">⚠️</div><div class="stat-val text-orange">11</div><div class="stat-label">Expiring (90 days)</div></div>' +
-    '<div class="stat-card red"><div class="stat-icon red">❌</div><div class="stat-val text-red">8</div><div class="stat-label">Expired</div></div>' +
-    '</div>' +
+function openApproval(iid){
+  var inv=DATA.invoices.find(function(x){return x.id===iid;});if(!inv)return;
+  document.getElementById("modal-approve-title").textContent="Approve "+inv.id;
+  var lks=DATA.ciLinks.filter(function(l){return l.i===inv.id;});
+  document.getElementById("modal-approve-body").innerHTML=
+    "<div style=\"background:var(--navy-800);border:1px solid var(--navy-border);border-radius:8px;padding:16px;margin-bottom:16px\">"+
+    "<div style=\"display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px\">"+
+    "<div><div class=\"fs-10 text-muted\">INVOICE</div><div class=\"fs-14 fw-700 text-teal\">"+inv.id+"</div></div>"+
+    "<div><div class=\"fs-10 text-muted\">AGENT</div><div class=\"fs-13 fw-600 text-white\">"+inv.agent+"</div></div>"+
+    "<div><div class=\"fs-10 text-muted\">AMOUNT</div><div class=\"fs-14 fw-700 text-white\">\u20ac"+inv.total.toLocaleString()+"</div></div></div></div>"+
+    "<div class=\"fs-11 fw-600 text-muted\" style=\"margin-bottom:8px\">LINKED CERTIFICATES ("+lks.length+")</div>"+
+    "<table class=\"tbl\"><thead><tr><th>Cert</th><th>Seafarer</th><th>Course</th></tr></thead><tbody>"+
+    lks.map(function(l){var cc=DATA.certs.find(function(x){return x.id===l.c;});return cc?"<tr><td class=\"text-mono fs-11 text-teal\">"+cc.id+"</td><td class=\"fw-600 text-white\">"+cc.seafarer+"</td><td class=\"fs-12\">"+cc.course+"</td></tr>":"";}).join("")+
+    "</tbody></table>";
+  document.getElementById("modal-approve-footer").innerHTML=inv.wf==="issued"?
+    "<button class=\"btn btn-ghost\" onclick=\"closeModal(\'modal-inv-approve\')\">Close</button><span class=\"badge badge-green\" style=\"padding:8px 14px\">Already Issued</span>":
+    "<button class=\"btn btn-ghost\" onclick=\"closeModal(\'modal-inv-approve\')\">Cancel</button>"+
+    "<button class=\"btn btn-danger\" onclick=\"closeModal(\'modal-inv-approve\');showToast(\'Rejected\',\'orange\')\">Reject</button>"+
+    "<button class=\"btn btn-primary\" onclick=\"closeModal(\'modal-inv-approve\');showToast(\'Approved & Issued\',\'green\')\">Approve</button>";
+  openModal("modal-inv-approve");
+}
 
-    '<div class="card">' +
-    '<div class="card-header"><span class="card-title">📋 Certificate Registry</span>' +
-    '<div style="display:flex;gap:6px">' +
-    ['All','valid','expiring','expired'].map(function(f){
-      return '<button class="btn ' + (f==='All'?'btn-primary':'btn-ghost') + ' btn-sm">' + (f==='All'?'All':f.charAt(0).toUpperCase()+f.slice(1)) + '</button>';
-    }).join('') +
-    '</div></div>' +
-    '<table class="tbl"><thead><tr><th>Certificate No.</th><th>Seafarer</th><th>Course</th><th>Center</th><th>Issued</th><th>Expires</th><th>Status</th><th></th></tr></thead><tbody>' +
-    DATA.certs.map(function(c) {
-      return '<tr>' +
-        '<td class="text-mono fs-11 text-teal">' + c.id + '</td>' +
-        '<td class="fw-600 text-white fs-13">' + c.seafarer + '</td>' +
-        '<td class="fs-12">' + c.course + '</td>' +
-        '<td class="fs-12 text-muted">' + c.center + '</td>' +
-        '<td class="text-mono fs-11">' + c.issued + '</td>' +
-        '<td class="text-mono fs-11" style="color:' + (c.status==='expired'?'var(--red)':c.status==='expiring'?'var(--orange)':'inherit') + '">' + c.expiry + '</td>' +
-        '<td><span class="badge ' + (c.status==='valid'?'badge-green':c.status==='expiring'?'badge-orange':'badge-red') + '">' + c.status + '</span></td>' +
-        '<td style="display:flex;gap:4px">' +
-        '<button class="btn btn-ghost btn-sm" onclick="showToast(\'Downloading PDF...\',\'teal\')">PDF ↓</button>' +
-        (c.status!=='valid'?'<button class="btn btn-primary btn-sm" onclick="openModal(\'modal-create-otr\')">+ OTR</button>':'') +
-        '</td></tr>';
-    }).join('') +
-    '</tbody></table></div>';
+function openAuditLog(id){
+  var logs=[{t:"07 Mar 09:15",u:"Charlene Wima",f:"status",fr:"draft",to:"ready_for_approval"},{t:"07 Mar 10:00",u:"Charlene Wima",f:"amount",fr:"\u20ac2,800",to:"\u20ac3,200"},{t:"07 Mar 14:20",u:"Niki Varia",f:"status",fr:"ready_for_approval",to:"approved"}];
+  document.getElementById("modal-audit-body").innerHTML=
+    "<div class=\"fs-12 text-muted\" style=\"margin-bottom:12px\">Audit for <span class=\"text-teal fw-600\">"+id+"</span></div>"+
+    "<table class=\"tbl\"><thead><tr><th>Time</th><th>User</th><th>Field</th><th>From</th><th>To</th></tr></thead><tbody>"+
+    logs.map(function(l){return "<tr><td class=\"text-mono fs-10\">"+l.t+"</td><td class=\"fw-600 text-white fs-12\">"+l.u+"</td><td><span class=\"badge badge-teal fs-10\">"+l.f+"</span></td><td class=\"fs-11 text-muted\">"+l.fr+"</td><td class=\"fs-11 fw-600 text-white\">"+l.to+"</td></tr>";}).join("")+
+    "</tbody></table>";
+  openModal("modal-audit");
+}
+
+function renderCertInvoices(){
+  var notI=DATA.certs.filter(function(c){return !DATA.ciLinks.find(function(l){return l.c===c.id;});}).length;
+  var pApp=DATA.invoices.filter(function(i){return i.wf==="ready_for_approval";}).length;
+  return '<div class="page-header"><div><div class="page-title">\uD83C\uDF93 Certificates & Invoices</div>'+
+    '<div class="page-subtitle">Unified view \u2014 manage certificates, invoicing and approval workflow</div></div>'+
+    '<div class="page-actions">'+
+    '<button class="btn btn-secondary" onclick="openModal(\'modal-upload-cert\')">Upload External</button>'+
+    '<button class="btn btn-primary" onclick="showToast(\'Select certificates to invoice\',\'teal\')">+ New Invoice</button></div></div>'+
+    '<div class="stat-grid">'+
+    '<div class="stat-card green"><div class="stat-icon green">\uD83C\uDF93</div><div class="stat-val text-green">'+DATA.certs.length+'</div><div class="stat-label">Total Certs</div></div>'+
+    '<div class="stat-card teal"><div class="stat-icon teal">\uD83D\uDCB3</div><div class="stat-val text-teal">'+DATA.invoices.length+'</div><div class="stat-label">Total Invoices</div></div>'+
+    '<div class="stat-card orange"><div class="stat-icon orange">\u26A0\uFE0F</div><div class="stat-val text-orange">'+notI+'</div><div class="stat-label">Not Invoiced</div></div>'+
+    '<div class="stat-card purple"><div class="stat-icon purple">\u2705</div><div class="stat-val" style="color:var(--purple)">'+pApp+'</div><div class="stat-label">Pending Approval</div></div></div>'+
+    '<div class="tabs" style="margin-bottom:0">'+
+    '<div class="tab active" id="ci-tab-certs" onclick="ciTab(\'certs\')">Cert Registry</div>'+
+    '<div class="tab" id="ci-tab-inv" onclick="ciTab(\'inv\')">Invoice Workflow</div>'+
+    '<div class="tab" id="ci-tab-appr" onclick="ciTab(\'appr\')">Pending Approvals</div></div>'+
+    '<div id="ci-content" style="margin-top:16px">'+renderCICerts()+'</div>';
+}
+
+function ciTab(t){document.querySelectorAll(".tab").forEach(function(x){x.classList.remove("active");});var el=document.getElementById("ci-tab-"+t);if(el)el.classList.add("active");document.getElementById("ci-content").innerHTML=({certs:renderCICerts,inv:renderCIInv,appr:renderCIAppr}[t]||renderCICerts)();}
+
+function renderCICerts(){
+  return '<div class="card"><div class="card-header"><span class="card-title">Certificate Registry with Invoice Status</span></div>'+
+    '<table class="tbl"><thead><tr><th>Cert No.</th><th>Seafarer</th><th>Course</th><th>Issued</th><th>Expires</th><th>Cert Status</th><th>Inv Status</th><th>Invoice</th><th></th></tr></thead><tbody>'+
+    DATA.certs.map(function(c){
+      var lk=DATA.ciLinks.find(function(l){return l.c===c.id;});
+      var iS=lk?"Invoiced":"Not invoiced";var iB=lk?"badge-green":"badge-orange";
+      return '<tr><td class="text-mono fs-11 text-teal">'+c.id+'</td>'+
+        '<td class="fw-600 text-white fs-13">'+c.seafarer+'</td><td class="fs-12">'+c.course+'</td>'+
+        '<td class="text-mono fs-11">'+c.issued+'</td>'+
+        '<td class="text-mono fs-11" style="color:'+(c.status==="expired"?"var(--red)":c.status==="expiring"?"var(--orange)":"inherit")+'">'+c.expiry+'</td>'+
+        '<td><span class="badge '+(c.status==="valid"?"badge-green":c.status==="expiring"?"badge-orange":"badge-red")+'">'+c.status+'</span></td>'+
+        '<td><span class="badge '+iB+'">'+iS+'</span></td>'+
+        '<td class="text-mono fs-11">'+(lk?'<span class="text-teal">'+lk.i+'</span>':'<span class="text-muted">\u2014</span>')+'</td>'+
+        '<td><div style="display:flex;gap:4px">'+
+        '<button class="btn btn-ghost btn-sm" onclick="showToast(\'PDF downloading\',\'teal\')">PDF</button>'+
+        '<button class="btn btn-ghost btn-sm" onclick="openAuditLog(\''+c.id+'\')">📋</button>'+
+        (!lk?'<button class="btn btn-primary btn-sm" onclick="if(!checkDup(\''+c.id+'\'))showToast(\'Added to draft\',\'green\')">+ Inv</button>':'<button class="btn btn-ghost btn-sm" onclick="checkDup(\''+c.id+'\')" title="Already invoiced">🔒</button>')+
+        '</div></td></tr>';
+    }).join('')+'</tbody></table></div>';
+}
+
+function renderCIInv(){
+  return '<div class="card"><div class="card-header"><span class="card-title">Invoice Workflow</span></div>'+
+    '<table class="tbl"><thead><tr><th>Invoice</th><th>Agent</th><th>Date</th><th>Amount</th><th>Workflow</th><th>Approver</th><th>Payment</th><th></th></tr></thead><tbody>'+
+    DATA.invoices.map(function(inv){
+      var ed=inv.wf==="draft"||inv.wf==="ready_for_approval";
+      var pB=inv.status==="paid"?"badge-green":inv.status==="sent"?"badge-teal":inv.status==="overdue"?"badge-red":inv.status==="pending"?"badge-orange":"badge-muted";
+      return '<tr><td class="text-mono fs-11 text-teal">'+inv.id+'</td>'+
+        '<td><div class="fs-13 fw-600 text-white">'+inv.agent+'</div><div class="fs-11 text-muted">'+inv.principal+'</div></td>'+
+        '<td class="text-mono fs-11">'+inv.date+'</td>'+
+        '<td class="fw-700 text-white">\u20ac'+inv.total.toLocaleString()+'</td>'+
+        '<td>'+renderWF(inv.wf)+'</td>'+
+        '<td>'+(inv.approver?'<div class="fs-11 fw-600 text-green">'+inv.approver+'</div><div class="fs-10 text-muted">'+inv.appAt+'</div>':'<span class="fs-11 text-muted">\u2014</span>')+'</td>'+
+        '<td><span class="badge '+pB+'">'+inv.status+'</span></td>'+
+        '<td><div style="display:flex;gap:4px">'+
+        (ed?'<button class="btn btn-ghost btn-sm" onclick="showToast(\'Edit mode\',\'teal\')" title="Editable">✏️</button>':'<button class="btn btn-ghost btn-sm" style="opacity:.4" title="Locked">🔒</button>')+
+        '<button class="btn btn-ghost btn-sm" onclick="openAuditLog(\''+inv.id+'\')">📋</button>'+
+        (inv.wf==="ready_for_approval"?'<button class="btn btn-success btn-sm" onclick="openApproval(\''+inv.id+'\')">✅ Approve</button>':'')+
+        (inv.wf==="issued"?'<button class="btn btn-ghost btn-sm" onclick="showToast(\'PDF\',\'teal\')">PDF</button>':'')+
+        '</div></td></tr>';
+    }).join('')+'</tbody></table></div>';
+}
+
+function renderCIAppr(){
+  var p=DATA.invoices.filter(function(i){return i.wf==="ready_for_approval";});
+  if(!p.length)return '<div class="card"><div class="card-body"><div class="empty-state"><div class="empty-state-icon">✅</div><div class="empty-state-text">No pending approvals</div></div></div></div>';
+  return '<div style="padding:14px 18px;border-radius:var(--radius);background:var(--orange-glow);border:1px solid rgba(245,158,11,.25);display:flex;align-items:center;gap:12px;margin-bottom:16px"><span style="font-size:24px">⏳</span><div><div style="font-size:14px;font-weight:700;color:var(--orange)">'+p.length+' invoice(s) awaiting approval</div><div class="fs-12 text-muted">Cannot be issued until approved</div></div></div>'+
+    p.map(function(inv){return '<div class="card section-mb"><div class="card-header"><div style="display:flex;align-items:center;gap:12px"><span class="text-mono fs-13 text-teal fw-700">'+inv.id+'</span>'+renderWF(inv.wf)+'</div><button class="btn btn-primary btn-sm" onclick="openApproval(\''+inv.id+'\')">✅ Approve</button></div><div class="card-body"><div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px"><div><div class="fs-10 text-muted">AGENT</div><div class="fs-13 fw-600 text-white">'+inv.agent+'</div></div><div><div class="fs-10 text-muted">PRINCIPAL</div><div class="fs-13">'+inv.principal+'</div></div><div><div class="fs-10 text-muted">AMOUNT</div><div style="font-size:14px;font-weight:700;color:var(--teal)">\u20ac'+inv.total.toLocaleString()+'</div></div><div><div class="fs-10 text-muted">DUE</div><div class="fs-13 text-orange">'+inv.due+'</div></div></div></div></div>';}).join('');
 }
 
 /* ─────────────────────────────────────────────
    COMPLIANCE MATRIX
 ───────────────────────────────────────────── */
-function renderCompliance() {
-  var matrix = [
+var compliancePrincipal = 'Shell';
+
+var COMPLIANCE_DATA = {
+  'Shell': [
     {course:'STCW BST',             freq:'5yr',    last:'Jan 2026', expiry:'Jan 2031', status:'valid'},
     {course:'GMDSS GOC',            freq:'5yr',    last:'Mar 2021', expiry:'Mar 2026', status:'expiring'},
     {course:'ECDIS Type Specific',  freq:'5yr',    last:'Jun 2024', expiry:'Jun 2029', status:'valid'},
@@ -1511,30 +1681,57 @@ function renderCompliance() {
     {course:'Bridge Resource Mgmt', freq:'5yr',    last:'Jan 2024', expiry:'Jan 2029', status:'valid'},
     {course:'Shell HSSE Induction', freq:'Annual', last:'Jan 2026', expiry:'Jan 2027', status:'valid'},
     {course:'Crowd & Crisis Mgmt',  freq:'5yr',    last:'Feb 2025', expiry:'Feb 2030', status:'valid'},
-    {course:'High Voltage Safety',  freq:'5yr',    last:'—',        expiry:'—',        status:'missing'},
-  ];
+    {course:'High Voltage Safety',  freq:'5yr',    last:'\u2014',   expiry:'\u2014',   status:'missing'},
+  ],
+  'Pioneer': [
+    {course:'STCW BST',             freq:'5yr',    last:'Nov 2024', expiry:'Nov 2029', status:'valid'},
+    {course:'GMDSS GOC',            freq:'5yr',    last:'Jun 2023', expiry:'Jun 2028', status:'valid'},
+    {course:'ECDIS Type Specific',  freq:'5yr',    last:'Feb 2025', expiry:'Feb 2030', status:'valid'},
+    {course:'Medical First Aid',    freq:'2yr',    last:'Mar 2024', expiry:'Mar 2026', status:'expiring'},
+    {course:'Bridge Resource Mgmt', freq:'5yr',    last:'Aug 2023', expiry:'Aug 2028', status:'valid'},
+    {course:'Oil Tanker Familiarization',freq:'5yr',last:'Jan 2025',expiry:'Jan 2030', status:'valid'},
+    {course:'Crowd & Crisis Mgmt',  freq:'5yr',    last:'\u2014',   expiry:'\u2014',   status:'missing'},
+  ],
+  'Crossover': [
+    {course:'STCW BST',             freq:'5yr',    last:'May 2022', expiry:'May 2027', status:'valid'},
+    {course:'GMDSS GOC',            freq:'5yr',    last:'Sep 2021', expiry:'Sep 2026', status:'expiring'},
+    {course:'ECDIS Type Specific',  freq:'5yr',    last:'\u2014',   expiry:'\u2014',   status:'missing'},
+    {course:'Medical First Aid',    freq:'2yr',    last:'Jan 2025', expiry:'Jan 2027', status:'valid'},
+    {course:'Bridge Resource Mgmt', freq:'5yr',    last:'Jul 2024', expiry:'Jul 2029', status:'valid'},
+    {course:'Crowd & Crisis Mgmt',  freq:'5yr',    last:'Apr 2023', expiry:'Apr 2028', status:'valid'},
+    {course:'Advanced Firefighting',freq:'5yr',    last:'Dec 2020', expiry:'Dec 2025', status:'expired'},
+  ],
+  'Global Marine': [
+    {course:'STCW BST',             freq:'5yr',    last:'Mar 2025', expiry:'Mar 2030', status:'valid'},
+    {course:'GMDSS GOC',            freq:'5yr',    last:'Jan 2025', expiry:'Jan 2030', status:'valid'},
+    {course:'ECDIS Type Specific',  freq:'5yr',    last:'Oct 2024', expiry:'Oct 2029', status:'valid'},
+    {course:'Medical First Aid',    freq:'2yr',    last:'Feb 2025', expiry:'Feb 2027', status:'valid'},
+    {course:'Bridge Resource Mgmt', freq:'5yr',    last:'Nov 2024', expiry:'Nov 2029', status:'valid'},
+    {course:'Oil Tanker Familiarization',freq:'5yr',last:'Sep 2024',expiry:'Sep 2029', status:'valid'},
+  ]
+};
+
+function setCompliancePrincipal(p) {
+  compliancePrincipal = p;
+  document.getElementById('compliance-content').innerHTML = renderComplianceBody();
+  document.querySelectorAll('.comp-filter-btn').forEach(function(b) {
+    if (b.textContent === p) { b.className = 'btn btn-primary btn-sm comp-filter-btn'; }
+    else { b.className = 'btn btn-ghost btn-sm comp-filter-btn'; }
+  });
+}
+
+function renderComplianceBody() {
+  var principal = compliancePrincipal;
+  var matrix = COMPLIANCE_DATA[principal] || COMPLIANCE_DATA['Shell'];
   var valid   = matrix.filter(function(r){return r.status==='valid';}).length;
   var score   = Math.round(valid/matrix.length*100);
   var scoreColor = score>=90?'var(--green)':score>=70?'var(--orange)':'var(--red)';
+  var fleetSf = DATA.seafarers.filter(function(s){return s.principal===principal;});
 
-  return '<div class="page-header">' +
-    '<div><div class="page-title">🛡 Training Matrix & Compliance</div>' +
-    '<div class="page-subtitle">Required courses per principal/rank, expiry tracking, compliance scores</div></div>' +
-    '<div class="page-actions">' +
-    '<button class="btn btn-secondary">📤 Export Report</button>' +
-    '<button class="btn btn-primary" onclick="showToast(\'Matrix builder coming next sprint\',\'teal\')">＋ Edit Matrix</button>' +
-    '</div></div>' +
-
-    '<div style="display:flex;gap:8px;margin-bottom:16px">' +
-    ['Shell','Pioneer','Crossover','Global Marine'].map(function(p,i) {
-      return '<button class="btn ' + (i===0?'btn-primary':'btn-ghost') + ' btn-sm">' + p + '</button>';
-    }).join('') +
-    '</div>' +
-
-    '<div class="grid-3-1" style="align-items:flex-start">' +
+  return '<div class="grid-3-1" style="align-items:flex-start">' +
     '<div>' +
     '<div class="card section-mb"><div class="card-header">' +
-    '<div style="display:flex;align-items:center;gap:10px"><span class="card-title">🛡 Shell Principal — Captain</span>' +
+    '<div style="display:flex;align-items:center;gap:10px"><span class="card-title">\uD83D\uDEE1 ' + principal + ' Principal \u2014 Captain</span>' +
     '<span class="badge ' + (score>=90?'badge-green':score>=70?'badge-orange':'badge-red') + '">' + score + '% Compliant</span></div>' +
     '<select style="background:var(--navy-600);border:1px solid var(--navy-border);border-radius:7px;color:var(--white);padding:6px 10px;font-size:12px;outline:none">' +
     '<option>Captain</option><option>Chief Officer</option><option>2nd Officer</option><option>3rd Officer</option></select>' +
@@ -1546,26 +1743,26 @@ function renderCompliance() {
         '<td class="text-mono fs-11">' + r.last + '</td>' +
         '<td class="text-mono fs-11" style="color:' + (r.status==='expiring'?'var(--orange)':r.status==='missing'||r.status==='expired'?'var(--red)':'inherit') + '">' + r.expiry + '</td>' +
         '<td><span class="badge ' + (r.status==='valid'?'badge-green':r.status==='expiring'?'badge-orange':r.status==='missing'?'badge-muted':'badge-red') + '">' + r.status + '</span></td>' +
-        '<td>' + (r.status!=='valid'?'<button class="btn btn-primary btn-sm" onclick="openModal(\'modal-create-otr\')">+ OTR</button>':'<button class="btn btn-ghost btn-sm">PDF ↓</button>') + '</td>' +
+        '<td>' + (r.status!=='valid'?'<button class="btn btn-primary btn-sm" onclick="openModal(\'modal-create-otr\')">+ OTR</button>':'<button class="btn btn-ghost btn-sm">PDF \u2193</button>') + '</td>' +
         '</tr>';
     }).join('') +
     '</tbody></table></div>' +
 
-    '<div class="card"><div class="card-header"><span class="card-title">⚠️ Fleet Expiry Alerts</span></div>' +
+    '<div class="card"><div class="card-header"><span class="card-title">\u26A0\uFE0F ' + principal + ' Fleet Alerts</span><span class="badge badge-teal">' + fleetSf.length + ' seafarers</span></div>' +
     '<div style="padding:8px 0">' +
-    DATA.seafarers.slice(0,4).map(function(s) {
+    (fleetSf.length > 0 ? fleetSf.map(function(s) {
       var compColor = s.compliance>=90?'var(--green)':s.compliance>=70?'var(--orange)':'var(--red)';
       return '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid rgba(30,48,80,.3)">' +
-        '<div><div class="fs-12 fw-600 text-white">' + s.name + '</div><div class="fs-11 text-muted">' + s.principal + ' · ' + s.rank + '</div></div>' +
+        '<div><div class="fs-12 fw-600 text-white">' + s.name + '</div><div class="fs-11 text-muted">' + s.principal + ' \u00B7 ' + s.rank + '</div></div>' +
         '<div style="display:flex;align-items:center;gap:8px">' +
         '<div class="progress" style="width:50px"><div class="progress-bar" style="width:' + s.compliance + '%;background:' + compColor + '"></div></div>' +
         '<span style="font-size:11px;font-weight:700;color:' + compColor + ';min-width:30px">' + s.compliance + '%</span>' +
         '</div></div>';
-    }).join('') +
+    }).join('') : '<div class="empty-state" style="padding:24px"><div class="fs-12 text-muted">No seafarers for this principal</div></div>') +
     '</div></div></div>' +
 
     '<div style="display:flex;flex-direction:column;gap:14px">' +
-    '<div class="card"><div class="card-header"><span class="card-title">📊 Compliance Score</span></div>' +
+    '<div class="card"><div class="card-header"><span class="card-title">\uD83D\uDCCA Compliance Score</span></div>' +
     '<div style="padding:20px;text-align:center">' +
     '<div style="position:relative;width:110px;height:110px;margin:0 auto 16px">' +
     '<svg viewBox="0 0 110 110"><circle cx="55" cy="55" r="44" fill="none" stroke="var(--navy-500)" stroke-width="10"/>' +
@@ -1574,19 +1771,37 @@ function renderCompliance() {
     '<div style="font-size:24px;font-weight:700;color:var(--white)">' + score + '%</div>' +
     '<div style="font-size:9px;color:var(--muted)">Compliant</div></div></div>' +
     '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px">' +
-    [['Valid',valid,'var(--green)'],['Expiring',matrix.filter(function(r){return r.status==='expiring';}).length,'var(--orange)'],['Expired',matrix.filter(function(r){return r.status==='expired';}).length,'var(--red)'],['Missing',matrix.filter(function(r){return r.status==='missing';}).length,'var(--muted)']].map(function(x){
-      return '<div style="padding:8px;background:rgba('+x[2].replace('var(--','').replace(')','')+',.08);border-radius:6px;text-align:center">' +
-        '<div style="font-size:18px;font-weight:700;color:' + x[2] + '">' + x[1] + '</div>' +
+    [['Valid',valid,'green'],['Expiring',matrix.filter(function(r){return r.status==='expiring';}).length,'orange'],['Expired',matrix.filter(function(r){return r.status==='expired';}).length,'red'],['Missing',matrix.filter(function(r){return r.status==='missing';}).length,'muted']].map(function(x){
+      return '<div style="padding:8px;background:var(--' + x[2] + '-glow, rgba(90,115,148,.1));border-radius:6px;text-align:center">' +
+        '<div style="font-size:18px;font-weight:700;color:var(--' + x[2] + ')">' + x[1] + '</div>' +
         '<div style="font-size:10px;color:var(--muted)">' + x[0] + '</div></div>';
     }).join('') +
     '</div></div></div>' +
-    '<div class="card"><div class="card-header"><span class="card-title">🔔 Bulk Actions</span></div>' +
+    '<div class="card"><div class="card-header"><span class="card-title">\uD83D\uDD14 Bulk Actions</span></div>' +
     '<div class="card-body" style="display:flex;flex-direction:column;gap:8px">' +
-    '<button class="btn btn-primary" style="justify-content:center" onclick="showToast(\'OTRs created for all expiring certs\',\'green\')">Create Renewal OTRs</button>' +
-    '<button class="btn btn-ghost" style="justify-content:center" onclick="showToast(\'Reminders sent to 5 money agents\',\'teal\')">Send Agent Reminders</button>' +
-    '<button class="btn btn-ghost" style="justify-content:center" onclick="showToast(\'Compliance report exported\',\'teal\')">📤 Export PDF Report</button>' +
+    '<button class="btn btn-primary" style="justify-content:center" onclick="showToast(\'OTRs created for ' + principal + ' expiring certs\',\'green\')">Create Renewal OTRs</button>' +
+    '<button class="btn btn-ghost" style="justify-content:center" onclick="showToast(\'Reminders sent to ' + principal + ' agents\',\'teal\')">Send Agent Reminders</button>' +
+    '<button class="btn btn-ghost" style="justify-content:center" onclick="showToast(\'' + principal + ' compliance report exported\',\'teal\')">\uD83D\uDCE4 Export PDF Report</button>' +
     '</div></div>' +
     '</div></div>';
+}
+
+function renderCompliance() {
+  return '<div class="page-header">' +
+    '<div><div class="page-title">\uD83D\uDEE1 Training Matrix & Compliance</div>' +
+    '<div class="page-subtitle">Required courses per principal/rank, expiry tracking, compliance scores</div></div>' +
+    '<div class="page-actions">' +
+    '<button class="btn btn-secondary">\uD83D\uDCE4 Export Report</button>' +
+    '<button class="btn btn-primary" onclick="showToast(\'Matrix builder coming next sprint\',\'teal\')">\uFF0B Edit Matrix</button>' +
+    '</div></div>' +
+
+    '<div style="display:flex;gap:8px;margin-bottom:16px">' +
+    ['Shell','Pioneer','Crossover','Global Marine'].map(function(p) {
+      return '<button class="btn ' + (p===compliancePrincipal?'btn-primary':'btn-ghost') + ' btn-sm comp-filter-btn" onclick="setCompliancePrincipal(\'' + p + '\')">' + p + '</button>';
+    }).join('') +
+    '</div>' +
+
+    '<div id="compliance-content">' + renderComplianceBody() + '</div>';
 }
 
 /* ─────────────────────────────────────────────
@@ -1658,6 +1873,84 @@ function renderInvoices() {
     '<span>Total</span><span class="text-teal">€5,626</span></div></div>' +
     '</div></div>' +
     '</div>';
+}
+
+/* ─────────────────────────────────────────────
+   EPIC 2: OTR TRACEABILITY (US5/US6)
+───────────────────────────────────────────── */
+function openLifecycle(num){
+  var o=DATA.otrs.find(function(x){return x.num===num;});if(!o)return;
+  document.getElementById("modal-lc-title").textContent="Lifecycle: "+num;
+  var lc=DATA.otrLC[num]||{};
+  var st=[{l:"OTR Created",i:"\uD83D\uDCCB",ok:true,d:o.date+" \u2014 "+o.seafarer,s:o.courses},{l:"Attendance",i:"\u2705",ok:!!lc.att,d:lc.att||"Not yet"},{l:"Certificate",i:"\uD83C\uDF93",ok:!!lc.cert,d:lc.cert||"Not yet"},{l:"Invoice",i:"\uD83D\uDCB3",ok:!!lc.inv,d:lc.inv||"Not yet"}];
+  document.getElementById("modal-lc-body").innerHTML=
+    '<div style="display:flex;gap:12px;margin-bottom:20px">'+st.map(function(s,i){
+      var bg=s.ok?"var(--green-glow)":"var(--navy-600)";var br=s.ok?"rgba(16,185,129,.3)":"var(--navy-border)";var cl=s.ok?"var(--green)":"var(--muted)";
+      return '<div style="flex:1;background:'+bg+';border:1px solid '+br+';border-radius:10px;padding:16px;text-align:center;position:relative">'+
+        '<div style="font-size:24px;margin-bottom:8px">'+s.i+'</div>'+
+        '<div style="font-size:12px;font-weight:600;color:'+cl+';margin-bottom:4px">'+s.l+'</div>'+
+        '<div style="font-size:11px;color:var(--muted)">'+s.d+'</div>'+
+        (s.s?'<div style="font-size:10px;color:var(--muted);margin-top:4px">'+s.s+'</div>':'')+
+        (i<st.length-1?'<div style="position:absolute;right:-10px;top:50%;transform:translateY(-50%);font-size:16px;color:var(--navy-border);z-index:1">\u2192</div>':'')+
+        '</div>';
+    }).join('')+'</div>';
+  openModal("modal-lifecycle");
+}
+
+function renderTraceability(){
+  return '<div class="page-header"><div><div class="page-title">\uD83D\uDD17 OTR End-to-End Traceability</div>'+
+    '<div class="page-subtitle">Track each OTR from creation through attendance, certification and invoicing</div></div>'+
+    '<div class="page-actions"><button class="btn btn-secondary" onclick="showToast(\'Export done\',\'teal\')">Export</button></div></div>'+
+    '<div class="stat-grid">'+
+    '<div class="stat-card green"><div class="stat-icon green">\u2705</div><div class="stat-val text-green">2</div><div class="stat-label">Fully Tracked</div></div>'+
+    '<div class="stat-card teal"><div class="stat-icon teal">\uD83D\uDCCB</div><div class="stat-val text-teal">7</div><div class="stat-label">Total OTRs</div></div>'+
+    '<div class="stat-card orange"><div class="stat-icon orange">\u26A0\uFE0F</div><div class="stat-val text-orange">5</div><div class="stat-label">Incomplete</div></div>'+
+    '<div class="stat-card purple"><div class="stat-icon purple">\uD83D\uDD17</div><div class="stat-val" style="color:var(--purple)">'+DATA.ciLinks.length+'</div><div class="stat-label">Cert-Inv Links</div></div></div>'+
+    '<div class="card"><div class="card-header"><span class="card-title">OTR Lifecycle Overview</span></div>'+
+    '<table class="tbl"><thead><tr><th>OTR</th><th>Seafarer</th><th>Status</th><th>Attendance</th><th>Certificate</th><th>Invoice</th><th>Complete</th><th></th></tr></thead><tbody>'+
+    DATA.otrs.map(function(o){
+      var lc=DATA.otrLC[o.num]||{};var n=1+(lc.att?1:0)+(lc.cert?1:0)+(lc.inv?1:0);var pct=Math.round(n/4*100);
+      var cl=pct===100?"var(--green)":pct>=50?"var(--teal)":"var(--orange)";
+      return '<tr><td class="text-mono fs-11 text-teal">'+o.num+'</td><td class="fw-600 text-white fs-12">'+o.seafarer+'</td>'+
+        '<td><span class="badge '+(o.status==="completed"?"badge-green":o.status==="scheduled"?"badge-teal":"badge-orange")+'">'+o.status+'</span></td>'+
+        '<td>'+(lc.att?'<span class="badge badge-green">\u2705 '+lc.att+'</span>':'<span class="badge badge-muted">\u2014</span>')+'</td>'+
+        '<td>'+(lc.cert?'<span class="badge badge-green">\uD83C\uDF93 '+lc.cert+'</span>':'<span class="badge badge-muted">\u2014</span>')+'</td>'+
+        '<td>'+(lc.inv?'<span class="badge badge-green">\uD83D\uDCB3 '+lc.inv+'</span>':'<span class="badge badge-muted">\u2014</span>')+'</td>'+
+        '<td><div style="display:flex;align-items:center;gap:6px"><div class="progress" style="width:50px"><div class="progress-bar" style="width:'+pct+'%;background:'+cl+'"></div></div><span class="fs-11 fw-700" style="color:'+cl+'">'+pct+'%</span></div></td>'+
+        '<td><button class="btn btn-ghost btn-sm" onclick="openLifecycle(\''+o.num+'\')">🔗</button></td></tr>';
+    }).join('')+'</tbody></table></div>';
+}
+
+/* ─────────────────────────────────────────────
+   EPIC 3: PROMOTIONS & RANKINGS (US7)
+───────────────────────────────────────────── */
+function renderPromotions(){
+  var sorted=DATA.promo.slice().sort(function(a,b){return b.d-a.d;});
+  var rN=sorted.filter(function(s){return s.ok;}).length;
+  return '<div class="page-header"><div><div class="page-title">\uD83D\uDE80 Promotions & Training Rankings</div>'+
+    '<div class="page-subtitle">Ranking by completed trainings, promotion readiness and compliance</div></div>'+
+    '<div class="page-actions"><button class="btn btn-secondary" onclick="showToast(\'CSV exported\',\'teal\')">Export CSV</button>'+
+    '<button class="btn btn-secondary" onclick="showToast(\'PDF generated\',\'teal\')">PDF</button></div></div>'+
+    '<div class="stat-grid">'+
+    '<div class="stat-card green"><div class="stat-icon green">\uD83D\uDE80</div><div class="stat-val text-green">'+rN+'</div><div class="stat-label">Promotable</div></div>'+
+    '<div class="stat-card teal"><div class="stat-icon teal">\uD83C\uDF93</div><div class="stat-val text-teal">'+sorted.reduce(function(a,b){return a+b.d;},0)+'</div><div class="stat-label">Total Trainings</div></div>'+
+    '<div class="stat-card purple"><div class="stat-icon purple">\u2693</div><div class="stat-val" style="color:var(--purple)">'+sorted.length+'</div><div class="stat-label">Tracked</div></div>'+
+    '<div class="stat-card orange"><div class="stat-icon orange">\uD83D\uDCCA</div><div class="stat-val text-orange">'+Math.round(sorted.reduce(function(a,b){return a+b.cp;},0)/sorted.length)+'%</div><div class="stat-label">Avg Compliance</div></div></div>'+
+    '<div class="card"><div class="card-header"><span class="card-title">\uD83C\uDFC6 Training Leaderboard</span><span class="badge badge-green">'+rN+' promotable</span></div>'+
+    '<table class="tbl"><thead><tr><th style="width:45px">#</th><th>Seafarer</th><th>Current</th><th>Target</th><th>Trainings</th><th>Mandatory</th><th>Compliance</th><th>Status</th><th></th></tr></thead><tbody>'+
+    sorted.map(function(s,i){
+      var mc=i===0?"gold":i===1?"silver":i===2?"bronze":"normal";
+      var tP=Math.round(s.d/s.tt*100);var mP=Math.round(s.md/s.mt*100);
+      return '<tr><td><div class="rank-medal '+mc+'">'+(i+1)+'</div></td>'+
+        '<td class="fw-600 text-white fs-13">'+s.n+'</td>'+
+        '<td><span class="badge badge-purple">'+s.r+'</span></td>'+
+        '<td><span class="badge badge-teal">'+s.t+'</span></td>'+
+        '<td><div style="display:flex;align-items:center;gap:6px"><span class="text-mono fs-12 fw-700">'+s.d+'<span class="text-muted" style="font-weight:400">/'+s.tt+'</span></span><div class="progress" style="width:40px"><div class="progress-bar" style="width:'+tP+'%;background:var(--teal)"></div></div></div></td>'+
+        '<td><div style="display:flex;align-items:center;gap:6px"><span class="text-mono fs-12 fw-700">'+s.md+'<span class="text-muted" style="font-weight:400">/'+s.mt+'</span></span><div class="progress" style="width:35px"><div class="progress-bar" style="width:'+mP+'%;background:'+(mP===100?"var(--green)":"var(--orange)")+'"></div></div></div></td>'+
+        '<td><span class="fs-12 fw-700" style="color:'+(s.cp>=90?"var(--green)":s.cp>=70?"var(--orange)":"var(--red)")+'">'+s.cp+'%</span></td>'+
+        '<td>'+(s.ok?'<span class="badge badge-green">\u2705 Ready</span>':'<span class="badge badge-muted">Not yet</span>')+'</td>'+
+        '<td><button class="btn btn-ghost btn-sm" onclick="showSeafarerDetail(\''+s.n.replace(/'/g,"\\'")+'\')">Profile</button></td></tr>';
+    }).join('')+'</tbody></table></div>';
 }
 
 /* ─────────────────────────────────────────────
@@ -1782,7 +2075,7 @@ function renderCenters() {
 ───────────────────────────────────────────── */
 var USERS_LIST = [
   { name:'Charlene Wima',     email:'charlene@wimas.io',   role:'Training Administrator', center:'Wima', status:'active',   av:'CW', color:'#0ea5e9', last:'07 Mar 2026, 08:14' },
-  { name:'Niki Varia',        email:'niki@wimas.io',        role:'System Admin',           center:'Wima', status:'active',   av:'NV', color:'#8b5cf6', last:'06 Mar 2026, 17:52' },
+  { name:'Niki Varia',        email:'niki@wimas.io',        role:'Final Approver',         center:'Wima', status:'active',   av:'NV', color:'#8b5cf6', last:'06 Mar 2026, 17:52' },
   { name:'Andreas Stavros',   email:'a.stavros@aegean.gr',  role:'Money Agent',            center:'Aegean', status:'active', av:'AS', color:'#10b981', last:'07 Mar 2026, 09:30' },
   { name:'Sofia Alexiou',     email:'s.alexiou@pioneer.com',role:'Money Agent',            center:'Pioneer', status:'active',av:'SA', color:'#f59e0b', last:'05 Mar 2026, 14:20' },
   { name:'Kostas Papadopoulos',email:'k.papa@wimas.io',     role:'Instructor',             center:'Wima', status:'active',   av:'KP', color:'#0ea5e9', last:'07 Mar 2026, 07:58' },
