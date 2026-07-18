@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /* ============================================================
-   WIMA ERP — Design System
+   WIMAS ERP — Design System
    Navy · Teal · Maritime Professional
 ============================================================ */
 :root {
@@ -305,7 +305,7 @@ html, body { height: 100%; font-family: var(--font); background: var(--navy-900)
 
   <div class="login-right">
     <div class="login-form-title">Welcome back</div>
-    <div class="login-form-sub">Sign in to continue to WIMA ERP</div>
+    <div class="login-form-sub">Sign in to continue to WIMAS ERP</div>
 
     <div class="demo-accounts">
       <div class="demo-label">Quick Demo Access</div>
@@ -510,7 +510,7 @@ html, body { height: 100%; font-family: var(--font); background: var(--navy-900)
         <div class="form-group">
           <label class="form-label">Training Center</label>
           <select class="form-input">
-            <option>Wima Training Center</option>
+            <option>WIMAS Training Center</option>
             <option>STI Maritime</option>
             <option>Compass Training</option>
             <option>External / N/A</option>
@@ -608,7 +608,7 @@ html, body { height: 100%; font-family: var(--font); background: var(--navy-900)
         <div class="form-group">
           <label class="form-label">Training Center *</label>
           <select class="form-input">
-            <option>Wima Training Center (Internal)</option>
+            <option>WIMAS Training Center (Internal)</option>
             <option>STI Maritime Center</option>
             <option>Compass Training</option>
           </select>
@@ -726,7 +726,7 @@ html, body { height: 100%; font-family: var(--font); background: var(--navy-900)
 
 <script>
 /* ============================================================
-   WIMA ERP — Application Logic
+   WIMAS ERP — Application Logic
    All functions are global scope — no wrappers
 ============================================================ */
 
@@ -935,7 +935,7 @@ function openOTRDetail(num, seafarer, principal, courses) {
     '<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">Courses Required</div>' +
     '<div style="font-size:13px;color:var(--white)">' + courses + '</div></div></div>' +
     '<div class="form-group"><label class="form-label">Assign to Training Center</label>' +
-    '<select class="form-input"><option>Wima Training Center (Internal)</option><option>STI Maritime Center</option><option>Compass Training</option></select></div>' +
+    '<select class="form-input"><option>WIMAS Training Center (Internal)</option><option>STI Maritime Center</option><option>Compass Training</option></select></div>' +
     '<div class="form-row cols-2"><div class="form-group"><label class="form-label">Scheduled Date</label><input class="form-input" type="date"></div>' +
     '<div class="form-group"><label class="form-label">Internal Notes</label><input class="form-input" type="text" placeholder="Notes for training center..."></div></div>';
   openModal('modal-otr-detail');
@@ -967,14 +967,14 @@ var DATA = {
     { name:'Thanasis Pappas',   rank:'2nd Officer',  principal:'Pioneer',   passport:'GR4827193', nat:'Greek',   compliance:80,  status:'inactive' },
   ],
   certs: [
-    { id:'CERT-2026-0841', seafarer:'Petros Nikolaou',  course:'STCW BST',             center:'Wima',     issued:'15 Jan 2026', expiry:'15 Jan 2031', status:'valid'    },
+    { id:'CERT-2026-0841', seafarer:'Petros Nikolaou',  course:'STCW BST',             center:'WIMAS',     issued:'15 Jan 2026', expiry:'15 Jan 2031', status:'valid'    },
     { id:'CERT-2026-0840', seafarer:'Ioannis Stefanou', course:'GMDSS GOC',            center:'STI',      issued:'03 Sep 2025', expiry:'03 Mar 2026', status:'expired'  },
-    { id:'CERT-2026-0839', seafarer:'Maria Papadaki',   course:'Advanced Firefighting',center:'Wima',     issued:'20 Jun 2025', expiry:'20 Jun 2030', status:'valid'    },
+    { id:'CERT-2026-0839', seafarer:'Maria Papadaki',   course:'Advanced Firefighting',center:'WIMAS',     issued:'20 Jun 2025', expiry:'20 Jun 2030', status:'valid'    },
     { id:'CERT-2026-0838', seafarer:'Vasilis Katsaros', course:'ECDIS Type Specific',  center:'Compass',  issued:'08 Jan 2026', expiry:'08 Jan 2031', status:'valid'    },
-    { id:'CERT-2026-0837', seafarer:'Nikos Drakos',     course:'Medical First Aid',    center:'Wima',     issued:'10 Apr 2024', expiry:'10 Apr 2026', status:'expiring' },
-    { id:'CERT-2026-0836', seafarer:'Elena Voulgari',   course:'Oil Tanker',           center:'Wima',     issued:'01 Mar 2026', expiry:'01 Mar 2031', status:'valid'    },
+    { id:'CERT-2026-0837', seafarer:'Nikos Drakos',     course:'Medical First Aid',    center:'WIMAS',     issued:'10 Apr 2024', expiry:'10 Apr 2026', status:'expiring' },
+    { id:'CERT-2026-0836', seafarer:'Elena Voulgari',   course:'Oil Tanker',           center:'WIMAS',     issued:'01 Mar 2026', expiry:'01 Mar 2031', status:'valid'    },
     { id:'CERT-2026-0835', seafarer:'Stavros Hatzis',   course:'Crowd & Crisis Mgmt',  center:'STI',      issued:'14 Feb 2025', expiry:'14 Feb 2030', status:'valid'    },
-    { id:'CERT-2026-0834', seafarer:'Thanasis Pappas',  course:'Bridge Resource Mgmt', center:'Wima',     issued:'28 Jan 2026', expiry:'28 Jan 2031', status:'valid'    },
+    { id:'CERT-2026-0834', seafarer:'Thanasis Pappas',  course:'Bridge Resource Mgmt', center:'WIMAS',     issued:'28 Jan 2026', expiry:'28 Jan 2031', status:'valid'    },
   ],
   invoices: [
     { id:'INV-2026-0084', agent:'Aegean Crew Mgmt',   principal:'Shell',     date:'01 Mar 2026', due:'31 Mar 2026', total:5626, status:'sent',    wf:'issued', approver:'Niki Varia', appAt:'01 Mar 14:20' },
@@ -1004,12 +1004,12 @@ var DATA = {
     {n:'Thanasis Pappas',  r:'2nd Officer',   t:'Chief Officer', d:7, tt:20,md:4, mt:10,cp:80, ok:false},
   ],
   sessions: [
-    { id:1, course:'STCW Basic Safety Training', center:'Wima',    instructor:'K. Papadopoulos', start:'2026-03-07', end:'2026-03-11', capacity:12, enrolled:8,  room:'Room A',    status:'ongoing',   pub:true  },
-    { id:2, course:'GMDSS Radio Operator',       center:'Wima',    instructor:'M. Stavridou',    start:'2026-03-08', end:'2026-03-10', capacity:8,  enrolled:5,  room:'Room B',    status:'ongoing',   pub:true  },
+    { id:1, course:'STCW Basic Safety Training', center:'WIMAS',    instructor:'K. Papadopoulos', start:'2026-03-07', end:'2026-03-11', capacity:12, enrolled:8,  room:'Room A',    status:'ongoing',   pub:true  },
+    { id:2, course:'GMDSS Radio Operator',       center:'WIMAS',    instructor:'M. Stavridou',    start:'2026-03-08', end:'2026-03-10', capacity:8,  enrolled:5,  room:'Room B',    status:'ongoing',   pub:true  },
     { id:3, course:'Medical First Aid Adv.',     center:'Compass', instructor:'External',        start:'2026-03-10', end:'2026-03-11', capacity:10, enrolled:6,  room:'Compass HQ',status:'scheduled', pub:true  },
     { id:4, course:'ECDIS Type Specific',        center:'STI',     instructor:'External',        start:'2026-03-14', end:'2026-03-18', capacity:10, enrolled:3,  room:'STI Lab',   status:'scheduled', pub:true  },
-    { id:5, course:'Bridge Resource Mgmt',       center:'Wima',    instructor:'A. Theodorou',    start:'2026-03-20', end:'2026-03-22', capacity:15, enrolled:12, room:'Room C',    status:'scheduled', pub:false },
-    { id:6, course:'Advanced Firefighting',      center:'Wima',    instructor:'K. Papadopoulos', start:'2026-03-25', end:'2026-03-27', capacity:12, enrolled:12, room:'Simulation',status:'full',      pub:true  },
+    { id:5, course:'Bridge Resource Mgmt',       center:'WIMAS',    instructor:'A. Theodorou',    start:'2026-03-20', end:'2026-03-22', capacity:15, enrolled:12, room:'Room C',    status:'scheduled', pub:false },
+    { id:6, course:'Advanced Firefighting',      center:'WIMAS',    instructor:'K. Papadopoulos', start:'2026-03-25', end:'2026-03-27', capacity:12, enrolled:12, room:'Simulation',status:'full',      pub:true  },
   ]
 };
 
@@ -1251,10 +1251,10 @@ function sfTab(tab) {
 
 function renderSFHistory() {
   var items = [
-    { course:'STCW BST Refresher', center:'Wima Internal', date:'15 Jan 2026', grade:'88%', expiry:'15 Jan 2031', dot:'teal', tag:'valid' },
+    { course:'STCW BST Refresher', center:'WIMAS Internal', date:'15 Jan 2026', grade:'88%', expiry:'15 Jan 2031', dot:'teal', tag:'valid' },
     { course:'GMDSS GOC',          center:'STI Maritime',  date:'03 Sep 2025', grade:'91%', expiry:'03 Mar 2026', dot:'orange', tag:'expiring' },
     { course:'ECDIS Type Specific',center:'Compass',       date:'20 Jun 2025', grade:'85%', expiry:'20 Jun 2030', dot:'teal', tag:'valid' },
-    { course:'Bridge Resource Mgmt',center:'Wima Internal',date:'08 Jan 2024', grade:'79%', expiry:'08 Jan 2029', dot:'teal', tag:'valid' },
+    { course:'Bridge Resource Mgmt',center:'WIMAS Internal',date:'08 Jan 2024', grade:'79%', expiry:'08 Jan 2029', dot:'teal', tag:'valid' },
   ];
   return '<div class="grid-3-1" style="align-items:flex-start">' +
     '<div class="card"><div class="card-header"><span class="card-title">📚 Training Timeline</span><button class="btn btn-ghost btn-sm" onclick="openModal(\'modal-upload-cert\')">📤 Upload Cert</button></div>' +
@@ -1417,7 +1417,7 @@ function renderSchedule() {
     '<div class="card-header">' +
     '<span class="card-title">March 2026</span>' +
     '<div style="display:flex;gap:6px">' +
-    '<select style="background:var(--navy-600);border:1px solid var(--navy-border);border-radius:7px;color:var(--white);padding:6px 10px;font-size:12px;outline:none"><option>All Centers</option><option>Wima</option><option>STI</option><option>Compass</option></select>' +
+    '<select style="background:var(--navy-600);border:1px solid var(--navy-border);border-radius:7px;color:var(--white);padding:6px 10px;font-size:12px;outline:none"><option>All Centers</option><option>WIMAS</option><option>STI</option><option>Compass</option></select>' +
     '</div></div>' +
     renderCalendar() +
     '</div>' +
@@ -1993,7 +1993,7 @@ function renderReports() {
     }).join('') +
     '</div>' +
     '<div style="display:flex;gap:16px;justify-content:center;font-size:11px">' +
-    '<span><span style="display:inline-block;width:8px;height:8px;background:var(--teal);border-radius:2px;margin-right:4px"></span>Wima Internal</span>' +
+    '<span><span style="display:inline-block;width:8px;height:8px;background:var(--teal);border-radius:2px;margin-right:4px"></span>WIMAS Internal</span>' +
     '<span><span style="display:inline-block;width:8px;height:8px;background:var(--purple);border-radius:2px;margin-right:4px"></span>External</span></div>' +
     '</div></div>' +
     '</div>' +
@@ -2028,7 +2028,7 @@ function renderReports() {
 ───────────────────────────────────────────── */
 function renderCenters() {
   var centers = [
-    { name:'Wima Training Center', type:'Internal', loc:'Piraeus, Greece', contact:'Charlene Wima', email:'training@wimas.io', status:'active', accred:['STCW','GMDSS','ISO 9001'], courses:7, sessions:8, logo:'🏫', color:'#0ea5e9' },
+    { name:'WIMAS Training Center', type:'Internal', loc:'Piraeus, Greece', contact:'Charlene Wima', email:'training@wimas.io', status:'active', accred:['STCW','GMDSS','ISO 9001'], courses:7, sessions:8, logo:'🏫', color:'#0ea5e9' },
     { name:'STI Maritime Center',  type:'External', loc:'Thessaloniki, GR', contact:'Andreas Stavros', email:'info@sti-maritime.gr', status:'active', accred:['STCW','DNV','MCA'], courses:5, sessions:5, logo:'⚓', color:'#10b981' },
     { name:'Compass Training',     type:'External', loc:'Athens, Greece', contact:'Sofia Alexiou', email:'admin@compass.gr', status:'active', accred:['STCW','Flag State'], courses:4, sessions:3, logo:'🧭', color:'#8b5cf6' },
     { name:'MarineEd Institute',   type:'External', loc:'Heraklion, Crete', contact:'Petros Manolis', email:'contact@marineed.gr', status:'review', accred:['STCW'], courses:1, sessions:0, logo:'🎓', color:'#f59e0b' },
@@ -2075,13 +2075,13 @@ function renderCenters() {
    USERS
 ───────────────────────────────────────────── */
 var USERS_LIST = [
-  { name:'Charlene Wima',     email:'charlene@wimas.io',   role:'Training Administrator', center:'Wima', status:'active',   av:'CW', color:'#0ea5e9', last:'07 Mar 2026, 08:14' },
-  { name:'Niki Varia',        email:'niki@wimas.io',        role:'Final Approver',         center:'Wima', status:'active',   av:'NV', color:'#8b5cf6', last:'06 Mar 2026, 17:52' },
+  { name:'Charlene Wima',     email:'charlene@wimas.io',   role:'Training Administrator', center:'WIMAS', status:'active',   av:'CW', color:'#0ea5e9', last:'07 Mar 2026, 08:14' },
+  { name:'Niki Varia',        email:'niki@wimas.io',        role:'Final Approver',         center:'WIMAS', status:'active',   av:'NV', color:'#8b5cf6', last:'06 Mar 2026, 17:52' },
   { name:'Andreas Stavros',   email:'a.stavros@aegean.gr',  role:'Money Agent',            center:'Aegean', status:'active', av:'AS', color:'#10b981', last:'07 Mar 2026, 09:30' },
   { name:'Sofia Alexiou',     email:'s.alexiou@pioneer.com',role:'Money Agent',            center:'Pioneer', status:'active',av:'SA', color:'#f59e0b', last:'05 Mar 2026, 14:20' },
-  { name:'Kostas Papadopoulos',email:'k.papa@wimas.io',     role:'Instructor',             center:'Wima', status:'active',   av:'KP', color:'#0ea5e9', last:'07 Mar 2026, 07:58' },
-  { name:'Maria Stavridou',   email:'m.stavr@wimas.io',     role:'Instructor',             center:'Wima', status:'active',   av:'MS', color:'#ec4899', last:'06 Mar 2026, 15:10' },
-  { name:'Anna Theodorou',    email:'a.theo@wimas.io',      role:'Instructor',             center:'Wima', status:'active',   av:'AT', color:'#14b8a6', last:'07 Mar 2026, 08:45' },
+  { name:'Kostas Papadopoulos',email:'k.papa@wimas.io',     role:'Instructor',             center:'WIMAS', status:'active',   av:'KP', color:'#0ea5e9', last:'07 Mar 2026, 07:58' },
+  { name:'Maria Stavridou',   email:'m.stavr@wimas.io',     role:'Instructor',             center:'WIMAS', status:'active',   av:'MS', color:'#ec4899', last:'06 Mar 2026, 15:10' },
+  { name:'Anna Theodorou',    email:'a.theo@wimas.io',      role:'Instructor',             center:'WIMAS', status:'active',   av:'AT', color:'#14b8a6', last:'07 Mar 2026, 08:45' },
   { name:'Costas Tsoumas',    email:'c.tsoum@crossover.gr', role:'Money Agent',            center:'Crossover', status:'inactive', av:'CT', color:'#64748b', last:'10 Feb 2026, 09:20' },
 ];
 
