@@ -278,6 +278,135 @@ html, body { height: 100%; font-family: var(--font); background: var(--navy-900)
 .rank-medal.normal { background: var(--navy-500); color: var(--muted-light); }
 .text-muted-light { color: var(--muted-light); }
 .fs-10 { font-size: 10px; } .fs-14 { font-size: 14px; } .fs-16 { font-size: 16px; }
+
+/* ===== WIMAS GUIDE — integrated styles ===== */
+/* ===== WIMAS GUIDE — styles (scoped to .gd-root, --gd-* vars) — paste inside the app <style> ===== */
+
+.gd-root{
+  --gd-navy:#0F2A43; --gd-navy2:#16324B; --gd-teal:#0EA5E9; --gd-teald:#0E7490;
+  --gd-green:#10B981; --gd-amber:#F59E0B; --gd-red:#EF4444; --gd-purple:#8B5CF6;
+  --gd-muted:#64748B; --gd-paper:#F1F5F9; --gd-card:#FFFFFF; --gd-line:#E2E8F0; --gd-ink:#0F2033;
+  --gd-shadow:0 1px 2px rgba(15,42,67,.06),0 8px 24px rgba(15,42,67,.06);
+}
+*{box-sizing:border-box}
+.gd-root{margin:0;background:var(--gd-paper);color:var(--gd-ink);font-family:'Sora',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.mono{font-family:'JetBrains Mono',monospace}
+.gd-wrap{max-width:1040px;margin:0 auto;padding:0 20px 80px}
+
+/* top bar */
+.gd-topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;
+  padding:12px 20px;background:rgba(241,245,249,.85);backdrop-filter:blur(8px);border-bottom:1px solid var(--gd-line)}
+.gd-brand{font-weight:800;letter-spacing:.5px;color:var(--gd-navy)}
+.gd-brand span{color:var(--gd-teald)}
+.gd-brand small{font-family:'JetBrains Mono',monospace;font-weight:500;color:var(--gd-muted);letter-spacing:2px;font-size:11px;margin-left:8px}
+.gd-controls{display:flex;gap:10px;align-items:center}
+.gd-lang{display:flex;border:1px solid var(--gd-line);border-radius:999px;overflow:hidden;background:#fff}
+.gd-lang button{border:0;background:transparent;padding:5px 12px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--gd-muted);cursor:pointer}
+.gd-lang button.on{background:var(--gd-navy);color:#fff}
+.gd-launch{border:1px solid var(--gd-line);background:#fff;border-radius:999px;padding:6px 14px;font-size:13px;font-weight:600;color:var(--gd-navy);cursor:pointer}
+.gd-launch:hover{border-color:var(--gd-teal)}
+
+/* hero */
+.gd-hero{margin:22px 0 18px;border-radius:20px;padding:30px 34px;color:#EAF6FB;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,var(--gd-teald) 0%,var(--gd-navy) 78%)}
+.gd-hero:after{content:"";position:absolute;right:-60px;top:-60px;width:240px;height:240px;border-radius:50%;
+  background:radial-gradient(circle,rgba(14,165,233,.55),transparent 65%)}
+.gd-eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:3px;color:#7FD3EC;text-transform:uppercase}
+.gd-hero h1{margin:8px 0 10px;font-size:34px;font-weight:800;color:#fff;display:flex;align-items:center;gap:12px}
+.gd-hero p{margin:0;max-width:640px;font-size:15px;line-height:1.6;color:#CFE7F2}
+.gd-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;position:relative;z-index:1}
+.gd-chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#EAF6FB;
+  padding:6px 13px;border-radius:999px;font-size:12.5px;font-weight:500;backdrop-filter:blur(4px)}
+
+/* tabs */
+.gd-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 20px}
+.gd-tab{display:inline-flex;align-items:center;gap:7px;padding:8px 15px;border-radius:999px;border:1px solid var(--gd-line);
+  background:#fff;color:var(--gd-navy);font-size:13.5px;font-weight:600;cursor:pointer;transition:.15s}
+.gd-tab:hover{border-color:var(--gd-teal)}
+.gd-tab .dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
+.gd-tab.active{background:var(--gd-navy);color:#fff;border-color:var(--gd-navy)}
+
+/* intro banner */
+.gd-introbox{border-radius:16px;padding:22px 24px;color:#EAF6FB;margin-bottom:18px;
+  background:linear-gradient(120deg,var(--gd-teald),var(--gd-navy))}
+.gd-introbox h2{margin:0 0 8px;font-size:21px;color:#fff;display:flex;align-items:center;gap:10px}
+.gd-introbox p{margin:0;font-size:14px;line-height:1.6;color:#CFE7F2;max-width:720px}
+.gd-aud{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.gd-aud span{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.2);padding:4px 11px;border-radius:999px;font-size:11.5px}
+
+/* cards */
+.gd-card{background:var(--gd-card);border:1px solid var(--gd-line);border-left:4px solid var(--gd-teal);
+  border-radius:14px;padding:20px 22px;margin-bottom:16px;box-shadow:var(--gd-shadow)}
+.gd-card h3{margin:0 0 14px;font-size:16px;font-weight:700;color:var(--gd-navy);display:flex;align-items:center;gap:9px}
+.gd-row{padding:10px 0;border-top:1px dashed var(--gd-line)}
+.gd-row:first-of-type{border-top:0;padding-top:0}
+.gd-rowlabel{font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--gd-teald);display:block;margin-bottom:5px}
+.gd-row p{margin:0;font-size:13.5px;line-height:1.55;color:#334155}
+.gd-steps{list-style:none;margin:0;padding:0;counter-reset:s}
+.gd-steps li{display:flex;gap:10px;align-items:flex-start;margin:6px 0;font-size:13.5px;color:#334155;line-height:1.5}
+.gd-num{flex:0 0 auto;width:20px;height:20px;border-radius:6px;background:var(--gd-navy);color:#fff;
+  font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;display:grid;place-items:center;margin-top:1px}
+.gd-result{margin-top:12px;background:#ECFDF5;border:1px solid #A7F3D0;border-radius:10px;padding:10px 13px}
+.gd-result .gd-rowlabel{color:var(--gd-green)}
+.gd-result p{margin:0;font-size:13.5px;color:#065F46;font-weight:500}
+.gd-cta{margin-top:14px;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--gd-teal);color:var(--gd-teald);
+  background:#fff;border-radius:999px;padding:7px 16px;font-size:13px;font-weight:600;cursor:pointer}
+.gd-cta:hover{background:#F0F9FF}
+
+/* tables */
+.gd-table{width:100%;border-collapse:collapse;margin:2px 0 4px;font-size:13px}
+.gd-table th{background:var(--gd-navy);color:#fff;text-align:left;padding:9px 11px;font-weight:600;font-size:12px}
+.gd-table td{padding:9px 11px;border-bottom:1px solid var(--gd-line);color:#334155}
+.gd-table tr:nth-child(even) td{background:#F8FAFC}
+.pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:11px;font-weight:700;font-family:'JetBrains Mono',monospace}
+.p-green{background:#DCFCE7;color:#166534}.p-amber{background:#FEF3C7;color:#92400E}.p-red{background:#FEE2E2;color:#991B1B}
+.p-muted{background:#E2E8F0;color:#475569}.p-teal{background:#CFF4FE;color:#0E7490}
+
+/* diagram */
+.gd-figwrap{background:#fff;border:1px solid var(--gd-line);border-radius:14px;padding:18px;margin-bottom:16px;box-shadow:var(--gd-shadow);overflow-x:auto}
+.gd-figcap{font-size:12px;color:var(--gd-muted);text-align:center;margin-top:6px}
+.gd-figtitle{font-size:13px;font-weight:700;color:var(--gd-navy);margin:0 0 12px;display:flex;align-items:center;gap:8px}
+
+.el,.en{display:none}
+.gd-root[data-lang="el"] .el{display:revert}
+.gd-root[data-lang="en"] .en{display:revert}
+.gd-steps .el,.gd-steps .en,.gd-row .el,.gd-row .en{display:none}
+.gd-root[data-lang="el"] .gd-steps .el,.gd-root[data-lang="el"] .gd-row .el{display:inline}
+.gd-root[data-lang="en"] .gd-steps .en,.gd-root[data-lang="en"] .gd-row .en{display:inline}
+
+@media(max-width:640px){.gd-hero h1{font-size:26px}.gd-wrap{padding:0 12px 60px}}
+
+/* ---- Next2View-style enrichments ---- */
+.gd-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.gd-kpi{background:#fff;border:1px solid var(--gd-line);border-radius:12px;padding:14px 16px;box-shadow:var(--gd-shadow)}
+.gd-kpi .v{font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:800;color:var(--gd-navy);line-height:1}
+.gd-kpi .l{font-size:12.5px;font-weight:700;color:var(--gd-teald);margin-top:6px}
+.gd-kpi .s{font-size:11.5px;color:var(--gd-muted);margin-top:2px}
+.gd-callout{border-radius:12px;padding:14px 16px;margin-bottom:14px;border:1px solid}
+.gd-callout .ct{font-weight:700;font-size:13.5px;margin:0 0 6px;display:flex;align-items:center;gap:7px}
+.gd-callout p{font-size:13px;line-height:1.55;margin:2px 0}
+.gd-callout.warn{background:#FFFBEB;border-color:#FDE68A}.gd-callout.warn .ct{color:#92400E}
+.gd-callout.tip{background:#EFF6FF;border-color:#BFDBFE}.gd-callout.tip .ct{color:#1E40AF}
+.gd-faqwrap{background:#fff;border:1px solid var(--gd-line);border-radius:14px;padding:16px 22px 20px;margin-top:6px;box-shadow:var(--gd-shadow)}
+.gd-faqwrap h3{margin:0 0 4px;font-size:16px;color:var(--gd-navy);display:flex;align-items:center;gap:8px}
+.gd-faq{border-top:1px dashed var(--gd-line);padding:12px 0}
+.gd-faq .q{font-weight:700;font-size:13.5px;color:var(--gd-navy);margin:0 0 4px}
+.gd-faq .a{font-size:13px;line-height:1.55;color:#475569;margin:0}
+.gd-printbtn{border:1px solid var(--gd-line);background:#fff;border-radius:999px;padding:6px 13px;font-size:13px;font-weight:600;color:var(--gd-navy);cursor:pointer}
+.gd-printbtn:hover{border-color:var(--gd-teal)}
+/* upgraded prominent numbered steps */
+.gd-steps li{background:#F8FAFC;border:1px solid var(--gd-line);border-radius:10px;padding:11px 13px;margin:8px 0;align-items:center}
+.gd-num{width:26px;height:26px;border-radius:50%;background:var(--gd-green);color:#fff;font-size:12px;box-shadow:0 1px 3px rgba(16,185,129,.4)}
+@media print{
+  .gd-topbar,.gd-tabs,.gd-launch,.gd-printbtn{display:none!important}
+  .gd-root{background:#fff}.gd-card,.gd-figwrap,.gd-faqwrap{break-inside:avoid;box-shadow:none}
+}
+@media(max-width:640px){.gd-kpis{grid-template-columns:repeat(2,1fr)}}
+
+.gd-root{padding:14px 0 44px;border-radius:12px}
+.gd-root .gd-topbar{position:static;background:transparent;border-bottom:1px solid var(--gd-line);border-radius:0;margin-bottom:4px}
+
 </style>
 </head>
 <body>
@@ -758,6 +887,8 @@ var NAV_MENUS = {
     { section: 'SETTINGS' },
     { id:'centers',     label:'Training Centers',  icon:'🏢', badge:null },
     { id:'users',       label:'Users',             icon:'👥', badge:null },
+    { section: 'HELP' },
+    { id:'guide', label:'User Guide', icon:'📘' },
   ],
   'Money Agent': [
     { section: 'MAIN' },
@@ -769,6 +900,8 @@ var NAV_MENUS = {
     { id:'certinvoices',label:'Certs & Invoices',  icon:'🎓', badge:null },
     { section: 'COMPLIANCE' },
     { id:'compliance',  label:'Compliance Report', icon:'🛡', badge:null },
+    { section: 'HELP' },
+    { id:'guide', label:'User Guide', icon:'📘' },
   ],
   'System Admin': [
     { section: 'MAIN' },
@@ -782,6 +915,8 @@ var NAV_MENUS = {
     { id:'traceability',label:'OTR Traceability',  icon:'🔗', badge:null },
     { id:'promotions',  label:'Promotions',        icon:'🚀', badge:null },
     { id:'reports',     label:'Reports',           icon:'📊', badge:null },
+    { section: 'HELP' },
+    { id:'guide', label:'User Guide', icon:'📘' },
   ]
 };
 
@@ -870,6 +1005,7 @@ function showSection(id) {
     reports:      renderReports,
     centers:      renderCenters,
     users:        renderUsers,
+    guide:        renderGuide,
     settings:     renderSettings
   };
 
@@ -877,7 +1013,7 @@ function showSection(id) {
     dashboard:'Dashboard', seafarers:'Seafarers', otrs:'OTR Requests',
     schedule:'Course Schedule', attendance:'Attendance & Grades', certinvoices:'Certificates & Invoices',
     compliance:'Compliance Matrix', traceability:'OTR Traceability', promotions:'Promotions & Rankings', reports:'Reports',
-    centers:'Training Centers', users:'Users', settings:'Settings'
+    centers:'Training Centers', users:'Users', settings:'Settings', guide:'User Guide'
   };
 
   var bc = document.getElementById('breadcrumb');
@@ -2162,6 +2298,478 @@ function renderSettings() {
     }).join('') +
     '</div></div>';
 }
+
+/* ===== WIMAS GUIDE — integrated module (global scope) ===== */
+/* ===== WIMAS GUIDE — module (all functions global, no IIFE) — paste at top level of the app <script>, next to the other render* functions. Then wire: renderers[guide]=renderGuide, labels[guide], and a NAV_MENUS item. ===== */
+
+/* ================= WIMAS GUIDE — portable module (global scope) ================= */
+var WG_LANG = 'el';
+function wgT(o){ return o[WG_LANG]; }
+
+var WG_CHIPS = [
+  {el:"Ένα OTR → Πιστοποιητικό → Τιμολόγιο", en:"One OTR → Certificate → Invoice"},
+  {el:"Compliance = ζωντανή μηχανή, όχι αναφορά", en:"Compliance is a live engine, not a report"},
+  {el:"Δικαιώματα ανά ρόλο (RBAC)", en:"Role-based access (RBAC)"},
+  {el:"Άνοιγμα πάντα full-screen", en:"Always open full-screen"}
+];
+
+/* ---- diagrams / tables / charts (lang-aware HTML builders) ---- */
+function figOverview(){
+  var L = WG_LANG==='el'
+    ? {t:"Πώς συνδέονται όλα — ο κύκλος ζωής ενός OTR",m:"Μητρώο Συμμόρφωσης (ΚΑΝΟΝΑΣ)",gap:"κενό / λήξη → +OTR",
+       s:["Αίτημα OTR","Ανάθεση & Πρόγραμμα","Παρουσίες & Βαθμοί","Πιστοποιητικό","Τιμολόγιο"],
+       loop:"το πιστοποιητικό ενημερώνει το μητρώο",cap:"Κάθε κενό συμμόρφωσης γίνεται νέο OTR· κάθε πιστοποιητικό κλείνει τον κύκλο."}
+    : {t:"How it all connects — the lifecycle of one OTR",m:"Compliance Matrix (the RULE)",gap:"gap / expiry → +OTR",
+       s:["OTR Request","Assign & Schedule","Attendance & Grades","Certificate","Invoice"],
+       loop:"the certificate updates the matrix",cap:"Every compliance gap becomes a new OTR; every certificate closes the loop."};
+  var x=[40,250,460,670,880], y=170, w=170, h=64, col=["#F59E0B","#8B5CF6","#10B981","#0E7490","#F59E0B"];
+  var boxes="", arrows="";
+  for(var i=0;i<5;i++){
+    boxes+='<g><rect x="'+x[i]+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="12" fill="#fff" stroke="'+col[i]+'" stroke-width="2"/>'
+      +'<text x="'+(x[i]+w/2)+'" y="'+(y+26)+'" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="700" fill="'+col[i]+'">'+(i+1)+'</text>'
+      +'<text x="'+(x[i]+w/2)+'" y="'+(y+46)+'" text-anchor="middle" font-family="Sora" font-size="12.5" font-weight="600" fill="#0F2A43">'+L.s[i]+'</text></g>';
+    if(i<4){var ax=x[i]+w, bx=x[i+1];arrows+='<line x1="'+ax+'" y1="'+(y+h/2)+'" x2="'+(bx-6)+'" y2="'+(y+h/2)+'" stroke="#94A3B8" stroke-width="2" marker-end="url(#ah)"/>';}
+  }
+  return '<div class="gd-figwrap"><p class="gd-figtitle">🗺️ '+L.t+'</p>'
+   +'<svg viewBox="0 0 1060 300" width="100%" preserveAspectRatio="xMidYMid meet" role="img">'
+   +'<defs><marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#94A3B8"/></marker>'
+   +'<marker id="ahr" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#EF4444"/></marker></defs>'
+   /* compliance box top, feeding step 1 */
+   +'<rect x="40" y="34" width="360" height="58" rx="12" fill="#FEF2F2" stroke="#EF4444" stroke-width="2"/>'
+   +'<text x="220" y="60" text-anchor="middle" font-family="Sora" font-size="13" font-weight="700" fill="#991B1B">📋 '+L.m+'</text>'
+   +'<text x="220" y="80" text-anchor="middle" font-family="Sora" font-size="11.5" fill="#B91C1C">'+L.gap+'</text>'
+   +'<line x1="125" y1="92" x2="125" y2="'+(y-6)+'" stroke="#EF4444" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#ahr)"/>'
+   +boxes+arrows
+   /* loop from certificate(4) back up to matrix */
+   +'<path d="M '+(x[3]+w/2)+' '+(y+h)+' V 250 H 220 V 92" fill="none" stroke="#0E7490" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#ahr)"/>'
+   +'<text x="'+(x[2])+'" y="245" font-family="Sora" font-size="11" fill="#0E7490">↩ '+L.loop+'</text>'
+   +'</svg><p class="gd-figcap">'+L.cap+'</p></div>';
+}
+
+function figCompliance(){
+  var el = WG_LANG==='el';
+  var rule = el?"ΚΑΝΟΝΑΣ / Template":"RULE / Template";
+  var inst = el?"ΣΤΙΓΜΙΟΤΥΠΟ / Instance":"INSTANCE";
+  var rt = el?"Μητρώο ανά Principal × Βαθμό":"Matrix per Principal × Rank";
+  var rb = el?"π.χ. Shell × Captain → STCW BST, GMDSS, ECDIS, …":"e.g. Shell × Captain → STCW BST, GMDSS, ECDIS, …";
+  var it = el?"Συμμόρφωση ναυτικού":"Seafarer compliance";
+  var ib = el?"τα πιστοποιητικά του ναυτικού ΑΞΙΟΛΟΓΟΥΝΤΑΙ πάνω στον κανόνα":"the seafarer certificates are EVALUATED against the rule";
+  var mid = el?"αξιολόγηση":"evaluate";
+  var cap = el?"Ο κανόνας υπάρχει ανεξάρτητα από πρόσωπα· η συμμόρφωση είναι το αποτέλεσμα ενός συγκεκριμένου ναυτικού πάνω στον κανόνα. Ποτέ μην τα μπερδεύεις."
+              :"The rule exists independently of people; compliance is a specific seafarer measured against that rule. Never conflate the two.";
+  return '<div class="gd-figwrap"><p class="gd-figtitle">🧠 '+(el?"Κανόνας vs Στιγμιότυπο":"Rule vs Instance")+'</p>'
+   +'<svg viewBox="0 0 900 190" width="100%" preserveAspectRatio="xMidYMid meet">'
+   +'<defs><marker id="ah2" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#0E7490"/></marker></defs>'
+   +'<rect x="30" y="40" width="330" height="110" rx="14" fill="#EFF6FF" stroke="#3B82F6" stroke-width="2"/>'
+   +'<text x="195" y="34" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="700" fill="#1D4ED8">'+rule+'</text>'
+   +'<text x="195" y="80" text-anchor="middle" font-family="Sora" font-size="14" font-weight="700" fill="#0F2A43">📋 '+rt+'</text>'
+   +'<text x="195" y="112" text-anchor="middle" font-family="Sora" font-size="11.5" fill="#475569">'+rb+'</text>'
+   +'<rect x="540" y="40" width="330" height="110" rx="14" fill="#ECFDF5" stroke="#10B981" stroke-width="2"/>'
+   +'<text x="705" y="34" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="700" fill="#047857">'+inst+'</text>'
+   +'<text x="705" y="80" text-anchor="middle" font-family="Sora" font-size="14" font-weight="700" fill="#0F2A43">🧑‍✈️ '+it+'</text>'
+   +'<text x="705" y="112" text-anchor="middle" font-family="Sora" font-size="11.5" fill="#475569">'+ib+'</text>'
+   +'<line x1="360" y1="95" x2="536" y2="95" stroke="#0E7490" stroke-width="2.5" marker-end="url(#ah2)"/>'
+   +'<text x="450" y="86" text-anchor="middle" font-family="Sora" font-size="11.5" font-weight="600" fill="#0E7490">'+mid+'</text>'
+   +'</svg><p class="gd-figcap">'+cap+'</p></div>';
+}
+
+function tblThresholds(){
+  var el=WG_LANG==='el';
+  return '<div class="gd-figwrap"><p class="gd-figtitle">📊 '+(el?"Κατώφλια συμμόρφωσης & λήξεων":"Compliance & expiry thresholds")+'</p>'
+   +'<table class="gd-table"><thead><tr>'
+   +'<th>'+(el?"Δείκτης":"Metric")+'</th><th>'+(el?"Τιμή":"Value")+'</th><th>'+(el?"Σημασία":"Meaning")+'</th></tr></thead><tbody>'
+   +'<tr><td>Compliance %</td><td><span class="pill p-green">≥ 90</span> <span class="pill p-amber">70–89</span> <span class="pill p-red">&lt; 70</span></td><td>'+(el?"έγκυρα ÷ απαιτούμενα μαθήματα (πράσινο/πορτοκαλί/κόκκινο)":"valid ÷ required courses (green/amber/red)")+'</td></tr>'
+   +'<tr><td>'+(el?"Ειδοποιήσεις λήξης":"Expiry alerts")+'</td><td class="mono">90 · 60 · 30 · 14</td><td>'+(el?"ημέρες πριν τη λήξη (ρυθμιζόμενα)":"days before expiry (configurable)")+'</td></tr>'
+   +'<tr><td>'+(el?"Επιτυχία μαθήματος":"Course pass")+'</td><td class="mono">≥ 80%*</td><td>'+(el?"Pass + επαρκής παρουσία → πιστοποιητικό (*ανά μάθημα)":"Pass + attendance met → certificate (*per course)")+'</td></tr>'
+   +'</tbody></table></div>';
+}
+
+function tblRoles(){
+  var el=WG_LANG==='el';
+  var C=el?["Ρόλος","Εμβέλεια","Βασική ενέργεια"]:["Role","Scope","Key action"];
+  var rows=el?[
+    ["System Admin","όλα (config)","χρήστες & κέντρα, oversight"],
+    ["Training Administrator","όλα (λειτουργικά)","OTR, πρόγραμμα, πιστοποιητικά, μητρώο"],
+    ["Money Agent","μόνο δικοί του principals","δημιουργεί/παρακολουθεί OTR"],
+    ["CFO / Accounting","οικονομικά (read) + έγκριση","εγκρίνει τιμολόγια"],
+    ["Instructor","δικά του μαθήματα","παρουσίες & βαθμοί"],
+    ["Training Center Staff","δικό του κέντρο","status OTR, ανέβασμα cert"],
+    ["Seafarer","μόνο ο εαυτός (read)","βλέπει cert & εκπαιδεύσεις"]
+  ]:[
+    ["System Admin","all (config)","users & centers, oversight"],
+    ["Training Administrator","all (operational)","OTR, schedule, certificates, matrix"],
+    ["Money Agent","own principals only","creates/tracks OTRs"],
+    ["CFO / Accounting","financial (read) + approve","approves invoices"],
+    ["Instructor","own classes","attendance & grades"],
+    ["Training Center Staff","own center","OTR status, cert upload"],
+    ["Seafarer","self only (read)","views certs & training"]
+  ];
+  var b="";for(var i=0;i<rows.length;i++){b+='<tr><td><b>'+rows[i][0]+'</b></td><td>'+rows[i][1]+'</td><td>'+rows[i][2]+'</td></tr>';}
+  return '<div class="gd-figwrap"><p class="gd-figtitle">👥 '+(el?"Ρόλοι & δικαιώματα (σύνοψη)":"Roles & access (summary)")+'</p>'
+   +'<table class="gd-table"><thead><tr><th>'+C[0]+'</th><th>'+C[1]+'</th><th>'+C[2]+'</th></tr></thead><tbody>'+b+'</tbody></table></div>';
+}
+
+function tblOtrStatus(){
+  var el=WG_LANG==='el';
+  return '<div class="gd-figwrap"><p class="gd-figtitle">🔀 '+(el?"Καταστάσεις OTR":"OTR statuses")+'</p>'
+   +'<table class="gd-table"><thead><tr><th>'+(el?"Κατάσταση":"Status")+'</th><th>'+(el?"Τι σημαίνει":"What it means")+'</th></tr></thead><tbody>'
+   +'<tr><td><span class="pill p-amber">'+(el?"Εκκρεμεί":"Pending")+'</span></td><td>'+(el?"υποβλήθηκε, δεν έχει προγραμματιστεί ακόμη":"submitted, not yet scheduled")+'</td></tr>'
+   +'<tr><td><span class="pill p-teal">'+(el?"Προγραμματισμένο":"Scheduled")+'</span></td><td>'+(el?"ανατέθηκε σε κέντρο + ημερομηνία":"assigned to a center + date")+'</td></tr>'
+   +'<tr><td><span class="pill p-green">'+(el?"Ολοκληρωμένο":"Completed")+'</span></td><td>'+(el?"παρακολούθησε, εκδόθηκε πιστοποιητικό":"attended, certificate issued")+'</td></tr>'
+   +'<tr><td><span class="pill p-red">'+(el?"Ακυρωμένο / Απορρίφθηκε":"Cancelled / Rejected")+'</span></td><td>'+(el?"με λόγο — δεν μένει «κολλημένο»":"with a reason — never left stuck")+'</td></tr>'
+   +'</tbody></table></div>';
+}
+
+function chartCompliance(){
+  var el=WG_LANG==='el';
+  var data=[["Shell",82,"#0EA5E9"],["Pioneer",91,"#10B981"],["Crossover",68,"#F59E0B"],["Global Marine",77,"#8B5CF6"]];
+  var bw=90,gap=54,x0=70,base=170,max=140,bars="",axis="";
+  for(var i=0;i<data.length;i++){
+    var h=Math.round(data[i][1]/100*max), x=x0+i*(bw+gap), y=base-h;
+    bars+='<rect x="'+x+'" y="'+y+'" width="'+bw+'" height="'+h+'" rx="6" fill="'+data[i][2]+'"/>'
+      +'<text x="'+(x+bw/2)+'" y="'+(y-8)+'" text-anchor="middle" font-family="JetBrains Mono" font-size="13" font-weight="700" fill="#0F2A43">'+data[i][1]+'%</text>'
+      +'<text x="'+(x+bw/2)+'" y="'+(base+20)+'" text-anchor="middle" font-family="Sora" font-size="12" fill="#475569">'+data[i][0]+'</text>';
+  }
+  return '<div class="gd-figwrap"><p class="gd-figtitle">📈 '+(el?"Συμμόρφωση ανά Principal (δείγμα)":"Compliance by Principal (sample)")+'</p>'
+   +'<svg viewBox="0 0 620 205" width="100%" preserveAspectRatio="xMidYMid meet">'
+   +'<line x1="55" y1="170" x2="600" y2="170" stroke="#CBD5E1" stroke-width="1"/>'
+   +'<line x1="55" y1="30" x2="55" y2="170" stroke="#CBD5E1" stroke-width="1"/>'+bars+'</svg>'
+   +'<p class="gd-figcap">'+(el?"Οι Αναφορές δίνουν drill-down: κλικ σε στήλη → η λίστα των ναυτικών από κάτω.":"Reports drill down: click a bar → the underlying seafarer list.")+'</p></div>';
+}
+
+/* ---- content model ---- */
+var WG_TABS = [
+ {id:"overview",dot:"#0EA5E9",label:{el:"Επισκόπηση & Ροή",en:"Overview & Flow"},
+  intro:{e:"🧭",title:{el:"Το οικοσύστημα WIMAS",en:"The WIMAS ecosystem"},
+   text:{el:"Το WIMAS ERP είναι η κεντρική πλατφόρμα όπου το κέντρο λειτουργεί ως Training Administrator: δέχεται αιτήματα, τα δρομολογεί, παρακολουθεί συμμόρφωση, εκδίδει πιστοποιητικά και τιμολόγια. Αυτός ο οδηγός εξηγεί κάθε ενότητα και πώς μιλάνε μεταξύ τους.",
+         en:"WIMAS ERP is the central platform where the center acts as a Training Administrator: it receives requests, routes them, tracks compliance, and issues certificates and invoices. This guide explains each section and how they talk to each other."},
+   aud:[{el:"Νέος χρήστης",en:"New user"},{el:"Διοίκηση",en:"Management"},{el:"Manning / Principal",en:"Manning / Principal"}]},
+  fig:figOverview,
+  cards:[
+   {a:"#0EA5E9",title:{el:"Η δομή: 5 βήματα + η μηχανή συμμόρφωσης",en:"The structure: 5 steps + the compliance engine"},
+    see:{el:"Πέντε ενότητες σε σειρά (OTR → Πρόγραμμα → Παρουσίες → Πιστοποιητικό → Τιμολόγιο) και το Μητρώο Συμμόρφωσης που τις τροφοδοτεί.",en:"Five sections in sequence (OTR → Schedule → Attendance → Certificate → Invoice) and the Compliance Matrix that feeds them."},
+    does:{el:"Κάθε ενότητα αναλαμβάνει μια φάση· το μητρώο εντοπίζει κενά και γεννά νέα OTR.",en:"Each section owns one phase; the matrix spots gaps and spawns new OTRs."},
+    steps:[{el:"Ξεκίνα από «Αιτήματα OTR» και άνοιξε (ή δημιούργησε) ένα OTR για τον ναυτικό.",en:"Start at OTR Requests and open (or create) an OTR for the seafarer."},{el:"Ως Training Admin πάτα «Assign & Confirm» για να το συνδέσεις με κέντρο + session στο «Πρόγραμμα».",en:"As Training Admin press Assign & Confirm to link it to a center + session in Schedule."},{el:"Ο εκπαιδευτής στις «Παρουσίες & Βαθμοί» καταγράφει παρουσία και βαθμό και πατά «Submit Grades».",en:"In Attendance & Grades the instructor records attendance and a grade, then presses Submit Grades."},{el:"Με Pass + επαρκή παρουσία, στα «Πιστοποιητικά» εκδίδεται αυτόματα το PDF.",en:"With Pass + enough attendance, the PDF is auto-issued in Certificates."},{el:"Στα «Τιμολόγια» δημιουργείται το τιμολόγιο και ο CFO/Accounting το εγκρίνει.",en:"In Invoices the invoice is created and CFO/Accounting approves it."},{el:"Το ολοκληρωμένο πιστοποιητικό ενημερώνει το «Μητρώο Συμμόρφωσης» — ο κύκλος κλείνει.",en:"The completed certificate updates the Compliance Matrix — the loop closes."},{el:"Όποτε χαθείς, γύρνα εδώ (Επισκόπηση) για να δεις σε ποιο βήμα βρίσκεσαι.",en:"Whenever you get lost, come back here (Overview) to see which step you are on."}],
+    result:{el:"Ένας κύκλος, μία πλατφόρμα — καμία διαδικασία εκτός συστήματος.",en:"One lifecycle, one platform — no process left outside the system."}}
+  ]},
+
+ {id:"dashboard",dot:"#0EA5E9",label:{el:"Dashboard",en:"Dashboard"},
+  intro:{e:"📊",title:{el:"Dashboard — η εικόνα της ημέρας",en:"Dashboard — today at a glance"},
+   text:{el:"Το σημείο εισόδου κάθε ρόλου. Δείχνει τα κρίσιμα KPI, το επερχόμενο πρόγραμμα και τις ειδοποιήσεις λήξης.",en:"Each role starts here. It shows critical KPIs, the upcoming schedule, and expiry alerts."},
+   aud:[{el:"Όλοι οι ρόλοι",en:"All roles"}]},
+  cards:[
+   {a:"#0EA5E9",title:{el:"Τρεις εκδοχές ανά ρόλο",en:"Three role variants"},
+    see:{el:"KPI κάρτες, «Επόμενες 7 ημέρες», εκκρεμή OTR, ειδοποιήσεις λήξης.",en:"KPI cards, next-7-days, pending OTRs, expiry alerts."},
+    does:{el:"Ο Admin βλέπει χρήστες/κέντρα, ο Agent τον στόλο του, ο Training Admin τις λειτουργίες.",en:"Admin sees users/centers, the Agent sees their fleet, the Training Admin sees operations."},
+    steps:[{el:"Συνδέσου με τον ρόλο σου· το Dashboard ανοίγει αυτόματα ως πρώτη οθόνη.",en:"Sign in with your role; the Dashboard opens automatically as the first screen."},{el:"Διάβασε τις 4 KPI κάρτες πάνω-πάνω (ενεργά OTR, μαθήματα σήμερα, πιστοποιητικά μήνα, λήξεις 30 ημερών).",en:"Read the 4 KPI cards at the top (active OTRs, courses today, certificates this month, expiring in 30 days)."},{el:"Κοίτα το panel «Επόμενες 7 ημέρες» για το πρόγραμμα που έρχεται.",en:"Check the Next 7 Days panel for the upcoming schedule."},{el:"Έλεγξε τη λίστα «Εκκρεμή OTR» για ό,τι περιμένει ενέργεια από εσένα.",en:"Review the Pending OTRs list for anything awaiting your action."},{el:"Σκρόλαρε στις «Ειδοποιήσεις Λήξης» και κάνε κλικ σε μία για να πας στον ναυτικό.",en:"Scroll to Expiry Alerts and click one to jump to that seafarer."},{el:"Χρησιμοποίησε τα Quick Actions (Create OTR / Schedule / Upload Cert) για άμεση ενέργεια.",en:"Use the Quick Actions (Create OTR / Schedule / Upload Cert) for an immediate action."}],
+    result:{el:"Ξέρεις τι χρειάζεται προσοχή, χωρίς να ψάξεις σε μενού.",en:"You know what needs attention without digging through menus."}}
+  ]},
+
+ {id:"seafarers",dot:"#10B981",label:{el:"Ναυτικοί",en:"Seafarers"},
+  intro:{e:"🧑‍✈️",title:{el:"Ναυτικοί — ο πυρήνας των δεδομένων",en:"Seafarers — the data core"},
+   text:{el:"Ο κατάλογος ναυτικών με compliance % ανά άτομο και αναλυτική καρτέλα με 4 tabs.",en:"The seafarer roster with per-person compliance %, plus a detail card with 4 tabs."},
+   aud:[{el:"Training Admin",en:"Training Admin"},{el:"Money Agent",en:"Money Agent"}]},
+  cards:[
+   {a:"#10B981",title:{el:"Καρτέλα ναυτικού (4 tabs)",en:"Seafarer profile (4 tabs)"},
+    see:{el:"Ιστορικό, Συμμόρφωση, Έγγραφα, Πορεία Καριέρας.",en:"History, Compliance, Documents, Career Path."},
+    does:{el:"Ενοποιεί εκπαιδεύσεις, πιστοποιητικά και στατικά έγγραφα (διαβατήριο, ναυτικό φυλλάδιο).",en:"Unifies trainings, certificates and statutory documents (passport, seafarer book)."},
+    steps:[{el:"Άνοιξε «Ναυτικοί» από το πλαϊνό μενού.",en:"Open Seafarers from the sidebar."},{el:"Προαιρετικά, ψάξε ή φίλτραρε με όνομα, principal ή βαθμό.",en:"Optionally search or filter by name, principal or rank."},{el:"Κάνε κλικ σε έναν ναυτικό για να ανοίξει η καρτέλα του.",en:"Click a seafarer to open their profile."},{el:"Στο tab «Ιστορικό» δες ολοκληρωμένα μαθήματα με ημερομηνίες και βαθμούς.",en:"In the History tab see completed courses with dates and grades."},{el:"Στο tab «Συμμόρφωση» εντόπισε κόκκινες/πορτοκαλί γραμμές (κενά ή λήξεις).",en:"In the Compliance tab spot red/amber rows (gaps or expiries)."},{el:"Στο tab «Έγγραφα» έλεγξε διαβατήριο, ναυτικό φυλλάδιο, CoC, ιατρικό.",en:"In the Documents tab check passport, seafarer book, CoC, medical."},{el:"Στο tab «Πορεία Καριέρας» δες αν είναι προαγωγίμος και τι του λείπει.",en:"In the Career Path tab see if they are promotable and what is missing."},{el:"Αν βρεις κενό, πάτα «+ OTR» για να ξεκινήσεις εκπαίδευση επιτόπου.",en:"If you find a gap, press + OTR to start training right there."}],
+    result:{el:"Πλήρης εικόνα ενός ναυτικού σε μία οθόνη.",en:"A complete picture of one seafarer on one screen."}}
+  ]},
+
+ {id:"otr",dot:"#F59E0B",label:{el:"Αιτήματα OTR",en:"OTR Requests"},
+  intro:{e:"📥",title:{el:"OTR — το αίτημα εκπαίδευσης",en:"OTR — the training request"},
+   text:{el:"Officer Training Request: το αίτημα ενός ναυτικού για εκπαίδευση, από τον Money Agent ή τον Training Admin.",en:"Officer Training Request: a seafarer training request, from a Money Agent or the Training Admin."},
+   aud:[{el:"Training Admin",en:"Training Admin"},{el:"Money Agent",en:"Money Agent"}]},
+  fig:tblOtrStatus,
+  cards:[
+   {a:"#F59E0B",title:{el:"Δημιουργία & δρομολόγηση",en:"Create & route"},
+    see:{el:"Λίστα OTR με αριθμό, ναυτικό, principal, κατάσταση· φόρμα «Create New OTR».",en:"OTR list with number, seafarer, principal, status; a Create New OTR form."},
+    does:{el:"Ο Agent υποβάλλει· ο Training Admin κάνει «Assign & Confirm» σε κέντρο + ημερομηνία.",en:"The Agent submits; the Training Admin does Assign & Confirm to a center + date."},
+    steps:[{el:"Άνοιξε «Αιτήματα OTR» και πάτα «Create New OTR».",en:"Open OTR Requests and press Create New OTR."},{el:"Επίλεξε τον ναυτικό από το dropdown (ή φτιάξε βασικό προφίλ αν λείπει).",en:"Pick the seafarer from the dropdown (or create a minimal profile if missing)."},{el:"Επίλεξε τον Principal (Shell, Pioneer, Crossover, Global Marine).",en:"Select the Principal (Shell, Pioneer, Crossover, Global Marine)."},{el:"Διάλεξε ένα ή περισσότερα μαθήματα — κράτα Ctrl/Cmd για πολλαπλά.",en:"Choose one or more courses — hold Ctrl/Cmd for multiple."},{el:"Όρισε προτεραιότητα (Normal/Urgent), προτεινόμενη ημερομηνία και σημειώσεις.",en:"Set priority (Normal/Urgent), preferred date and notes."},{el:"Πάτα «Submit OTR»· παίρνει αριθμό (π.χ. OTR-2026-0155) και μπαίνει σε «Εκκρεμεί».",en:"Press Submit OTR; it gets a number (e.g. OTR-2026-0155) and enters Pending."},{el:"Ως Training Admin, άνοιξε το OTR και πάτα «Assign & Confirm».",en:"As Training Admin, open the OTR and press Assign & Confirm."},{el:"Επίλεξε κέντρο + ημερομηνία/session· η κατάσταση γίνεται «Προγραμματισμένο» και ειδοποιείται ο Agent.",en:"Choose center + date/session; the status becomes Scheduled and the Agent is notified."}],
+    result:{el:"Το αίτημα μπαίνει σε ροή· τίποτα δεν χάνεται σε email.",en:"The request enters the flow; nothing gets lost in email."}},
+   {a:"#F59E0B",title:{el:"Από το μητρώο σε ένα κλικ",en:"Straight from the matrix"},
+    see:{el:"Κουμπί «+ OTR» δίπλα σε κάθε κενό/ληγμένο μάθημα στο Μητρώο Συμμόρφωσης.",en:"A + OTR button next to each missing/expired course in the Compliance Matrix."},
+    does:{el:"Προ-συμπληρώνει το OTR με ναυτικό, principal και το μάθημα που λείπει.",en:"Pre-fills the OTR with seafarer, principal and the missing course."},
+    steps:[{el:"Πήγαινε στο «Μητρώο Συμμόρφωσης».",en:"Go to the Compliance Matrix."},{el:"Επίλεξε Principal + βαθμό για να δεις τα απαιτούμενα μαθήματα.",en:"Select Principal + rank to see the required courses."},{el:"Επίλεξε τον συγκεκριμένο ναυτικό για να δεις το στιγμιότυπό του.",en:"Select the specific seafarer to see their instance."},{el:"Εντόπισε γραμμή «λείπει» (⚫) ή «λήγει/έληξε» (🟠/🔴).",en:"Find a row marked missing (⚫) or expiring/expired (🟠/🔴)."},{el:"Πάτα το κουμπί «+ OTR» πάνω σε εκείνη τη γραμμή.",en:"Press the + OTR button on that row."},{el:"Η φόρμα ανοίγει προ-συμπληρωμένη με ναυτικό, principal και μάθημα.",en:"The form opens pre-filled with seafarer, principal and course."},{el:"Έλεγξε/διόρθωσε και πάτα «Submit OTR» — το κενό μπαίνει σε ροή.",en:"Review/adjust and press Submit OTR — the gap enters the flow."}],
+    result:{el:"Η συμμόρφωση δεν μένει «θεωρία» — γίνεται ενέργεια.",en:"Compliance stops being theory — it becomes an action."}}
+  ]},
+
+ {id:"schedule",dot:"#8B5CF6",label:{el:"Πρόγραμμα",en:"Course Schedule"},
+  intro:{e:"📅",title:{el:"Πρόγραμμα μαθημάτων",en:"Course schedule"},
+   text:{el:"Δημιουργία και διαχείριση sessions, με χωρητικότητα, εκπαιδευτή/αίθουσα και ορατότητα προς Agents.",en:"Create and manage sessions, with capacity, instructor/room and visibility to Agents."},
+   aud:[{el:"Training Admin",en:"Training Admin"},{el:"Training Center Staff",en:"Training Center Staff"}]},
+  cards:[
+   {a:"#8B5CF6",title:{el:"Create Course Session",en:"Create Course Session"},
+    see:{el:"Ημερολόγιο + λίστα· κάθε session δείχνει εγγεγραμμένους/χωρητικότητα.",en:"Calendar + list; each session shows enrolled/capacity."},
+    does:{el:"Εσωτερικό (αίθουσα + εκπαιδευτής) ή εξωτερικό (κέντρο)· επανάληψη εβδομαδιαία/μηνιαία.",en:"Internal (room + instructor) or external (center); weekly/monthly recurrence."},
+    steps:[{el:"Άνοιξε «Πρόγραμμα Μαθημάτων» (λίστα ή ημερολόγιο).",en:"Open Course Schedule (list or calendar)."},{el:"Πάτα «New Session».",en:"Press New Session."},{el:"Διάλεξε τύπο μαθήματος και ημερομηνίες έναρξης/λήξης.",en:"Pick the course type and start/end dates."},{el:"Όρισε μέγιστη χωρητικότητα (θέσεις).",en:"Set the maximum capacity (seats)."},{el:"Διάλεξε κέντρο: εσωτερικό (αίθουσα + εκπαιδευτής) ή εξωτερικό.",en:"Choose the center: internal (room + instructor) or external."},{el:"Όρισε ορατότητα Public (ορατό σε Agents) ή Private, και τυχόν επανάληψη.",en:"Set visibility Public (visible to Agents) or Private, and any recurrence."},{el:"Πάτα «Create Session».",en:"Press Create Session."},{el:"Ενέγραψε ναυτικούς ή σύνδεσε ένα εκκρεμές OTR στο session.",en:"Enroll seafarers or link a pending OTR to the session."}],
+    result:{el:"Καθαρό πρόγραμμα με έλεγχο θέσεων και συγκρούσεων.",en:"A clean schedule with seat and conflict control."}}
+  ]},
+
+ {id:"attendance",dot:"#10B981",label:{el:"Παρουσίες & Βαθμοί",en:"Attendance & Grades"},
+  intro:{e:"✅",title:{el:"Παρουσίες & Βαθμοί",en:"Attendance & Grades"},
+   text:{el:"Ο εκπαιδευτής καταγράφει παρουσία και βαθμό· το σύστημα κρίνει Pass/Fail και ξεκλειδώνει το πιστοποιητικό.",en:"The instructor records attendance and a grade; the system decides Pass/Fail and unlocks the certificate."},
+   aud:[{el:"Instructor",en:"Instructor"},{el:"Training Admin (read)",en:"Training Admin (read)"}]},
+  cards:[
+   {a:"#10B981",title:{el:"Καταγραφή & υποβολή",en:"Record & submit"},
+    see:{el:"Λίστα εγγεγραμμένων ανά session, παρουσία ανά ημέρα, πεδίο βαθμού.",en:"Enrolled list per session, per-day attendance, a grade field."},
+    does:{el:"«Submit Grades» κλειδώνει τα δεδομένα· μόνο ο Training Admin ξεκλειδώνει.",en:"Submit Grades locks the data; only the Training Admin can unlock."},
+    steps:[{el:"Άνοιξε «Παρουσίες & Βαθμοί» και επίλεξε το session.",en:"Open Attendance & Grades and select the session."},{el:"Θα δεις τη λίστα των εγγεγραμμένων ναυτικών.",en:"You will see the list of enrolled seafarers."},{el:"Για κάθε ημέρα σημείωσε Παρών / Απών / Αργοπορία.",en:"For each day mark Present / Absent / Late."},{el:"Σε πολυήμερα μαθήματα, συμπλήρωσε παρουσία για Ημέρα 1, 2, 3…",en:"For multi-day courses, fill attendance for Day 1, 2, 3…"},{el:"Καταχώρησε τον βαθμό κάθε ναυτικού· εμφανίζεται αυτόματα Pass/Fail βάσει κατωφλίου.",en:"Enter each seafarer grade; Pass/Fail shows automatically against the threshold."},{el:"Έλεγξε ότι όλα είναι σωστά — μετά την υποβολή τα δεδομένα κλειδώνουν.",en:"Check everything is correct — after submission the data locks."},{el:"Πάτα «Submit Grades» για οριστικοποίηση.",en:"Press Submit Grades to finalize."},{el:"Για όσους πέρασαν, το πιστοποιητικό γίνεται διαθέσιμο προς έκδοση.",en:"For those who passed, the certificate becomes available to issue."}],
+    result:{el:"Με Pass + επαρκή παρουσία, το πιστοποιητικό ξεκλειδώνει μόνο του.",en:"With Pass + enough attendance, the certificate unlocks on its own."}}
+  ]},
+
+ {id:"certificates",dot:"#0E7490",label:{el:"Πιστοποιητικά",en:"Certificates"},
+  intro:{e:"📜",title:{el:"Πιστοποιητικά",en:"Certificates"},
+   text:{el:"Μητρώο εκδοθέντων πιστοποιητικών με κατάσταση έγκυρο/λήγει/έληξε, PDF και ανέβασμα εξωτερικών.",en:"A registry of issued certificates with valid/expiring/expired status, PDF, and external upload."},
+   aud:[{el:"Training Admin",en:"Training Admin"},{el:"Money Agent (δικά του)",en:"Money Agent (own)"}]},
+  cards:[
+   {a:"#0E7490",title:{el:"Έκδοση & εξωτερικά",en:"Issuance & externals"},
+    see:{el:"Λίστα CERT-… με χρώμα κατάστασης και ένδειξη τιμολόγησης.",en:"A CERT-… list with status color and an invoiced flag."},
+    does:{el:"Αυτόματη έκδοση από ολοκλήρωση session· «Upload External» για μαθήματα αλλού.",en:"Auto-issued on session completion; Upload External for courses done elsewhere."},
+    steps:[{el:"Άνοιξε «Πιστοποιητικά» — βλέπεις το μητρώο CERT-….",en:"Open Certificates — you see the CERT-… registry."},{el:"Διάβασε το χρώμα κατάστασης: 🟢 έγκυρο, 🟠 λήγει, 🔴 έληξε.",en:"Read the status color: 🟢 valid, 🟠 expiring, 🔴 expired."},{el:"Για session που ολοκληρώθηκε με Pass, πάτα «Issue» για αυτόματη έκδοση PDF.",en:"For a session completed with Pass, press Issue to auto-generate the PDF."},{el:"Το PDF αποθηκεύεται στην καρτέλα του ναυτικού και μπορεί να σταλεί στον Agent.",en:"The PDF is stored on the seafarer profile and can be sent to the Agent."},{el:"Για μάθημα που έγινε αλλού, πάτα «Upload External Certificate».",en:"For a course done elsewhere, press Upload External Certificate."},{el:"Συμπλήρωσε ναυτικό, τύπο μαθήματος, κέντρο, ημερομηνία και ανέβασε το PDF.",en:"Fill in seafarer, course type, center, date and upload the PDF."},{el:"Προαιρετικά όρισε ημερομηνία λήξης — προτείνεται αυτόματα αν είναι γνωστή.",en:"Optionally set an expiry date — it is auto-suggested when known."},{el:"Πάτα «Upload Certificate»· εμφανίζεται στο ιστορικό και κλείνει το κενό στο μητρώο.",en:"Press Upload Certificate; it appears in history and closes the gap in the matrix."}],
+    result:{el:"Ένα ενιαίο, αξιόπιστο ιστορικό πιστοποιήσεων ανά ναυτικό.",en:"One reliable certification history per seafarer."}}
+  ]},
+
+ {id:"compliance",dot:"#EF4444",label:{el:"Μητρώο Συμμόρφωσης",en:"Compliance Matrix"},
+  intro:{e:"🧮",title:{el:"Μητρώο Συμμόρφωσης — η καρδιά",en:"Compliance Matrix — the heart"},
+   text:{el:"Εδώ το WIMAS «κερδίζει τη θέση του». Κωδικοποιεί τι απαιτείται ανά principal × βαθμό και εντοπίζει κενά. Κρίσιμη διάκριση: ο κανόνας είναι template· η συμμόρφωση είναι το στιγμιότυπο ενός ναυτικού.",en:"This is where WIMAS earns its keep. It encodes what is required per principal × rank and flags gaps. Key distinction: the rule is a template; compliance is a seafarer instance."},
+   aud:[{el:"Training Admin",en:"Training Admin"},{el:"Διοίκηση",en:"Management"}]},
+  fig:figCompliance,
+  cards:[
+   {a:"#EF4444",title:{el:"Κανόνας vs Στιγμιότυπο",en:"Rule vs Instance"},
+    see:{el:"Πίνακας απαιτούμενων μαθημάτων ανά principal × βαθμό, με συχνότητα, τελευταία εκτέλεση, λήξη.",en:"A table of required courses per principal × rank, with frequency, last done, expiry."},
+    does:{el:"Ο ΚΑΝΟΝΑΣ ισχύει ανεξάρτητα από πρόσωπα· η ΣΥΜΜΟΡΦΩΣΗ προκύπτει όταν αξιολογηθεί ένας ναυτικός πάνω του.",en:"The RULE holds independently of people; COMPLIANCE emerges when a seafarer is evaluated against it."},
+    steps:[{el:"Άνοιξε «Μητρώο Συμμόρφωσης».",en:"Open the Compliance Matrix."},{el:"Επίλεξε Principal και βαθμό — βλέπεις τον ΚΑΝΟΝΑ (απαιτούμενα μαθήματα).",en:"Select Principal and rank — you see the RULE (required courses)."},{el:"Επίλεξε έναν ναυτικό — βλέπεις το ΣΤΙΓΜΙΟΤΥΠΟ (τι έχει και τι του λείπει).",en:"Select a seafarer — you see the INSTANCE (what they have and what is missing)."},{el:"Διάβασε ανά γραμμή: μάθημα, συχνότητα, τελευταία εκτέλεση, λήξη, κατάσταση.",en:"Read each row: course, frequency, last done, expiry, status."},{el:"Δες το συνολικό Compliance % (🟢 ≥90 / 🟠 70–89 / 🔴 <70).",en:"Check the overall Compliance % (🟢 ≥90 / 🟠 70–89 / 🔴 <70)."},{el:"Σε κάθε μη-έγκυρη γραμμή πάτα «+ OTR» για διόρθωση.",en:"On any non-valid row press + OTR to fix it."},{el:"Για μαζική ενέργεια χρησιμοποίησε «Create Renewal OTRs» με preview πριν την υποβολή.",en:"For bulk action use Create Renewal OTRs with a preview before submitting."},{el:"Επανέλεγξε: μόλις εκδοθεί το πιστοποιητικό, η γραμμή γίνεται 🟢.",en:"Re-check: once the certificate is issued, the row turns 🟢."}],
+    result:{el:"Η συμμόρφωση είναι μετρήσιμη και εκτελέσιμη, όχι απλή αναφορά.",en:"Compliance is measurable and actionable, not a static report."}}
+  ],
+  extra:tblThresholds},
+
+ {id:"invoices",dot:"#F59E0B",label:{el:"Τιμολόγια",en:"Invoices"},
+  intro:{e:"💶",title:{el:"Τιμολόγια",en:"Invoices"},
+   text:{el:"Τιμολόγηση ολοκληρωμένων εκπαιδεύσεων προς τον Agent, με διαχωρισμό καθηκόντων: άλλος συντάσσει, άλλος εγκρίνει.",en:"Billing completed trainings to the Agent, with separation of duties: one drafts, another approves."},
+   aud:[{el:"Training Admin",en:"Training Admin"},{el:"CFO / Accounting",en:"CFO / Accounting"}]},
+  cards:[
+   {a:"#F59E0B",title:{el:"Ροή έγκρισης",en:"Approval flow"},
+    see:{el:"Λίστα τιμολογίων + καρτέλα, κατάσταση Draft → Ready → Approved → Issued.",en:"Invoice list + panel, status Draft → Ready → Approved → Issued."},
+    does:{el:"Ο Training Admin συντάσσει· ΜΟΝΟ ο CFO/Accounting εγκρίνει (segregation of duties).",en:"The Training Admin drafts; ONLY CFO/Accounting approves (segregation of duties)."},
+    steps:[{el:"Άνοιξε «Τιμολόγια».",en:"Open Invoices."},{el:"Πάτα «Create Invoice» και επίλεξε τα ολοκληρωμένα πιστοποιητικά προς χρέωση.",en:"Press Create Invoice and pick the completed certificates to bill."},{el:"Το σύστημα μπλοκάρει αυτόματα διπλή τιμολόγηση του ίδιου πιστοποιητικού.",en:"The system auto-blocks double-invoicing of the same certificate."},{el:"Έλεγξε agent, ποσά ανά είδος και σύνολο.",en:"Check the agent, per-item amounts and total."},{el:"Πάτα «Send for Approval» — η κατάσταση γίνεται «Ready for Approval».",en:"Press Send for Approval — the status becomes Ready for Approval."},{el:"Ως CFO/Accounting, άνοιξε το τιμολόγιο και πάτα «Approve» (μόνο αυτός ο ρόλος).",en:"As CFO/Accounting, open the invoice and press Approve (this role only)."},{el:"Μετά την έγκριση στείλε το τιμολόγιο (Issued) και κατέβασε PDF/CSV.",en:"After approval, send the invoice (Issued) and download PDF/CSV."},{el:"Κάθε αλλαγή καταγράφεται στο Audit Trail.",en:"Every change is recorded in the Audit Trail."}],
+    result:{el:"Καθαρό, ελεγχόμενο billing με πλήρες audit trail.",en:"Clean, controlled billing with a full audit trail."}}
+  ]},
+
+ {id:"reports",dot:"#8B5CF6",label:{el:"Αναφορές",en:"Reports"},
+  intro:{e:"📈",title:{el:"Αναφορές & Ανάλυση",en:"Reports & Analytics"},
+   text:{el:"Στρατηγική εικόνα: συμμόρφωση ανά principal, όγκος μαθημάτων, προαγωγίμοι, χρήση εξωτερικών κέντρων.",en:"The strategic picture: compliance by principal, course volume, promotable seafarers, external-center usage."},
+   aud:[{el:"Training Admin",en:"Training Admin"},{el:"Διοίκηση",en:"Management"}]},
+  fig:chartCompliance,
+  cards:[
+   {a:"#8B5CF6",title:{el:"Από αριθμό σε δράση",en:"From number to action"},
+    see:{el:"Panels με KPI ανά principal/μάθημα και «market intelligence» για εξωτερικά κέντρα.",en:"Panels with KPIs per principal/course and market intelligence for external centers."},
+    does:{el:"Drill-down: κλικ σε KPI → η υποκείμενη λίστα ναυτικών.",en:"Drill-down: click a KPI → the underlying seafarer list."},
+    steps:[{el:"Άνοιξε «Αναφορές».",en:"Open Reports."},{el:"Διάλεξε φίλτρα: Principal, βαθμό, χρονική περίοδο.",en:"Choose filters: Principal, rank, time period."},{el:"Δες το panel «Συμμόρφωση ανά Principal» και τα υπόλοιπα KPI.",en:"See the Compliance by Principal panel and the other KPIs."},{el:"Κάνε κλικ σε στήλη ή αριθμό για drill-down στη λίστα των ναυτικών.",en:"Click a bar or number to drill down into the seafarer list."},{el:"Στο «Promotable Seafarers» δες ποιοι είναι έτοιμοι για προαγωγή.",en:"In Promotable Seafarers see who is ready for promotion."},{el:"Στο «External Center Usage» δες πού πάει όγκος εκτός WIMAS.",en:"In External Center Usage see where volume goes outside WIMAS."},{el:"Πάτα «Export» για PDF (παρουσίαση) ή Excel (raw data).",en:"Press Export for PDF (presentation) or Excel (raw data)."}],
+    result:{el:"Οι αναφορές οδηγούν σε ενέργειες, δεν μένουν στατικές.",en:"Reports lead to action instead of staying static."}}
+  ]},
+
+ {id:"centers",dot:"#0EA5E9",label:{el:"Κέντρα Εκπαίδευσης",en:"Training Centers"},
+  intro:{e:"🏫",title:{el:"Κέντρα Εκπαίδευσης",en:"Training Centers"},
+   text:{el:"Κατάλογος εσωτερικών & εξωτερικών κέντρων με διαπιστεύσεις, μαθήματα και κατάσταση.",en:"A directory of internal & external centers with accreditations, courses and status."},
+   aud:[{el:"Training Admin",en:"Training Admin"},{el:"System Admin",en:"System Admin"}]},
+  cards:[
+   {a:"#0EA5E9",title:{el:"Διαχείριση κέντρων",en:"Manage centers"},
+    see:{el:"WIMAS (internal), STI, Compass, MarineEd· διαπιστεύσεις STCW/GMDSS/ISO κ.λπ.",en:"WIMAS (internal), STI, Compass, MarineEd; STCW/GMDSS/ISO accreditations, etc."},
+    does:{el:"Κατάσταση Active/Inactive/Under Review· το «Under Review» μπλοκάρει νέα sessions.",en:"Active/Inactive/Under Review status; Under Review blocks new sessions."},
+    steps:[{el:"Άνοιξε «Κέντρα Εκπαίδευσης».",en:"Open Training Centers."},{el:"Δες τη λίστα: WIMAS (internal), STI, Compass, MarineEd.",en:"See the list: WIMAS (internal), STI, Compass, MarineEd."},{el:"Κάνε κλικ σε κέντρο για διαπιστεύσεις (STCW/GMDSS/ISO…), μαθήματα και επικοινωνία.",en:"Click a center for accreditations (STCW/GMDSS/ISO…), courses and contact."},{el:"Για νέο κέντρο, πάτα «Add Center» και συμπλήρωσε στοιχεία + διαπιστεύσεις.",en:"For a new center, press Add Center and fill in details + accreditations."},{el:"Όρισε κατάσταση: Active / Inactive / Under Review.",en:"Set the status: Active / Inactive / Under Review."},{el:"«Under Review» μπλοκάρει νέο προγραμματισμό sessions σε αυτό το κέντρο.",en:"Under Review blocks new session scheduling at that center."},{el:"Ενημέρωσε τη λίστα προσφερόμενων μαθημάτων ανά κέντρο.",en:"Update the list of offered courses per center."}],
+    result:{el:"Ξέρεις ποιο κέντρο μπορεί να παραδώσει τι — και ποιο όχι.",en:"You know which center can deliver what — and which cannot."}}
+  ]},
+
+ {id:"users",dot:"#64748B",label:{el:"Χρήστες & Ρόλοι",en:"Users & Roles"},
+  intro:{e:"👥",title:{el:"Χρήστες & Ρόλοι (RBAC)",en:"Users & Roles (RBAC)"},
+   text:{el:"Επτά ρόλοι με διαφορετική εμβέλεια. Τα δικαιώματα επιβάλλονται στον server, όχι απλώς κρύβονται στο UI.",en:"Seven roles with different scope. Permissions are enforced on the server, not just hidden in the UI."},
+   aud:[{el:"System Admin",en:"System Admin"}]},
+  fig:tblRoles,
+  cards:[
+   {a:"#64748B",title:{el:"Δημιουργία χρήστη",en:"Create user"},
+    see:{el:"Λίστα χρηστών με ρόλο, οργανισμό, κατάσταση· φόρμα «Create New User».",en:"A user list with role, org, status; a Create New User form."},
+    does:{el:"Ο Money Agent είναι κλειδωμένος στους δικούς του principals· ο CFO εγκρίνει τιμολόγια.",en:"The Money Agent is locked to their own principals; the CFO approves invoices."},
+    steps:[{el:"Άνοιξε «Χρήστες» (μόνο System Admin / Training Admin).",en:"Open Users (System Admin / Training Admin only)."},{el:"Πάτα «Create New User».",en:"Press Create New User."},{el:"Συμπλήρωσε ονοματεπώνυμο και email.",en:"Fill in full name and email."},{el:"Επίλεξε ρόλο από το dropdown (7 ρόλοι).",en:"Select a role from the dropdown (7 roles)."},{el:"Αν είναι Instructor ή Training Center Staff, ανάθεσε κέντρο.",en:"If Instructor or Training Center Staff, assign a center."},{el:"Προαιρετικά βάλε τηλέφωνο για SMS ειδοποιήσεις.",en:"Optionally add a phone for SMS alerts."},{el:"Πάτα «Create User & Send Email» — στέλνεται προσωρινός κωδικός.",en:"Press Create User & Send Email — a temporary password is sent."},{el:"Ο χρήστης αλλάζει κωδικό στην πρώτη σύνδεση· ενεργοποίησε/απενεργοποίησε χωρίς διαγραφή.",en:"The user changes password on first login; activate/deactivate without deleting."}],
+    result:{el:"Κάθε χρήστης βλέπει μόνο ό,τι του αναλογεί — με ασφάλεια.",en:"Each user sees only what their role allows — securely."}}
+  ]},
+
+ {id:"agents",dot:"#10B981",label:{el:"Για Money Agents",en:"For Money Agents"},
+  intro:{e:"🚢",title:{el:"Για Money Agents",en:"For Money Agents"},
+   text:{el:"Εσύ βλέπεις ΜΟΝΟ τους δικούς σου principals: τους ναυτικούς σου, τα OTR σου, τα τιμολόγιά σου, τις αναφορές σου.",en:"You see ONLY your own principals: your seafarers, your OTRs, your invoices, your reports."},
+   aud:[{el:"Money Agent",en:"Money Agent"}]},
+  cards:[
+   {a:"#10B981",title:{el:"Ο κύκλος σου σε 3 κινήσεις",en:"Your loop in 3 moves"},
+    see:{el:"Dashboard στόλου, λίστα OTR με status tracker, ειδοποιήσεις νέων πιστοποιητικών.",en:"A fleet dashboard, an OTR list with a status tracker, new-certificate alerts."},
+    does:{el:"Υποβάλλεις OTR, παρακολουθείς κατάσταση, κατεβάζεις πιστοποιητικό — χωρίς email.",en:"You submit OTRs, track status, download certificates — without email."},
+    steps:[{el:"Συνδέσου με τον λογαριασμό σου· βλέπεις μόνο τους δικούς σου principals.",en:"Sign in with your account; you see only your own principals."},{el:"Στο Dashboard δες τον στόλο σου και τα εκκρεμή OTR.",en:"On the Dashboard see your fleet and pending OTRs."},{el:"Πάτα «Submit new OTR» για έναν ναυτικό σου.",en:"Press Submit new OTR for one of your seafarers."},{el:"Επίλεξε μαθήματα, ημερομηνίες, προτεραιότητα και υπόβαλε.",en:"Choose courses, dates, priority and submit."},{el:"Παρακολούθησε στον status tracker: Υποβλήθηκε → Προγραμματίστηκε → Ολοκληρώθηκε.",en:"Track it on the status tracker: Submitted → Scheduled → Completed."},{el:"Θα λάβεις ειδοποίηση σε κάθε αλλαγή κατάστασης.",en:"You get a notification on every status change."},{el:"Μόλις εκδοθεί, κατέβασε το πιστοποιητικό από την καρτέλα.",en:"Once issued, download the certificate from the profile."},{el:"Στο «Compliance Report» δες μόνο τους δικούς σου ναυτικούς και κάνε export.",en:"In the Compliance Report see only your own seafarers and export."}],
+    result:{el:"Πλήρης έλεγχος του στόλου σου, χωρίς πηγαινέλα με email.",en:"Full control of your fleet, with no email back-and-forth."}}
+  ]},
+
+ {id:"glossary",dot:"#64748B",label:{el:"Γλωσσάριο",en:"Glossary"},
+  intro:{e:"📖",title:{el:"Γλωσσάριο",en:"Glossary"},
+   text:{el:"Οι όροι που μπερδεύουν, εξηγημένοι απλά.",en:"The terms that cause confusion, explained simply."},
+   aud:[{el:"Όλοι",en:"Everyone"}]},
+  glossary:[
+   {t:"OTR",el:"Officer Training Request — το αίτημα εκπαίδευσης ενός ναυτικού.",en:"Officer Training Request — a seafarer training request."},
+   {t:"Principal",el:"Η ναυτιλιακή/πελάτης του οποίου το πλήρωμα εκπαιδεύεται (Shell, Pioneer…).",en:"The shipping client whose crew is trained (Shell, Pioneer…)."},
+   {t:"Money Agent",el:"Το γραφείο crewing που εκπροσωπεί έναν ή περισσότερους principals.",en:"The crewing office representing one or more principals."},
+   {t:"Compliance %",el:"Έγκυρα απαιτούμενα μαθήματα ÷ σύνολο απαιτούμενων, ανά principal × βαθμό.",en:"Valid required courses ÷ total required, per principal × rank."},
+   {t:"Compliance Matrix",el:"Ο ΚΑΝΟΝΑΣ: ποια μαθήματα απαιτούνται ανά principal × βαθμό (ανεξάρτητα από πρόσωπα).",en:"The RULE: which courses are required per principal × rank (independent of people)."},
+   {t:"Certificate",el:"Το πιστοποιητικό ενός ναυτικού για ένα μάθημα, με ημερομηνία λήξης.",en:"A seafarer certificate for a course, with an expiry date."},
+   {t:"CFO / Accounting",el:"Ο ρόλος που εγκρίνει τιμολόγια (ξεχωριστός από αυτόν που τα συντάσσει).",en:"The role that approves invoices (separate from whoever drafts them)."},
+   {t:"RBAC",el:"Δικαιώματα ανά ρόλο· ο Money Agent βλέπει μόνο τους δικούς του principals.",en:"Role-based access; a Money Agent sees only their own principals."},
+   {t:"STCW",el:"Το διεθνές πρότυπο εκπαίδευσης & πιστοποίησης ναυτικών (βάση των μαθημάτων).",en:"The international standard for seafarer training & certification (the course baseline)."}
+  ]}
+];
+
+
+/* ---- enrichment data ---- */
+var WG_KPIS = {
+ overview:[
+  {v:"5",l:{el:"βήματα ροής",en:"flow steps"},s:{el:"OTR → Τιμολόγιο",en:"OTR → Invoice"}},
+  {v:"7",l:{el:"ρόλοι (RBAC)",en:"roles (RBAC)"},s:{el:"εμβέλεια ανά ρόλο",en:"scoped per role"}},
+  {v:"8",l:{el:"Epics",en:"Epics"},s:{el:"31 user stories",en:"31 user stories"}},
+  {v:"14",l:{el:"ενότητες οδηγού",en:"guide sections"},s:{el:"EL / EN",en:"EL / EN"}}
+ ]
+};
+var WG_CALLOUTS = {
+ overview:[{type:"tip",title:{el:"Συμβουλή",en:"Tip"},body:{el:"Άνοιξε τον οδηγό full-screen για την πλήρη εικόνα της ροής, και γύρνα εδώ όποτε χαθείς.",en:"Open the guide full-screen for the full picture of the flow, and return here whenever you get lost."}}],
+ otr:[
+  {type:"warn",title:{el:"Προσοχή",en:"Heads-up"},body:{el:"Ο Money Agent δημιουργεί OTR ΜΟΝΟ για τους δικούς του principals — το πεδίο Principal είναι κλειδωμένο στα δικά του.",en:"A Money Agent creates OTRs ONLY for their own principals — the Principal field is locked to theirs."}},
+  {type:"tip",title:{el:"Συμβουλή",en:"Tip"},body:{el:"Από το Μητρώο Συμμόρφωσης το «+ OTR» έρχεται προ-συμπληρωμένο — πολύ πιο γρήγορο από το μηδέν.",en:"From the Compliance Matrix the + OTR arrives pre-filled — much faster than starting from scratch."}}
+ ],
+ attendance:[{type:"warn",title:{el:"Προσοχή",en:"Heads-up"},body:{el:"Μετά το «Submit Grades» τα δεδομένα κλειδώνουν· μόνο ο Training Admin μπορεί να τα ξεκλειδώσει.",en:"After Submit Grades the data locks; only the Training Admin can unlock it."}}],
+ compliance:[{type:"warn",title:{el:"Το πιο συχνό λάθος",en:"The most common mistake"},body:{el:"ΜΗΝ μπερδεύεις τον ΚΑΝΟΝΑ (template ανά principal × βαθμό) με τη ΣΥΜΜΟΡΦΩΣΗ (το στιγμιότυπο ενός ναυτικού). Είναι δύο διαφορετικά πράγματα.",en:"Do NOT confuse the RULE (template per principal × rank) with COMPLIANCE (a seafarer instance). They are two different things."}}],
+ invoices:[{type:"warn",title:{el:"Διαχωρισμός καθηκόντων",en:"Separation of duties"},body:{el:"Όποιος συντάσσει το τιμολόγιο ΔΕΝ το εγκρίνει. Η έγκριση ανήκει αποκλειστικά στον CFO / Accounting.",en:"Whoever drafts the invoice does NOT approve it. Approval belongs solely to CFO / Accounting."}}],
+ certificates:[{type:"tip",title:{el:"Συμβουλή",en:"Tip"},body:{el:"Για μαθήματα που έγιναν σε άλλο κέντρο, χρησιμοποίησε «Upload External Certificate» ώστε να κλείσει το κενό στο μητρώο.",en:"For courses done at another center, use Upload External Certificate so the gap in the matrix closes."}}]
+};
+var WG_FAQ = {
+ overview:[
+  {q:{el:"Από πού ξεκινάω;",en:"Where do I start?"},a:{el:"Από τα «Αιτήματα OTR» — εκεί γεννιέται κάθε εκπαίδευση. Μετά ακολούθησε τη ροή των 5 βημάτων.",en:"From OTR Requests — every training starts there. Then follow the 5-step flow."}},
+  {q:{el:"Ποιος βλέπει τι;",en:"Who sees what?"},a:{el:"Κάθε ρόλος βλέπει μόνο ό,τι του αναλογεί (RBAC). Δες την ενότητα «Χρήστες & Ρόλοι».",en:"Each role sees only what it is allowed to (RBAC). See the Users & Roles section."}}
+ ],
+ otr:[
+  {q:{el:"Ξέχασα να προσθέσω μάθημα σε ένα OTR.",en:"I forgot to add a course to an OTR."},a:{el:"Άνοιξε το OTR όσο είναι «Εκκρεμές» και επεξεργάσου το· πρόσθεσε το μάθημα πριν την ανάθεση.",en:"Open the OTR while it is Pending and edit it; add the course before it is assigned."}},
+  {q:{el:"Ο ναυτικός δεν υπάρχει ακόμη στο σύστημα.",en:"The seafarer is not in the system yet."},a:{el:"Στη φόρμα OTR μπορείς να δημιουργήσεις βασικό προφίλ (όνομα, διαβατήριο, βαθμό) εκείνη τη στιγμή.",en:"In the OTR form you can create a minimal profile (name, passport, rank) on the spot."}},
+  {q:{el:"Μπορώ να ακυρώσω ένα OTR;",en:"Can I cancel an OTR?"},a:{el:"Ναι — όρισέ το «Ακυρωμένο/Απορρίφθηκε» με λόγο, ώστε να μη μένει «κολλημένο» στις αναφορές.",en:"Yes — set it to Cancelled/Rejected with a reason, so it does not stay stuck in the reports."}}
+ ],
+ attendance:[
+  {q:{el:"Έβαλα λάθος βαθμό μετά το Submit.",en:"I entered a wrong grade after Submit."},a:{el:"Ζήτησε από τον Training Admin να ξεκλειδώσει το session· μόνο αυτός ο ρόλος μπορεί.",en:"Ask the Training Admin to unlock the session; only that role can."}},
+  {q:{el:"Ο ναυτικός κόπηκε — χρειάζεται νέο OTR;",en:"The seafarer failed — do I need a new OTR?"},a:{el:"Όχι απαραίτητα· μπορεί να επανεγγραφεί σε νέο session κάτω από το ίδιο OTR.",en:"Not necessarily; they can re-enroll in a new session under the same OTR."}}
+ ],
+ certificates:[
+  {q:{el:"Πότε εκδίδεται αυτόματα το πιστοποιητικό;",en:"When is the certificate auto-issued?"},a:{el:"Με Pass + επαρκή παρουσία, μόλις υποβληθούν οι βαθμοί.",en:"With Pass + enough attendance, as soon as grades are submitted."}},
+  {q:{el:"Πώς περνάω πιστοποιητικό από άλλο κέντρο;",en:"How do I add a certificate from another center?"},a:{el:"Με «Upload External Certificate»: ναυτικός, μάθημα, κέντρο, ημερομηνία, PDF.",en:"With Upload External Certificate: seafarer, course, center, date, PDF."}}
+ ],
+ compliance:[
+  {q:{el:"Γιατί ο «Captain» δείχνει δεδομένα χωρίς ναυτικό;",en:"Why does Captain show data with no seafarer?"},a:{el:"Γιατί βλέπεις τον ΚΑΝΟΝΑ (template). Οι πραγματικές ημερομηνίες γεμίζουν όταν επιλέξεις συγκεκριμένο ναυτικό.",en:"Because you are seeing the RULE (template). Real dates fill in when you pick a specific seafarer."}},
+  {q:{el:"Τι σημαίνει «λείπει» (⚫);",en:"What does missing (⚫) mean?"},a:{el:"Ότι απαιτείται μάθημα που ο ναυτικός δεν έχει καθόλου. Πάτα «+ OTR» για να το ξεκινήσεις.",en:"A required course the seafarer does not have at all. Press + OTR to start it."}}
+ ],
+ invoices:[
+  {q:{el:"Δεν μπορώ να εγκρίνω το τιμολόγιό μου.",en:"I cannot approve my own invoice."},a:{el:"Σωστό — η έγκριση ανήκει στον CFO/Accounting, όχι σε αυτόν που το συντάσσει.",en:"Correct — approval belongs to CFO/Accounting, not to whoever drafts it."}},
+  {q:{el:"Το σύστημα μπλόκαρε το τιμολόγιο.",en:"The system blocked the invoice."},a:{el:"Πιθανώς το πιστοποιητικό έχει ήδη τιμολογηθεί. Ζήτησε override από admin αν χρειάζεται.",en:"The certificate is probably already invoiced. Request an admin override if needed."}}
+ ],
+ agents:[
+  {q:{el:"Γιατί δεν βλέπω άλλους ναυτικούς;",en:"Why do I not see other seafarers?"},a:{el:"Βλέπεις μόνο τους δικούς σου principals — έτσι προστατεύονται τα δεδομένα κάθε πελάτη.",en:"You see only your own principals — this protects each client data."}},
+  {q:{el:"Πού βρίσκω το πιστοποιητικό;",en:"Where do I find the certificate?"},a:{el:"Μόλις εκδοθεί, κατεβαίνει από την καρτέλα του ναυτικού και ειδοποιείσαι.",en:"Once issued, it downloads from the seafarer profile and you are notified."}}
+ ]
+};
+
+/* ---- render ---- */
+function wgCard(c){
+  var seeL = WG_LANG==='el'?'👁 ΤΙ ΒΛΕΠΕΙΣ':'👁 WHAT YOU SEE';
+  var doesL = WG_LANG==='el'?'⚙ ΤΙ ΚΑΝΕΙ':'⚙ WHAT IT DOES';
+  var stepL = WG_LANG==='el'?'▦ ΒΗΜΑ-ΒΗΜΑ':'▦ STEP BY STEP';
+  var resL = WG_LANG==='el'?'✓ ΑΠΟΤΕΛΕΣΜΑ':'✓ RESULT';
+  var steps = c.steps.map(function(s){return '<li><span class="gd-num">•</span><span>'+wgT(s)+'</span></li>';}).join('');
+  var i=0; steps = c.steps.map(function(s){i++;return '<li><span class="gd-num">'+i+'</span><span>'+wgT(s)+'</span></li>';}).join('');
+  return '<div class="gd-card" style="border-left-color:'+c.a+'">'
+    +'<h3><span style="color:'+c.a+'">◆</span>'+wgT(c.title)+'</h3>'
+    +'<div class="gd-row"><span class="gd-rowlabel">'+seeL+'</span><p>'+wgT(c.see)+'</p></div>'
+    +'<div class="gd-row"><span class="gd-rowlabel">'+doesL+'</span><p>'+wgT(c.does)+'</p></div>'
+    +'<div class="gd-row"><span class="gd-rowlabel">'+stepL+'</span><ul class="gd-steps">'+steps+'</ul></div>'
+    +'<div class="gd-result"><span class="gd-rowlabel">'+resL+'</span><p>'+wgT(c.result)+'</p></div>'
+    +(c.cta?'<button class="gd-cta" onclick="wgTab(\''+c.cta.target+'\')">→ '+wgT(c.cta.label)+'</button>':'')
+    +'</div>';
+}
+function wgGloss(items){
+  return '<div class="gd-card" style="border-left-color:#64748B">'
+   + items.map(function(g){return '<div class="gd-row"><span class="gd-rowlabel" style="color:#0F2A43">'+g.t+'</span><p>'+g[WG_LANG]+'</p></div>';}).join('')
+   + '</div>';
+}
+function wgKpisBlock(arr){
+  return '<div class="gd-kpis">'+arr.map(function(k){
+    return '<div class="gd-kpi"><div class="v">'+k.v+'</div><div class="l">'+wgT(k.l)+'</div><div class="s">'+wgT(k.s)+'</div></div>';
+  }).join('')+'</div>';
+}
+function wgCalloutsBlock(arr){
+  return arr.map(function(c){
+    var ic = c.type==='warn'?'\u26A0\uFE0F':'\uD83D\uDCA1';
+    return '<div class="gd-callout '+c.type+'"><p class="ct">'+ic+' '+wgT(c.title)+'</p><p>'+wgT(c.body)+'</p></div>';
+  }).join('');
+}
+function wgFaqBlock(arr){
+  var ttl = WG_LANG==='el'?'\u2753 \u03A3\u03C5\u03C7\u03BD\u03AD\u03C2 \u0395\u03C1\u03C9\u03C4\u03AE\u03C3\u03B5\u03B9\u03C2':'\u2753 Frequently Asked Questions';
+  return '<div class="gd-faqwrap"><h3>'+ttl+'</h3>'+arr.map(function(f){
+    return '<div class="gd-faq"><p class="q">'+wgT(f.q)+'</p><p class="a">'+wgT(f.a)+'</p></div>';
+  }).join('')+'</div>';
+}
+
+/* ---- WIMAS Guide: pure string builders + handlers (all global, no IIFE) ---- */
+var WG_ACTIVE = 'overview';
+function wgChipsHtml(){
+  return WG_CHIPS.map(function(c){return '<span class="gd-chip">'+wgT(c)+'</span>';}).join('');
+}
+function wgTabsHtml(active){
+  return WG_TABS.map(function(tb){
+    return '<button class="gd-tab'+(tb.id===active?' active':'')+'" onclick="wgTab(\''+tb.id+'\')">'
+      +'<span class="dot" style="background:'+tb.dot+'"></span>'+wgT(tb.label)+'</button>';
+  }).join('');
+}
+function wgTabHtml(id){
+  var tb=null; for(var i=0;i<WG_TABS.length;i++){if(WG_TABS[i].id===id){tb=WG_TABS[i];break;}}
+  if(!tb) return '';
+  var html='<div class="gd-introbox"><h2>'+tb.intro.e+' '+wgT(tb.intro.title)+'</h2><p>'+wgT(tb.intro.text)+'</p>'
+    +'<div class="gd-aud">'+tb.intro.aud.map(function(a){return '<span>'+wgT(a)+'</span>';}).join('')+'</div></div>';
+  if(WG_KPIS[id]) html+=wgKpisBlock(WG_KPIS[id]);
+  if(tb.fig) html+=tb.fig();
+  if(WG_CALLOUTS[id]) html+=wgCalloutsBlock(WG_CALLOUTS[id]);
+  if(tb.glossary) html+=wgGloss(tb.glossary);
+  if(tb.cards) html+=tb.cards.map(wgCard).join('');
+  if(tb.extra) html+=tb.extra();
+  if(WG_FAQ[id]) html+=wgFaqBlock(WG_FAQ[id]);
+  return html;
+}
+function wgTab(id){
+  WG_ACTIVE=id;
+  var c=document.getElementById('gd-content'); if(c) c.innerHTML=wgTabHtml(id);
+  var t=document.getElementById('gd-tabs'); if(t) t.innerHTML=wgTabsHtml(id);
+  var r=document.getElementById('gd-root'); if(r) r.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function wgLang(l){
+  WG_LANG=l;
+  var host=document.getElementById('gd-root');
+  if(host && host.parentNode){ host.parentNode.innerHTML=renderGuide(); }
+}
+function renderGuide(){
+  var el=(WG_LANG==='el');
+  return '<div class="gd-root" id="gd-root" data-lang="'+WG_LANG+'"><div class="gd-wrap">'
+   +'<div class="gd-topbar"><div class="gd-brand">WIMAS<span> ERP</span><small>'+(el?'ΟΔΗΓΟΣ ΧΡΗΣΗΣ · USER GUIDE':'USER GUIDE · ΟΔΗΓΟΣ ΧΡΗΣΗΣ')+'</small></div>'
+     +'<div class="gd-controls"><div class="gd-lang">'
+       +'<button class="'+(el?'on':'')+'" onclick="wgLang(\'el\')">EL</button>'
+       +'<button class="'+(el?'':'on')+'" onclick="wgLang(\'en\')">EN</button></div>'
+       +'<button class="gd-printbtn" onclick="window.print()">🖨 PDF</button></div></div>'
+   +'<div class="gd-hero"><div class="gd-eyebrow">WIMAS ERP · TRAINING MANAGEMENT PLATFORM</div>'
+     +'<h1>📘 '+(el?'Οδηγός Χρήσης':'User Guide')+'</h1>'
+     +'<p>'+(el?'Πλήρης οδηγός για κάθε ενότητα της πλατφόρμας. Διάλεξε ενότητα, δες τι βλέπεις, τι κάνει, και βήμα-βήμα πώς προχωράς — από το αίτημα εκπαίδευσης ως το πιστοποιητικό και το τιμολόγιο.':'A complete guide to every part of the platform. Pick a section, see what you look at, what it does, and step-by-step how it works — from the training request all the way to certificate and invoice.')+'</p>'
+     +'<div class="gd-chips">'+wgChipsHtml()+'</div></div>'
+   +'<div class="gd-tabs" id="gd-tabs">'+wgTabsHtml(WG_ACTIVE)+'</div>'
+   +'<div id="gd-content">'+wgTabHtml(WG_ACTIVE)+'</div>'
+   +'</div></div>';
+}
+
 </script>
 </body>
 </html>
