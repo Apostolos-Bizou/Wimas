@@ -633,7 +633,7 @@ html, body { height: 100%; font-family: var(--font); background: var(--navy-900)
     <div class="modal-body" id="modal-otr-body"></div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modal-otr-detail')">Close</button>
-      <button class="btn btn-primary" onclick="closeModal('modal-otr-detail');showToast('OTR assigned successfully','green')">Assign & Confirm</button>
+      <button class="btn btn-primary" onclick="assignOTR()">Assign & Confirm</button>
     </div>
   </div>
 </div>
@@ -1158,6 +1158,7 @@ function createUser() {
 }
 
 function openOTRDetail(num, seafarer, principal, courses) {
+  WM_OTR_CUR = num;
   document.getElementById('modal-otr-title').textContent = 'OTR ' + num;
   document.getElementById('modal-otr-body').innerHTML =
     '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">' +
@@ -1180,7 +1181,7 @@ function openOTRDetail(num, seafarer, principal, courses) {
 ============================================================ */
 
 /* ── MOCK DATA ── */
-var DATA = {
+var SEED_DATA = {
   otrs: [
     { num:'OTR-2026-0154', seafarer:'Petros Nikolaou',      rank:'AB',           principal:'Shell',     courses:'STCW BST, Advanced Firefighting', status:'pending',   urgent:true,  date:'07 Mar 2026' },
     { num:'OTR-2026-0153', seafarer:'Vasilis Katsaros',     rank:'3rd Officer',  principal:'Pioneer',   courses:'GMDSS GOC',                       status:'scheduled', urgent:false, date:'06 Mar 2026' },
@@ -1202,6 +1203,8 @@ var DATA = {
   ],
   certs: [
     { id:'CERT-2026-0841', seafarer:'Petros Nikolaou',  course:'STCW BST',             center:'WIMAS',     issued:'15 Jan 2026', expiry:'15 Jan 2031', status:'valid'    },
+    { id:'CERT-2025-0712', seafarer:'Petros Nikolaou',  course:'Personal Survival Techniques', center:'WIMAS', issued:'12 Nov 2025', expiry:'12 Nov 2030', status:'valid'    },
+    { id:'CERT-2024-0488', seafarer:'Petros Nikolaou',  course:'Medical First Aid',    center:'STI',       issued:'05 Apr 2024', expiry:'05 Apr 2026', status:'expiring' },
     { id:'CERT-2026-0840', seafarer:'Ioannis Stefanou', course:'GMDSS GOC',            center:'STI',      issued:'03 Sep 2025', expiry:'03 Mar 2026', status:'expired'  },
     { id:'CERT-2026-0839', seafarer:'Maria Papadaki',   course:'Advanced Firefighting',center:'WIMAS',     issued:'20 Jun 2025', expiry:'20 Jun 2030', status:'valid'    },
     { id:'CERT-2026-0838', seafarer:'Vasilis Katsaros', course:'ECDIS Type Specific',  center:'Compass',  issued:'08 Jan 2026', expiry:'08 Jan 2031', status:'valid'    },
@@ -1786,7 +1789,7 @@ function renderAttendance() {
         '<td><div style="display:flex;align-items:center;gap:8px"><span class="text-mono fs-13 fw-700" style="color:' + (sf.passed?'var(--green)':'var(--red)') + '">' + sf.grade + '%</span>' +
         '<div class="progress" style="width:60px"><div class="progress-bar" style="width:' + sf.grade + '%;background:' + (sf.passed?'var(--green)':'var(--red)') + '"></div></div></div></td>' +
         '<td><span class="badge ' + (sf.passed?'badge-green':'badge-red') + '">' + (sf.passed?'PASS':'FAIL') + '</span></td>' +
-        '<td>' + (sf.passed?'<button class="btn btn-primary btn-sm" onclick="showToast(\'Certificate issued for ' + sf.name + '\',\'green\')">🎓 Issue</button>':'<span class="fs-11 text-muted">—</span>') + '</td></tr>';
+        '<td>' + (sf.passed?'<button class="btn btn-primary btn-sm" onclick="issueCert(\'' + sf.name.replace(/'/g,"\\'") + '\',\'' + s.course.replace(/'/g,"\\'") + '\')">🎓 Issue</button>':'<span class="fs-11 text-muted">—</span>') + '</td></tr>';
     }).join('') +
     '</tbody></table></div></div>';
 }
@@ -1815,8 +1818,8 @@ function openApproval(iid){
   document.getElementById("modal-approve-footer").innerHTML=inv.wf==="issued"?
     "<button class=\"btn btn-ghost\" onclick=\"closeModal(\'modal-inv-approve\')\">Close</button><span class=\"badge badge-green\" style=\"padding:8px 14px\">Already Issued</span>":
     "<button class=\"btn btn-ghost\" onclick=\"closeModal(\'modal-inv-approve\')\">Cancel</button>"+
-    "<button class=\"btn btn-danger\" onclick=\"closeModal(\'modal-inv-approve\');showToast(\'Rejected\',\'orange\')\">Reject</button>"+
-    "<button class=\"btn btn-primary\" onclick=\"closeModal(\'modal-inv-approve\');showToast(\'Approved & Issued\',\'green\')\">Approve</button>";
+    "<button class=\"btn btn-danger\" onclick=\"rejectInvoice(\'"+inv.id+"\')\">Reject</button>"+
+    "<button class=\"btn btn-primary\" onclick=\"approveInvoice(\'"+inv.id+"\')\">Approve</button>";
   openModal("modal-inv-approve");
 }
 
@@ -2308,7 +2311,7 @@ function renderCenters() {
 /* ─────────────────────────────────────────────
    USERS
 ───────────────────────────────────────────── */
-var USERS_LIST = [
+var SEED_USERS = [
   { name:'Charlene Wima',     email:'charlene@wimas.io',   role:'Training Administrator', center:'WIMAS', status:'active',   av:'CW', color:'#0ea5e9', last:'07 Mar 2026, 08:14' },
   { name:'Niki Varia',        email:'niki@wimas.io',        role:'Final Approver',         center:'WIMAS', status:'active',   av:'NV', color:'#8b5cf6', last:'06 Mar 2026, 17:52' },
   { name:'Andreas Stavros',   email:'a.stavros@aegean.gr',  role:'Money Agent',            center:'Aegean', status:'active', av:'AS', color:'#10b981', last:'07 Mar 2026, 09:30' },
@@ -2394,6 +2397,10 @@ function renderSettings() {
         '<div style="width:16px;height:16px;background:#fff;border-radius:50%;position:absolute;top:3px;' + (p[1]?'right:3px':'left:3px') + ';transition:all .2s"></div></div>' +
         '</div>';
     }).join('') +
+    '</div></div>' +
+    '<div class="card"><div class="card-header"><span class="card-title">🧪 Demo Data</span></div><div class="card-body">' +
+    '<div class="fs-13 text-muted" style="margin-bottom:12px">Changes you make (new OTRs, users, issued certificates, approvals) are saved locally in this browser and survive a refresh. Reset restores the original demo data.</div>' +
+    '<button class="btn btn-secondary" onclick="resetDemo()">↺ Reset demo data</button>' +
     '</div></div>';
 }
 
@@ -2921,6 +2928,105 @@ sfTab = function(tab){
   wmOrigSfTab(tab);
   wmLabelizeTables(document.getElementById('sf-tab-content'));
 };
+
+/* ===== STATE SPINE — localStorage persistence + real writes (feat/state-spine). Global scope, no IIFE/DOMContentLoaded. ===== */
+var WM_STATE_KEY = 'wimas_state_v1';
+var WM_OTR_CUR = null;
+
+function saveState(){
+  try { localStorage.setItem(WM_STATE_KEY, JSON.stringify({ v:1, data: DATA, users: USERS_LIST })); } catch(e){}
+}
+function loadState(){
+  try { var raw = localStorage.getItem(WM_STATE_KEY); if(!raw) return null; var o = JSON.parse(raw); return (o && o.data && o.users) ? o : null; } catch(e){ return null; }
+}
+
+/* live, mutable state: restored from localStorage if present, else a deep clone of the immutable SEED */
+var _wmBoot = loadState();
+var DATA       = _wmBoot ? _wmBoot.data  : JSON.parse(JSON.stringify(SEED_DATA));
+var USERS_LIST = _wmBoot ? _wmBoot.users : JSON.parse(JSON.stringify(SEED_USERS));
+
+function resetDemo(){
+  try { localStorage.removeItem(WM_STATE_KEY); } catch(e){}
+  DATA       = JSON.parse(JSON.stringify(SEED_DATA));
+  USERS_LIST = JSON.parse(JSON.stringify(SEED_USERS));
+  showToast('Demo data reset to defaults','teal');
+  showSection(activeSection);
+}
+
+/* helpers */
+function wmVal(id){ var el = document.getElementById(id); return el ? String(el.value||'').trim() : ''; }
+function wmInitials(name){ return name.split(' ').map(function(w){ return w[0]; }).join('').slice(0,2).toUpperCase(); }
+function wmNextSeq(arr, field, prefix){
+  var max = 0;
+  arr.forEach(function(o){ var m = String(o[field]||'').match(/(\d+)\s*$/); if(m){ var n = parseInt(m[1],10); if(n>max) max = n; } });
+  var next = String(max+1); while(next.length<4) next = '0'+next;
+  return prefix + next;
+}
+
+/* --- WRITES: mutate state -> saveState() -> re-render (toast preserved) --- */
+submitOTR = function(){
+  var sea  = wmVal('otr-seafarer');
+  var prin = wmVal('otr-principal');
+  var sel  = document.getElementById('otr-courses');
+  var courses = sel ? Array.prototype.slice.call(sel.selectedOptions || []).map(function(o){ return o.value; }).join(', ') : '';
+  if(!courses){ courses = (sel && sel.value) ? sel.value : 'STCW BST'; }
+  var date = wmVal('otr-date');
+  var rec  = DATA.seafarers.find(function(s){ return s.name===sea; });
+  var num  = wmNextSeq(DATA.otrs, 'num', 'OTR-2026-');
+  DATA.otrs.unshift({ num:num, seafarer:(sea||'—'), rank:(rec?rec.rank:''), principal:(prin||'—'), courses:courses, status:'pending', urgent:false, date:(date||'Today') });
+  saveState();
+  closeModal('modal-create-otr');
+  showToast('OTR submitted — '+num+' created','green');
+  showSection('otrs');
+};
+
+createUser = function(){
+  var name  = wmVal('nu-name');
+  var email = wmVal('nu-email');
+  if(!name || !email){ showToast('Please fill in name and email','orange'); return; }
+  var role  = wmVal('nu-role') || 'Instructor';
+  USERS_LIST.unshift({ name:name, email:email, role:role, center:'WIMAS', status:'active', av:wmInitials(name), color:'#0ea5e9', last:'Just now' });
+  saveState();
+  closeModal('modal-create-user');
+  showToast('User "'+name+'" created — welcome email sent','green');
+  var n = document.getElementById('nu-name');  if(n) n.value='';
+  var e = document.getElementById('nu-email'); if(e) e.value='';
+  if(activeSection==='users') showSection('users');
+};
+
+function issueCert(name, course){
+  var id = wmNextSeq(DATA.certs, 'id', 'CERT-2026-');
+  DATA.certs.unshift({ id:id, seafarer:name, course:(course||'Training'), center:'WIMAS', issued:'Today', expiry:'—', status:'valid' });
+  saveState();
+  showToast('Certificate '+id+' issued for '+name,'green');
+  showSection(activeSection);
+}
+
+function approveInvoice(id){
+  var inv = DATA.invoices.find(function(x){ return x.id===id; });
+  if(inv){ inv.wf='issued'; inv.status='paid'; if(!inv.approver){ inv.approver='Niki Varia'; } }
+  saveState();
+  closeModal('modal-inv-approve');
+  showToast('Invoice '+id+' approved & issued','green');
+  showSection(activeSection);
+}
+function rejectInvoice(id){
+  var inv = DATA.invoices.find(function(x){ return x.id===id; });
+  if(inv){ inv.wf='rejected'; inv.status='rejected'; }
+  saveState();
+  closeModal('modal-inv-approve');
+  showToast('Invoice '+id+' rejected','orange');
+  showSection(activeSection);
+}
+
+function assignOTR(){
+  var o = DATA.otrs.find(function(x){ return x.num===WM_OTR_CUR; });
+  if(o){ o.status='scheduled'; o.urgent=false; }
+  saveState();
+  closeModal('modal-otr-detail');
+  showToast('OTR '+(WM_OTR_CUR||'')+' assigned & scheduled','green');
+  showSection(activeSection);
+}
 </script>
 </body>
 </html>
