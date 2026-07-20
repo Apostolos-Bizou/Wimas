@@ -822,7 +822,7 @@ html, body { height: 100%; font-family: var(--font); background: var(--navy-900)
       <div class="form-row cols-2">
         <div class="form-group">
           <label class="form-label">Course Type *</label>
-          <select class="form-input">
+          <select class="form-input" id="cs-course">
             <option>STCW Basic Safety Training</option>
             <option>Advanced Firefighting</option>
             <option>GMDSS / Radio Operator</option>
@@ -834,7 +834,7 @@ html, body { height: 100%; font-family: var(--font); background: var(--navy-900)
         </div>
         <div class="form-group">
           <label class="form-label">Training Center *</label>
-          <select class="form-input">
+          <select class="form-input" id="cs-center">
             <option>WIMAS Training Center (Internal)</option>
             <option>STI Maritime Center</option>
             <option>Compass Training</option>
@@ -844,21 +844,21 @@ html, body { height: 100%; font-family: var(--font); background: var(--navy-900)
       <div class="form-row cols-2">
         <div class="form-group">
           <label class="form-label">Start Date *</label>
-          <input class="form-input" type="date">
+          <input class="form-input" type="date" id="cs-start">
         </div>
         <div class="form-group">
           <label class="form-label">End Date *</label>
-          <input class="form-input" type="date">
+          <input class="form-input" type="date" id="cs-end">
         </div>
       </div>
       <div class="form-row cols-3">
         <div class="form-group">
           <label class="form-label">Max Capacity</label>
-          <input class="form-input" type="number" value="12">
+          <input class="form-input" type="number" value="12" id="cs-capacity">
         </div>
         <div class="form-group">
           <label class="form-label">Instructor</label>
-          <select class="form-input">
+          <select class="form-input" id="cs-instructor">
             <option>K. Papadopoulos</option>
             <option>M. Stavridou</option>
             <option>A. Theodorou</option>
@@ -866,7 +866,7 @@ html, body { height: 100%; font-family: var(--font); background: var(--navy-900)
         </div>
         <div class="form-group">
           <label class="form-label">Room</label>
-          <input class="form-input" type="text" placeholder="e.g. Room A">
+          <input class="form-input" type="text" placeholder="e.g. Room A" id="cs-room">
         </div>
       </div>
       <div class="form-row cols-2">
@@ -889,7 +889,7 @@ html, body { height: 100%; font-family: var(--font); background: var(--navy-900)
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modal-create-session')">Cancel</button>
-      <button class="btn btn-primary" onclick="closeModal('modal-create-session');showToast('Session created successfully','green')">Create Session</button>
+      <button class="btn btn-primary" onclick="createSession()">Create Session</button>
     </div>
   </div>
 </div>
@@ -3025,6 +3025,23 @@ function assignOTR(){
   saveState();
   closeModal('modal-otr-detail');
   showToast('OTR '+(WM_OTR_CUR||'')+' assigned & scheduled','green');
+  showSection(activeSection);
+}
+
+function createSession(){
+  var course = wmVal("cs-course") || "STCW Basic Safety Training";
+  var craw = wmVal("cs-center");
+  var center = craw.indexOf("WIMAS")>-1?"WIMAS":craw.indexOf("STI")>-1?"STI":craw.indexOf("Compass")>-1?"Compass":(craw||"WIMAS");
+  var start = wmVal("cs-start"), end = wmVal("cs-end");
+  if(!start || !end){ showToast("Please set start and end dates","orange"); return; }
+  var cap = parseInt(wmVal("cs-capacity"),10); if(isNaN(cap)) cap = 12;
+  var instructor = wmVal("cs-instructor") || "\u2014";
+  var room = wmVal("cs-room") || "\u2014";
+  var maxId = 0; DATA.sessions.forEach(function(s){ if(s.id>maxId) maxId = s.id; });
+  DATA.sessions.push({ id:maxId+1, course:course, center:center, instructor:instructor, start:start, end:end, capacity:cap, enrolled:0, room:room, status:"scheduled", pub:true });
+  saveState();
+  closeModal("modal-create-session");
+  showToast("Session created successfully","green");
   showSection(activeSection);
 }
 </script>
