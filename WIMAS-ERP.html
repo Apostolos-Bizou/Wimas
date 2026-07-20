@@ -407,6 +407,104 @@ html, body { height: 100%; font-family: var(--font); background: var(--navy-900)
 .gd-root{padding:14px 0 44px;border-radius:12px}
 .gd-root .gd-topbar{position:static;background:transparent;border-bottom:1px solid var(--gd-line);border-radius:0;margin-bottom:4px}
 
+
+/* ============================================================
+   MOBILE RESPONSIVE — additive only. Scope: (1) login, (2) Seafarer views.
+   Desktop (>768px) is untouched. New helper elements hidden on desktop.
+============================================================ */
+.wm-hamburger { display: none; }
+.wm-nav-backdrop { display: none; }
+
+@media (max-width: 768px) {
+  html, body { overflow-x: hidden; }
+
+  /* ---------------- LOGIN ---------------- */
+  #login { flex-direction: column; min-height: 100vh; }
+  .login-left { padding: 26px 20px 18px; flex: none; }
+  .login-left::before { background-size: 32px 32px; opacity: .18; }
+  .login-tagline { font-size: 26px; }
+  .login-desc { font-size: 13px; margin-top: 12px; max-width: none; }
+  .login-stats { gap: 18px; margin-top: 20px; padding-top: 16px; flex-wrap: wrap; }
+  .ls-num { font-size: 22px; }
+  .login-right { width: 100%; flex: none; padding: 20px; justify-content: flex-start; }
+  .field-input { font-size: 16px; padding: 13px 12px 13px 38px; }      /* 16px stops iOS zoom */
+  .login-btn { min-height: 48px; font-size: 16px; }
+  .demo-btn { padding: 11px 12px; }
+
+  /* ------------- APP SHELL: off-canvas sidebar + hamburger (global) ------------- */
+  .sidebar {
+    position: fixed; top: 0; left: 0; height: 100vh; z-index: 1200;
+    transform: translateX(-100%); transition: transform .25s ease;
+    box-shadow: 0 0 48px rgba(0,0,0,.55);
+  }
+  #app.nav-open .sidebar { transform: translateX(0); }
+  .wm-nav-backdrop { position: fixed; inset: 0; background: rgba(8,15,28,.6); z-index: 1100; }
+  #app.nav-open .wm-nav-backdrop { display: block; }
+  .wm-hamburger {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 42px; height: 42px; min-width: 42px; flex-shrink: 0;
+    background: var(--navy-600); border: 1px solid var(--navy-border);
+    border-radius: 8px; color: var(--white); font-size: 18px; cursor: pointer;
+  }
+  .main { width: 100%; }
+  .topbar { padding: 0 12px; gap: 8px; }
+  .search-bar { display: none; }
+  .page-area { padding: 16px 14px; overflow-x: hidden; }
+  .page-header { flex-direction: column; gap: 12px; }
+  .page-actions { width: 100%; }
+  .page-actions .btn { flex: 1; justify-content: center; }
+
+  /* tap targets */
+  .btn { min-height: 44px; }
+  .btn-sm { min-height: 38px; }
+  .nav-item { min-height: 44px; }
+
+  /* content grids stack */
+  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+  .grid-2, .grid-3, .grid-3-1, .grid-2-1 { grid-template-columns: 1fr; }
+
+  /* non-seafarer tables: horizontal scroll inside the card (body never scrolls) */
+  .page-area .card { overflow-x: auto; }
+  #app:not(.sf-scope) .page-area .tbl { min-width: 560px; }
+
+  /* ------------- SEAFARER-SCOPED card tables (.sf-scope only) ------------- */
+  .sf-scope .tbl thead { display: none; }
+  .sf-scope .tbl, .sf-scope .tbl tbody { display: block; width: 100%; }
+  .sf-scope .tbl tr {
+    display: block; margin: 0 0 12px; padding: 4px 12px;
+    border: 1px solid var(--navy-border); border-radius: 10px; background: var(--navy-700);
+  }
+  .sf-scope .tbl tbody tr:hover { background: var(--navy-700); }
+  .sf-scope .tbl td {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 9px 0; border: 0; border-bottom: 1px solid rgba(30,48,80,.4);
+    min-height: 40px; text-align: right; white-space: normal;
+  }
+  .sf-scope .tbl tr td:last-child { border-bottom: 0; }
+  .sf-scope .tbl td::before {
+    content: attr(data-label); flex: 0 0 42%; text-align: left;
+    font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .6px; color: var(--muted);
+  }
+  .sf-scope .tbl td:not([data-label]) { justify-content: stretch; }
+  .sf-scope .tbl td:not([data-label])::before { content: none; }
+  .sf-scope .tbl td:not([data-label]) .btn { width: 100%; }
+
+  /* seafarer detail hero: wrap row, mini-grid 4 -> 2 cols (inline-style overrides) */
+  .sf-scope .sf-hero > div[style*="display:flex"] { flex-wrap: wrap !important; }
+  .sf-scope [style*="repeat(4,1fr)"] { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* tabs scroll horizontally rather than overflow */
+  .tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .tab { flex: 0 0 auto; }
+
+  /* ---------------- MODALS ---------------- */
+  .modal-overlay { align-items: flex-end; }
+  .modal-box, .modal-box-lg, .modal-box-xl {
+    width: 100%; max-width: 100vw; max-height: 90vh;
+    border-radius: var(--radius) var(--radius) 0 0;
+  }
+  .modal-body { padding: 16px; }
+}
 </style>
 </head>
 <body>
@@ -2770,6 +2868,59 @@ function renderGuide(){
    +'</div></div>';
 }
 
+
+/* ===== MOBILE RESPONSIVE — hamburger nav + seafarer card-scope (additive, global scope, no IIFE/DOMContentLoaded) ===== */
+function wmToggleNav(){ var a=document.getElementById('app'); if(a) a.classList.toggle('nav-open'); }
+function wmCloseNav(){ var a=document.getElementById('app'); if(a) a.classList.remove('nav-open'); }
+function wmLabelizeTables(root){
+  if(!root) return;
+  var tables = root.querySelectorAll('table.tbl');
+  for(var ti=0; ti<tables.length; ti++){
+    var ths = tables[ti].querySelectorAll('thead th');
+    var labels = []; for(var i=0;i<ths.length;i++){ labels.push((ths[i].textContent||'').trim()); }
+    var rows = tables[ti].querySelectorAll('tbody tr');
+    for(var r=0;r<rows.length;r++){
+      var cells = rows[r].children;
+      for(var c=0;c<cells.length;c++){ if(labels[c]) cells[c].setAttribute('data-label', labels[c]); }
+    }
+  }
+}
+/* inject hamburger button + drawer backdrop once (script runs at end of <body>, so shell DOM exists) */
+var wmTopbar = document.querySelector('#app .topbar');
+if (wmTopbar && !document.getElementById('wm-hamburger')) {
+  var wmHb = document.createElement('button');
+  wmHb.id = 'wm-hamburger'; wmHb.className = 'wm-hamburger'; wmHb.type = 'button';
+  wmHb.setAttribute('aria-label', 'Toggle navigation'); wmHb.textContent = '\u2630';
+  wmHb.onclick = wmToggleNav;
+  wmTopbar.insertBefore(wmHb, wmTopbar.firstChild);
+}
+var wmAppEl = document.getElementById('app');
+if (wmAppEl && !document.getElementById('wm-nav-backdrop')) {
+  var wmBd = document.createElement('div');
+  wmBd.id = 'wm-nav-backdrop'; wmBd.className = 'wm-nav-backdrop';
+  wmBd.onclick = wmCloseNav;
+  wmAppEl.appendChild(wmBd);
+}
+/* monkey-patch renderers (no edits to the originals): toggle sf-scope, labelize tables, close drawer on navigate */
+var wmOrigShowSection = showSection;
+showSection = function(id){
+  wmOrigShowSection(id);
+  var a = document.getElementById('app');
+  if (a){ if (id==='seafarers'){ a.classList.add('sf-scope'); } else { a.classList.remove('sf-scope'); } a.classList.remove('nav-open'); }
+  if (id==='seafarers'){ wmLabelizeTables(document.getElementById('page-area')); }
+};
+var wmOrigShowSeafarerDetail = showSeafarerDetail;
+showSeafarerDetail = function(name){
+  wmOrigShowSeafarerDetail(name);
+  var a = document.getElementById('app'); if (a){ a.classList.add('sf-scope'); a.classList.remove('nav-open'); }
+  var pa = document.getElementById('page-area'); if (pa && pa.firstElementChild){ pa.firstElementChild.classList.add('sf-hero'); }
+  wmLabelizeTables(document.getElementById('page-area'));
+};
+var wmOrigSfTab = sfTab;
+sfTab = function(tab){
+  wmOrigSfTab(tab);
+  wmLabelizeTables(document.getElementById('sf-tab-content'));
+};
 </script>
 </body>
 </html>
