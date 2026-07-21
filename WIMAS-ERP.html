@@ -919,6 +919,19 @@ html, body { height: 100%; font-family: var(--font); background: var(--navy-900)
   </div>
 </div>
 
+<!-- Enroll Seafarer Modal (Φ5b) -->
+<div class="modal-overlay" id="modal-enroll">
+  <div class="modal-box">
+    <div class="modal-header"><span class="modal-title">＋ Enroll Seafarer</span><button class="modal-close" onclick="closeModal('modal-enroll')">✕</button></div>
+    <div class="modal-body">
+      <div class="fs-12 text-muted" style="margin-bottom:12px">Session: <span id="en-session" class="fw-600 text-white">—</span></div>
+      <div class="form-group"><label class="form-label">Seafarer *</label><select class="form-input" id="en-seafarer"></select></div>
+      <div class="fs-11 text-muted">If the session is full, the seafarer is added to the waitlist instead.</div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('modal-enroll')">Cancel</button><button class="btn btn-primary" onclick="enrollConfirm()">Enroll</button></div>
+  </div>
+</div>
+
 <!-- Create Session Modal -->
 <div class="modal-overlay" id="modal-create-session">
   <div class="modal-box modal-box-lg">
@@ -1381,7 +1394,8 @@ var SEED_DATA = {
     { key:'Compass', name:'Compass Training', type:'External', loc:'Athens, Greece', contact:'Sofia Alexiou', email:'admin@compass.gr', status:'active', accred:['STCW','Flag State'], courses:4, sessions:3, logo:'🧭', color:'#8b5cf6' },
     { key:'MarineEd', name:'MarineEd Institute', type:'External', loc:'Heraklion, Crete', contact:'Petros Manolis', email:'contact@marineed.gr', status:'review', accred:['STCW'], courses:1, sessions:0, logo:'🎓', color:'#f59e0b' }
   ],
-  profiles: {}
+  profiles: {},
+  waitlist: []
 };
 
 /* ─────────────────────────────────────────────
@@ -1758,7 +1772,7 @@ function renderOTRTable(otrs) {
       return '<tr><td class="text-mono fs-11 text-teal">' + o.num + (o.urgent?'<span class="badge badge-red" style="font-size:9px;margin-left:6px">URGENT</span>':'') + '</td>' +
         '<td><div class="fs-13 fw-600 text-white">' + o.seafarer + '</div><span class="badge badge-purple" style="font-size:10px">' + o.rank + '</span></td>' +
         '<td class="fs-12">' + o.principal + '</td>' +
-        '<td class="fs-12 text-muted" style="max-width:180px">' + o.courses + '</td>' +
+        '<td class="fs-12 text-muted" style="max-width:180px">' + o.courses + (o.complianceGap && o.complianceGap.length ? '<div class="fs-10" style="color:var(--orange);margin-top:3px">\u26a0 Missing: '+o.complianceGap.slice(0,3).join(', ')+(o.complianceGap.length>3?(' +'+(o.complianceGap.length-3)):'')+'</div>' : '') + '</td>' +
         '<td class="text-mono fs-11">' + o.date + '</td>' +
         '<td><span class="badge ' + statusBadge + '">' + o.status + '</span>' + (o.center?'<div class="fs-11 text-muted" style="margin-top:3px">\u2192 '+o.center+'</div>':'') + (o.declineReason?'<div class="fs-11" style="color:var(--red);margin-top:3px">\u2716 '+o.declineReason+'</div>':'') + '</td>' +
         '<td><div style="display:flex;gap:4px"><button class="btn btn-ghost btn-sm" onclick="openOTRDetail(\'' + o.num + '\',\'' + o.seafarer + '\',\'' + o.principal + '\',\'' + o.courses.replace(/'/g,"\\'") + '\')">View →</button>' +
@@ -1811,7 +1825,7 @@ function renderSchedule() {
         '<div class="progress" style="margin-top:4px"><div class="progress-bar" style="width:' + pct + '%;background:' + barColor + '"></div></div></td>' +
         '<td><span class="badge ' + statusBadge + '">' + s.status + '</span></td>' +
         '<td><span class="badge ' + (s.pub?'badge-teal':'badge-muted') + '">' + (s.pub?'Public':'Private') + '</span></td>' +
-        '<td><button class="btn btn-ghost btn-sm" onclick="showToast(\'Session detail — coming soon\',\'teal\')">View →</button></td>' +
+        '<td><button class="btn btn-primary btn-sm" onclick="enrollOpen('+s.id+')">＋ Enroll</button></td>' +
         '</tr>';
     }).join('') +
     '</tbody></table></div>';
@@ -3111,10 +3125,13 @@ submitOTR = function(){
   var date = wmVal('otr-date');
   var rec  = DATA.seafarers.find(function(s){ return s.name===sea; });
   var num  = wmNextSeq(DATA.otrs, 'num', 'OTR-2026-');
-  DATA.otrs.unshift({ num:num, seafarer:(sea||'—'), rank:(rec?rec.rank:''), principal:(prin||'—'), courses:courses, status:'pending', urgent:false, date:(date||'Today') });
+  var required = (typeof COMPLIANCE_DATA!=='undefined' && COMPLIANCE_DATA[prin]) ? COMPLIANCE_DATA[prin].map(function(r){ return r.course; }) : [];
+  var held = DATA.certs.filter(function(c){ return c.seafarer===sea && c.status==='valid'; }).map(function(c){ return c.course; });
+  var gaps = required.filter(function(rc){ return held.indexOf(rc)===-1; });
+  DATA.otrs.unshift({ num:num, seafarer:(sea||'—'), rank:(rec?rec.rank:''), principal:(prin||'—'), courses:courses, status:'pending', urgent:false, date:(date||'Today'), complianceGap:gaps });
   saveState();
   closeModal('modal-create-otr');
-  showToast('OTR submitted — '+num+' created','green');
+  showToast(gaps.length ? ('OTR '+num+' created — \u26a0 '+gaps.length+' compliance gap'+(gaps.length>1?'s':'')) : ('OTR submitted — '+num+' created'), gaps.length?'orange':'green');
   showSection('otrs');
 };
 
@@ -3182,6 +3199,8 @@ function createSession(){
   var cap = parseInt(wmVal("cs-capacity"),10); if(isNaN(cap)) cap = 12;
   var instructor = wmVal("cs-instructor") || "\u2014";
   var room = wmVal("cs-room") || "\u2014";
+  var conflict = DATA.sessions.find(function(x){ return (start<=x.end && x.start<=end) && (x.instructor===instructor || (x.room===room && room!=="\u2014")); });
+  if(conflict){ showToast('Conflict — '+(conflict.instructor===instructor?('instructor '+instructor):('room '+room))+' booked for '+conflict.course+' ('+conflict.start+' \u2192 '+conflict.end+')','red'); return; }
   var maxId = 0; DATA.sessions.forEach(function(s){ if(s.id>maxId) maxId = s.id; });
   DATA.sessions.push({ id:maxId+1, course:course, center:center, instructor:instructor, start:start, end:end, capacity:cap, enrolled:0, room:room, status:"scheduled", pub:true });
   saveState();
@@ -3772,6 +3791,34 @@ function saveProfile(){
   var n=document.getElementById('nav-user-name'); if(n) n.textContent=nm;
   showToast('Profile updated','green');
   showSection('settings');
+}
+
+/* ===== Φ5b — E04 enroll/waitlist + notification. Global scope, no IIFE. ===== */
+var WM_ENROLL_SID = null;
+function enrollOpen(sid){
+  WM_ENROLL_SID = sid;
+  var s = DATA.sessions.find(function(x){ return x.id===sid; });
+  var lbl = document.getElementById('en-session'); if(lbl && s) lbl.textContent = s.course+' · '+s.start+' → '+s.end+' ('+s.enrolled+'/'+s.capacity+')';
+  wmFillSeafarers('en-seafarer');
+  wmOrigOpenModal('modal-enroll');
+}
+function enrollConfirm(){
+  var sid = WM_ENROLL_SID;
+  var s = DATA.sessions.find(function(x){ return x.id===sid; });
+  var sea = wmVal('en-seafarer');
+  if(!s || !sea){ showToast('Pick a seafarer','orange'); return; }
+  if(DATA.enrollments.some(function(e){ return e.sessionId===sid && e.seafarer===sea; })){ showToast(sea+' already enrolled','orange'); return; }
+  if(s.enrolled < s.capacity){
+    DATA.enrollments.push({ sessionId:sid, seafarer:sea, present:null, grade:null, passed:null, certId:null });
+    s.enrolled++;
+    DATA.notifications.unshift({ seafarer:sea, icon:'📅', title:'Enrolled in course', body:s.course+' — '+s.start+' → '+s.end+' · '+s.center, when:'Today', tag:'badge-teal', tagt:'Enrolled' });
+    saveState(); closeModal('modal-enroll');
+    showToast(sea+' enrolled in '+s.course,'green'); showSection(activeSection);
+  } else {
+    DATA.waitlist.push({ sessionId:sid, seafarer:sea, course:s.course, when:'Today' });
+    saveState(); closeModal('modal-enroll');
+    showToast(s.course+' is full — '+sea+' added to waitlist','orange'); showSection(activeSection);
+  }
 }
 </script>
 </body>
