@@ -586,6 +586,11 @@ html, body { height: 100%; font-family: var(--font); background: var(--navy-900)
         <div><div class="demo-name">Petros Nikolaou</div><div class="demo-role">Seafarer</div></div>
         <div style="margin-left:auto;font-size:11px;color:var(--muted)">→</div>
       </div>
+      <div class="demo-btn" onclick="fillDemo('k.papa@wimas.io','Instructor','KP','#0ea5e9')">
+        <div class="demo-av" style="background:#0ea5e9">KP</div>
+        <div><div class="demo-name">Kostas Papadopoulos</div><div class="demo-role">Instructor</div></div>
+        <div style="margin-left:auto;font-size:11px;color:var(--muted)">→</div>
+      </div>
     </div>
 
     <div class="divider-text">or sign in manually</div>
@@ -1282,6 +1287,22 @@ var SEED_DATA = {
     { id:4, course:'ECDIS Type Specific',        center:'STI',     instructor:'External',        start:'2026-03-14', end:'2026-03-18', capacity:10, enrolled:3,  room:'STI Lab',   status:'scheduled', pub:true  },
     { id:5, course:'Bridge Resource Mgmt',       center:'WIMAS',    instructor:'A. Theodorou',    start:'2026-03-20', end:'2026-03-22', capacity:15, enrolled:12, room:'Room C',    status:'scheduled', pub:false },
     { id:6, course:'Advanced Firefighting',      center:'WIMAS',    instructor:'K. Papadopoulos', start:'2026-03-25', end:'2026-03-27', capacity:12, enrolled:12, room:'Simulation',status:'full',      pub:true  },
+  ],
+  enrollments: [
+    { sessionId:1, seafarer:'Petros Nikolaou',  present:null, grade:null, passed:null, certId:null },
+    { sessionId:1, seafarer:'Maria Papadaki',   present:null, grade:null, passed:null, certId:null },
+    { sessionId:1, seafarer:'Nikos Drakos',     present:null, grade:null, passed:null, certId:null },
+    { sessionId:6, seafarer:'Petros Nikolaou',  present:null, grade:null, passed:null, certId:null },
+    { sessionId:6, seafarer:'Elena Voulgari',   present:null, grade:null, passed:null, certId:null },
+    { sessionId:2, seafarer:'Vasilis Katsaros', present:null, grade:null, passed:null, certId:null },
+    { sessionId:2, seafarer:'Ioannis Stefanou', present:null, grade:null, passed:null, certId:null },
+    { sessionId:5, seafarer:'Nikos Drakos',     present:null, grade:null, passed:null, certId:null },
+    { sessionId:5, seafarer:'Thanasis Pappas',  present:null, grade:null, passed:null, certId:null }
+  ],
+  notifications: [
+    { seafarer:'Petros Nikolaou', icon:'📅', title:'Course reminder',    body:'Advanced Firefighting starts 25 Mar 2026 · WIMAS Simulation', when:'2 days ago', tag:'badge-teal',   tagt:'Reminder' },
+    { seafarer:'Petros Nikolaou', icon:'🎓', title:'Certificate issued', body:'STCW BST — valid until 15 Jan 2031',                          when:'12 Jan 2026', tag:'badge-green',  tagt:'Issued' },
+    { seafarer:'Petros Nikolaou', icon:'⚠️', title:'Compliance notice',  body:'Your compliance is 85% — 1 item needs attention',            when:'Today',       tag:'badge-orange', tagt:'Action' }
   ]
 };
 
@@ -3099,12 +3120,6 @@ var ELEARNING_SF = [
   { course:'Cyber Awareness at Sea',     status:'Not Started',  progress:0 },
   { course:'ECDIS Fundamentals (CBT)',   status:'Completed',    progress:100 }
 ];
-var NOTIFICATIONS_SF = [
-  { icon:'📅', title:'Course reminder',    body:'Advanced Firefighting starts 25 Mar 2026 · WIMAS Simulation', when:'2 days ago', tag:'badge-teal',   tagt:'Reminder' },
-  { icon:'🎓', title:'Certificate issued', body:'STCW BST — valid until 15 Jan 2031',                          when:'12 Jan 2026', tag:'badge-green',  tagt:'Issued' },
-  { icon:'⚠️', title:'Compliance notice',  body:'Your compliance is 85% — 1 item needs attention',            when:'Today',       tag:'badge-orange', tagt:'Action' }
-];
-
 /* --- helpers --- */
 function sfMe(){ return (currentUser && DATA.seafarers.find(function(s){ return s.name===currentUser.seafarerName; })) || null; }
 function sfCompColor(v){ return v>=90?'var(--green)':v>=70?'var(--orange)':'var(--red)'; }
@@ -3119,7 +3134,7 @@ function renderSeafarerHome(){
   var me = sfMe(); if(!me) return '<div class="sf-portal"><div class="card"><div class="card-body">No seafarer record.</div></div></div>';
   var first = me.name.split(' ')[0];
   var next = DATA.sessions.filter(function(s){ return s.status==='scheduled'||s.status==='ongoing'; })[0];
-  var notes = NOTIFICATIONS_SF.slice(0,2);
+  var notes = DATA.notifications.filter(function(n){ return n.seafarer===me.name; }).slice(0,2);
   return '<div class="sf-portal">' +
     '<div class="sfp-greet">Hi '+first+' 👋</div>' +
     '<div class="sfp-sub">'+me.rank+' · '+me.principal+'</div>' +
@@ -3161,21 +3176,20 @@ function renderMyCertificates(){
 
 function renderUpcomingTraining(){
   var name = currentUser.seafarerName;
-  var myCourses = {};
-  DATA.otrs.filter(function(o){ return o.seafarer===name; }).forEach(function(o){ (o.courses||'').split(',').forEach(function(c){ myCourses[c.trim().toLowerCase()]=true; }); });
-  var sessions = DATA.sessions.filter(function(s){ return s.status==='scheduled'||s.status==='ongoing'; });
+  var myIds = {};
+  DATA.enrollments.filter(function(e){ return e.seafarer===name; }).forEach(function(e){ myIds[e.sessionId]=true; });
+  var sessions = DATA.sessions.filter(function(s){ return myIds[s.id]; });
   return '<div class="sf-portal">' +
-    '<div class="sfp-greet">Upcoming Training</div><div class="sfp-sub">Scheduled &amp; ongoing sessions</div>' +
+    '<div class="sfp-greet">Upcoming Training</div><div class="sfp-sub">Your enrolled sessions</div>' +
     (sessions.length ? sessions.map(function(s){
-      var mine = Object.keys(myCourses).some(function(mc){ return mc && (s.course.toLowerCase().indexOf(mc)>-1 || mc.indexOf(s.course.toLowerCase())>-1); });
-      return '<div class="card"><div class="card-header"><span class="card-title">'+s.course+'</span>' +
-        (mine ? '<span class="badge badge-teal">For you</span>' : '<span class="badge '+(s.status==='ongoing'?'badge-green':'badge-muted')+'">'+s.status+'</span>')+'</div>' +
+      var badge = s.status==='ongoing'?'badge-green':s.status==='full'?'badge-red':s.status==='completed'?'badge-muted':'badge-teal';
+      return '<div class="card"><div class="card-header"><span class="card-title">'+s.course+'</span><span class="badge '+badge+'">'+s.status+'</span></div>' +
         '<div class="card-body">' +
         '<div class="sfp-kv"><span class="k">Dates</span><span class="v">'+s.start+' → '+s.end+'</span></div>' +
         '<div class="sfp-kv"><span class="k">Center</span><span class="v">'+s.center+'</span></div>' +
         '<div class="sfp-kv"><span class="k">Location</span><span class="v">'+s.room+'</span></div>' +
         '</div></div>';
-    }).join('') : '<div class="card"><div class="card-body"><div class="sfp-meta">No upcoming sessions.</div></div></div>') +
+    }).join('') : '<div class="card"><div class="card-body"><div class="sfp-meta">No enrolled sessions.</div></div></div>') +
     '</div>';
 }
 
@@ -3214,14 +3228,15 @@ function renderMyProfile(){
 }
 
 function renderMyNotifications(){
+  var notes = DATA.notifications.filter(function(n){ return n.seafarer===currentUser.seafarerName; });
   return '<div class="sf-portal">' +
-    '<div class="sfp-greet">Notifications</div><div class="sfp-sub">'+NOTIFICATIONS_SF.length+' recent</div>' +
+    '<div class="sfp-greet">Notifications</div><div class="sfp-sub">'+notes.length+' recent</div>' +
     '<div class="card"><div class="card-body" style="padding-top:2px;padding-bottom:2px">' +
-    NOTIFICATIONS_SF.map(function(n){
+    (notes.length ? notes.map(function(n){
       return '<div class="sfp-row"><div class="sfp-ic">'+n.icon+'</div><div class="sfp-main">' +
         '<div class="sfp-title">'+n.title+' <span class="badge '+n.tag+'" style="font-size:9px">'+n.tagt+'</span></div>' +
         '<div class="sfp-meta">'+n.body+'</div><div class="sfp-meta">'+n.when+'</div></div></div>';
-    }).join('') +
+    }).join('') : '<div class="sfp-meta">No notifications.</div>') +
     '</div></div></div>';
 }
 
@@ -3243,6 +3258,152 @@ showSection = function(id){
     return;
   }
   return wmPortalOrigShowSection(id);
+};
+
+/* ===== INSTRUCTOR ROLE (Φ1) — attendance/grades + idempotent cert-trigger. Global scope, no IIFE/DOMContentLoaded. ===== */
+USERS['k.papa@wimas.io'] = { name:'Kostas Papadopoulos', role:'instructor', instructorName:'K. Papadopoulos', pass:'demo123', av:'KP', color:'#0ea5e9' };
+NAV_MENUS.instructor = [
+  { section:'MAIN' },
+  { id:'insessions',   label:'My Sessions', icon:'📅' },
+  { id:'inattendance', label:'Attendance',  icon:'✅' },
+  { id:'ingrades',     label:'Grades',      icon:'🎓' },
+  { id:'inprofile',    label:'My Profile',  icon:'👤' }
+];
+
+var IN_SESSION_CUR = null;
+
+/* scoped helpers — instructor only ever sees their own sessions */
+function inMySessions(){ return DATA.sessions.filter(function(s){ return currentUser && s.instructor===currentUser.instructorName; }); }
+function inSessionById(id){ return DATA.sessions.find(function(s){ return s.id===id; }); }
+function inEnrollments(sid){ return DATA.enrollments.filter(function(e){ return e.sessionId===sid; }); }
+function inOwnsSession(sid){ var s=inSessionById(sid); return !!(s && currentUser && s.instructor===currentUser.instructorName); }
+function inGo(sec, sid){ IN_SESSION_CUR = sid; showSection(sec); }
+function inCurrentSid(){ var mine=inMySessions(); var sid=IN_SESSION_CUR; if(!inOwnsSession(sid)){ sid = mine[0] && mine[0].id; } return sid; }
+
+function inSessionPicker(sess, sid, sec){
+  return '<select class="btn btn-secondary btn-sm" style="min-width:190px" onchange="inGo(\'' + sec + '\', parseInt(this.value,10))">' +
+    sess.map(function(s){ return '<option value="'+s.id+'"'+(s.id===sid?' selected':'')+'>'+s.course+'</option>'; }).join('') +
+    '</select>';
+}
+
+/* attendance write */
+function inTogglePresent(sid, seafarer){
+  if(!inOwnsSession(sid)) return;
+  var e = DATA.enrollments.find(function(x){ return x.sessionId===sid && x.seafarer===seafarer; });
+  if(e){ e.present = (e.present===true) ? false : true; saveState(); showSection('inattendance'); }
+}
+/* grade write (in-memory until Save) */
+function inSetGrade(sid, seafarer, val){
+  if(!inOwnsSession(sid)) return;
+  var e = DATA.enrollments.find(function(x){ return x.sessionId===sid && x.seafarer===seafarer; });
+  if(e){ var g = parseInt(val,10); e.grade = isNaN(g) ? null : g; e.passed = (e.grade!==null) ? (e.grade>=60) : null; }
+}
+/* Save & issue certs — INTERCONNECTION + IDEMPOTENCY (dedupe anchor = enrollment.certId) */
+function inSaveGrades(sid){
+  if(!inOwnsSession(sid)) return;
+  var sess = inSessionById(sid); if(!sess) return;
+  var issued = 0;
+  inEnrollments(sid).forEach(function(e){
+    if(e.present===true && e.passed===true && !e.certId){
+      var id = wmNextSeq(DATA.certs, 'id', 'CERT-2026-');
+      DATA.certs.unshift({ id:id, seafarer:e.seafarer, course:sess.course, center:sess.center, issued:'Today', expiry:'—', status:'valid' });
+      e.certId = id;
+      DATA.notifications.unshift({ seafarer:e.seafarer, icon:'🎓', title:'Certificate issued', body:sess.course+' — '+id, when:'Today', tag:'badge-green', tagt:'Issued' });
+      var key = sess.course.toLowerCase().split(' ')[0];
+      DATA.otrs.forEach(function(o){ if(o.seafarer===e.seafarer && (o.courses||'').toLowerCase().indexOf(key)>-1 && o.status!=='completed'){ o.status='completed'; } });
+      issued++;
+    }
+  });
+  saveState();
+  showToast(issued ? (issued+' certificate'+(issued>1?'s':'')+' issued') : 'Grades saved', 'green');
+  showSection('ingrades');
+}
+
+/* renderers */
+function renderInSessions(){
+  var sess = inMySessions();
+  return '<div class="page-header"><div><div class="page-title">📅 My Sessions</div>' +
+    '<div class="page-subtitle">Sessions you are teaching</div></div></div>' +
+    (sess.length ? '<div class="grid-2">' + sess.map(function(s){
+      var roster = inEnrollments(s.id).length;
+      var b = s.status==='ongoing'?'badge-green':s.status==='full'?'badge-red':s.status==='completed'?'badge-muted':'badge-teal';
+      return '<div class="card"><div class="card-header"><span class="card-title">'+s.course+'</span><span class="badge '+b+'">'+s.status+'</span></div>' +
+        '<div class="card-body">' +
+        '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(30,48,80,.4)"><span class="text-muted fs-12">Dates</span><span class="fs-12 fw-600">'+s.start+' → '+s.end+'</span></div>' +
+        '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(30,48,80,.4)"><span class="text-muted fs-12">Center · Room</span><span class="fs-12 fw-600">'+s.center+' · '+s.room+'</span></div>' +
+        '<div style="display:flex;justify-content:space-between;padding:6px 0"><span class="text-muted fs-12">Roster</span><span class="fs-12 fw-600">'+roster+' seafarers</span></div>' +
+        '<div style="display:flex;gap:8px;margin-top:12px">' +
+        '<button class="btn btn-secondary btn-sm" style="flex:1;justify-content:center" onclick="inGo(\'inattendance\','+s.id+')">✅ Attendance</button>' +
+        '<button class="btn btn-primary btn-sm" style="flex:1;justify-content:center" onclick="inGo(\'ingrades\','+s.id+')">🎓 Grades</button>' +
+        '</div></div></div>';
+    }).join('') + '</div>' : '<div class="card"><div class="card-body">No sessions assigned to you.</div></div>');
+}
+
+function renderInAttendance(){
+  var sess = inMySessions(); var sid = inCurrentSid(); var s = inSessionById(sid);
+  if(!s) return '<div class="page-header"><div class="page-title">✅ Attendance</div></div><div class="card"><div class="card-body">No sessions.</div></div>';
+  var roster = inEnrollments(sid);
+  return '<div class="page-header"><div><div class="page-title">✅ Attendance</div><div class="page-subtitle">'+s.course+' · '+s.start+' → '+s.end+'</div></div>' +
+    '<div class="page-actions">'+inSessionPicker(sess, sid, 'inattendance')+'</div></div>' +
+    '<div class="card"><div class="card-header"><span class="card-title">Roster ('+roster.length+')</span></div>' +
+    '<table class="tbl"><thead><tr><th>Seafarer</th><th>Attendance</th></tr></thead><tbody>' +
+    roster.map(function(e){
+      var lbl = e.present===true?'✅ Present':(e.present===false?'❌ Absent':'Mark present');
+      var cls = e.present===true?'btn-primary':'btn-ghost';
+      return '<tr><td class="fw-600 text-white">'+e.seafarer+'</td>' +
+        '<td><button class="btn '+cls+' btn-sm" onclick="inTogglePresent('+sid+',\''+e.seafarer.replace(/'/g,"\\'")+'\')">'+lbl+'</button></td></tr>';
+    }).join('') +
+    '</tbody></table></div>';
+}
+
+function renderInGrades(){
+  var sess = inMySessions(); var sid = inCurrentSid(); var s = inSessionById(sid);
+  if(!s) return '<div class="page-header"><div class="page-title">🎓 Grades</div></div><div class="card"><div class="card-body">No sessions.</div></div>';
+  var roster = inEnrollments(sid);
+  return '<div class="page-header"><div><div class="page-title">🎓 Grades</div><div class="page-subtitle">'+s.course+' — pass ≥ 60 &amp; present → certificate</div></div>' +
+    '<div class="page-actions">'+inSessionPicker(sess, sid, 'ingrades')+'</div></div>' +
+    '<div class="card"><div class="card-header"><span class="card-title">Grades ('+roster.length+')</span>' +
+    '<button class="btn btn-primary btn-sm" onclick="inSaveGrades('+sid+')">💾 Save &amp; Issue Certs</button></div>' +
+    '<table class="tbl"><thead><tr><th>Seafarer</th><th>Present</th><th>Grade</th><th>Result</th><th>Certificate</th></tr></thead><tbody>' +
+    roster.map(function(e){
+      var res = e.passed===true?'<span class="badge badge-green">PASS</span>':e.passed===false?'<span class="badge badge-red">FAIL</span>':'<span class="fs-11 text-muted">—</span>';
+      var cert = e.certId?'<span class="badge badge-teal">'+e.certId+'</span>':'<span class="fs-11 text-muted">—</span>';
+      return '<tr><td class="fw-600 text-white">'+e.seafarer+'</td>' +
+        '<td>'+(e.present===true?'✅':(e.present===false?'❌':'—'))+'</td>' +
+        '<td><input type="number" min="0" max="100" value="'+(e.grade!==null?e.grade:'')+'" style="width:72px;background:var(--navy-700);border:1px solid var(--navy-border);border-radius:6px;color:var(--white);padding:6px 8px;font-size:13px" onchange="inSetGrade('+sid+',\''+e.seafarer.replace(/'/g,"\\'")+'\',this.value)"></td>' +
+        '<td>'+res+'</td><td>'+cert+'</td></tr>';
+    }).join('') +
+    '</tbody></table></div>';
+}
+
+function renderInProfile(){
+  var u = currentUser; var mine = inMySessions();
+  return '<div class="page-header"><div><div class="page-title">👤 My Profile</div><div class="page-subtitle">Instructor</div></div></div>' +
+    '<div class="card"><div class="card-header"><span class="card-title">'+u.name+'</span><span class="badge badge-teal">Instructor</span></div>' +
+    '<div class="card-body">' +
+    '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(30,48,80,.4)"><span class="text-muted fs-13">Instructor ref</span><span class="fs-13 fw-600">'+u.instructorName+'</span></div>' +
+    '<div style="display:flex;justify-content:space-between;padding:8px 0"><span class="text-muted fs-13">Sessions teaching</span><span class="fs-13 fw-600">'+mine.length+'</span></div>' +
+    '</div></div>';
+}
+
+/* routing: additive wrapper layering after the portal wrapper (responsive -> portal -> instructor) */
+var IN_RENDERERS = { insessions:renderInSessions, inattendance:renderInAttendance, ingrades:renderInGrades, inprofile:renderInProfile };
+var IN_LABELS = { insessions:'My Sessions', inattendance:'Attendance', ingrades:'Grades', inprofile:'My Profile' };
+var IN_REMAP = { dashboard:'insessions', compliance:'insessions', settings:'inprofile' };
+var wmInstrOrigShowSection = showSection;
+showSection = function(id){
+  if (currentUser && currentUser.role === 'instructor') {
+    if (IN_REMAP[id]) id = IN_REMAP[id];
+    if (!IN_RENDERERS[id]) id = 'insessions';
+    activeSection = id;
+    document.querySelectorAll('.nav-item').forEach(function(el){ el.classList.remove('active'); });
+    var nav = document.getElementById('nav-'+id); if (nav) nav.classList.add('active');
+    var bc = document.getElementById('breadcrumb'); if (bc) bc.innerHTML = '<span class="current">'+(IN_LABELS[id]||id)+'</span>';
+    var app = document.getElementById('app'); if (app) app.classList.remove('nav-open');
+    document.getElementById('page-area').innerHTML = IN_RENDERERS[id]();
+    return;
+  }
+  return wmInstrOrigShowSection(id);
 };
 </script>
 </body>
