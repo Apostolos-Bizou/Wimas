@@ -407,6 +407,31 @@ html, body { height: 100%; font-family: var(--font); background: var(--navy-900)
 .gd-root{padding:14px 0 44px;border-radius:12px}
 .gd-root .gd-topbar{position:static;background:transparent;border-bottom:1px solid var(--gd-line);border-radius:0;margin-bottom:4px}
 
+/* ── Login onboarding overlay (Option A) — light .lo-* panel reusing .modal-overlay mechanics ── */
+.lo-overlay{z-index:1200}
+.lo-panel{background:#fff;color:var(--gd-ink,#0F2033);width:min(1040px,95vw);max-height:90vh;display:flex;flex-direction:column;border-radius:16px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.55);animation:modalIn .2s ease}
+.lo-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;border-bottom:1px solid #E2E8F0;background:#fff;flex-shrink:0}
+.lo-title{font-size:15px;font-weight:700;color:#0F2033;display:flex;align-items:center;gap:8px}
+.lo-head-right{display:flex;align-items:center;gap:10px}
+.lo-lang{display:inline-flex;border:1px solid #CBD5E1;border-radius:999px;overflow:hidden;background:#fff}
+.lo-lang button{border:none;background:#fff;color:#475569;font-family:var(--font);font-size:12px;font-weight:700;padding:5px 13px;cursor:pointer;transition:all .15s}
+.lo-lang button.on{background:#0E7490;color:#fff}
+.lo-close{border:none;background:#F1F5F9;color:#475569;width:32px;height:32px;border-radius:8px;font-size:15px;cursor:pointer;transition:all .15s}
+.lo-close:hover{background:#E2E8F0;color:#0F2033}
+.lo-body{padding:18px;overflow-y:auto;flex:1;background:#F1F5F9}
+.lo-body .gd-root{padding:0;background:transparent}
+.lo-body .gd-figwrap{margin-bottom:14px}
+.lo-body .gd-figwrap svg{min-width:940px}
+.lo-scrollhint{display:none;font-size:11px;color:var(--gd-muted,#64748B);text-align:center;margin:-6px 0 10px}
+.lo-openbtn{margin-top:20px;display:inline-flex;align-items:center;gap:9px;padding:11px 18px;background:rgba(255,255,255,.06);color:#fff;border:1px solid var(--navy-border);border-radius:var(--radius-sm);font-family:var(--font);font-size:14px;font-weight:600;cursor:pointer;position:relative;z-index:1;transition:all .15s}
+.lo-openbtn:hover{background:rgba(255,255,255,.12);border-color:var(--teal)}
+@media (max-width:768px){
+  .lo-panel{width:100%;max-width:100%;max-height:92vh;border-radius:16px 16px 0 0}
+  .lo-body{padding:14px}
+  .lo-body .gd-scrollhint,.lo-scrollhint{display:block}
+  .lo-openbtn{width:100%;justify-content:center;min-height:48px;font-size:15px;margin-top:16px}
+}
+
 
 /* ============================================================
    MOBILE RESPONSIVE — additive only. Scope: (1) login, (2) Seafarer views.
@@ -556,6 +581,7 @@ html, body { height: 100%; font-family: var(--font); background: var(--navy-900)
       </div>
       <div class="login-tagline">Nurturing Every<br><span>Seafarer's</span><br>Potential.</div>
       <div class="login-desc">The central platform for managing training requests, certificates, compliance and career development across your entire fleet.</div>
+      <button class="lo-openbtn" id="lo-openbtn" onclick="loOpenOverview()">📖 <span>Πώς λειτουργεί το WIMAS</span></button>
     </div>
     <div class="login-stats">
       <div><div class="ls-num">214</div><div class="ls-label">Seafarers</div></div>
@@ -625,6 +651,25 @@ html, body { height: 100%; font-family: var(--font); background: var(--navy-900)
     <button class="login-btn" onclick="doLogin()">
       <span id="li-btn-text">Sign In</span>
     </button>
+  </div>
+</div>
+
+<!-- ============================================================
+     LOGIN ONBOARDING OVERLAY (Option A) — pre-login, single-source (figBusiness + overview cards)
+============================================================ -->
+<div class="modal-overlay lo-overlay" id="modal-login-overview" onclick="if(event.target===this)loCloseOverview()">
+  <div class="lo-panel" role="dialog" aria-modal="true" aria-label="How WIMAS works">
+    <div class="lo-head">
+      <div class="lo-title">📖 <span id="lo-title-txt">Πώς λειτουργεί το WIMAS</span></div>
+      <div class="lo-head-right">
+        <div class="lo-lang">
+          <button type="button" id="lo-lang-el" class="on" onclick="loSetLang('el')">EL</button>
+          <button type="button" id="lo-lang-en" onclick="loSetLang('en')">EN</button>
+        </div>
+        <button type="button" class="lo-close" aria-label="Close" onclick="loCloseOverview()">✕</button>
+      </div>
+    </div>
+    <div class="lo-body" id="lo-body"></div>
   </div>
 </div>
 
@@ -4127,6 +4172,40 @@ function wgCTA(){
     '<div><div class="fs-14 fw-700 text-white">📘 '+(el?'Οδηγός Χρήσης':'User Guide')+'</div><div class="fs-12 text-muted">'+(el?'Δες τι κάνει κάθε ενότητα και πώς συνδέονται — EL/EN, με PDF.':'See what each section does and how they connect — EL/EN, with PDF.')+'</div></div>' +
     '<button class="btn btn-primary btn-sm" onclick="showSection(\'guide\')">'+(el?'Άνοιγμα οδηγού →':'Open guide →')+'</button>' +
     '</div></div>';
+}
+
+/* ===== Login onboarding overlay (Option A) — pre-login, single-source, no IIFE ===== */
+/* Guardrail A: the overlay toggle writes the GLOBAL WG_LANG. We snapshot it on open and RESTORE it on close,
+   so any EL/EN switch inside the overlay is ephemeral — post-login the in-app guide opens in the pre-open
+   default (EL). To reach the login form the user must close the overlay (X / outside / Esc), all of which
+   run loCloseOverview() -> restore. Guardrail C: the Esc keydown listener is added on open and removed on close. */
+var loPrevLang = null;
+function loRenderOverview(){
+  var isEl = (WG_LANG==='el');
+  var tt = document.getElementById('lo-title-txt'); if(tt) tt.textContent = isEl ? 'Πώς λειτουργεί το WIMAS' : 'How WIMAS works';
+  var be=document.getElementById('lo-lang-el'), bn=document.getElementById('lo-lang-en');
+  if(be) be.className = isEl?'on':''; if(bn) bn.className = isEl?'':'on';
+  var ov = (typeof WG_TABS!=='undefined') ? WG_TABS.filter(function(t){return t.id==='overview';})[0] : null;
+  var hint = isEl ? '↔ Σύρε οριζόντια για όλα τα 6 βήματα' : '↔ Scroll sideways to see all 6 steps';
+  var body = '<div class="gd-root">';
+  body += figBusiness();
+  body += '<p class="lo-scrollhint">'+hint+'</p>';
+  if(ov && ov.cards){ if(ov.cards[0]) body += wgCard(ov.cards[0]); if(ov.cards[1]) body += wgCard(ov.cards[1]); }
+  body += '</div>';
+  var host = document.getElementById('lo-body'); if(host) host.innerHTML = body;
+}
+function loSetLang(l){ WG_LANG = l; loRenderOverview(); }
+function loKeyHandler(e){ if(e.key==='Escape' || e.key==='Esc'){ loCloseOverview(); } }
+function loOpenOverview(){
+  loPrevLang = WG_LANG;            /* snapshot pre-open language */
+  loRenderOverview();
+  var m = document.getElementById('modal-login-overview'); if(m) m.classList.add('open');
+  document.addEventListener('keydown', loKeyHandler);
+}
+function loCloseOverview(){
+  var m = document.getElementById('modal-login-overview'); if(m) m.classList.remove('open');
+  document.removeEventListener('keydown', loKeyHandler);
+  if(loPrevLang!==null){ WG_LANG = loPrevLang; loPrevLang = null; }   /* restore -> no post-login surprise */
 }
 </script>
 </body>
