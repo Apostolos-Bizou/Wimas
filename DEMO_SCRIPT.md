@@ -18,7 +18,7 @@ State is shared and persisted in the browser (`localStorage`), so actions by one
 
 ### 1. Money Agent / Admin — create a Training Request (OTR)
 - As **Training Administrator** → **OTR Requests** → **＋ New OTR**.
-- Seafarer **Petros Nikolaou**, Principal **Shell**, pick a course → **Submit OTR**.
+- Seafarer **Petros Nikolaou**, Principal **Shell**, pick course **Advanced Firefighting** → **Submit OTR**.
 - *You'll see:* toast "OTR … created — ⚠ N compliance gaps" (E07-02 compliance gate), new row `OTR-2026-0155` at the top with a **⚠ Missing: …** note.
 
 ### 2. Admin — route the OTR to a training center
@@ -32,7 +32,7 @@ State is shared and persisted in the browser (`localStorage`), so actions by one
 
 ### 4. Admin — create the course session (with conflict detection)
 - Sign Out → log in as **Training Administrator**. Sidebar → **Course Schedule** → **New Session**.
-- Course **STCW Basic Safety Training**, Center **WIMAS**, Instructor **K. Papadopoulos**, dates e.g. **01→03 Jul 2026**, Room **Q** → **Create Session**.
+- Course **Advanced Firefighting**, Center **WIMAS**, Instructor **K. Papadopoulos**, dates e.g. **01→03 Jul 2026**, Room **Q** → **Create Session**.
 - *Show conflict detection (optional):* try the same instructor with dates overlapping an existing session → **blocked** with a red "Conflict — instructor … booked" toast.
 
 ### 5. Admin — enroll the seafarer (+ notification)
@@ -41,12 +41,12 @@ State is shared and persisted in the browser (`localStorage`), so actions by one
 
 ### 6. Instructor — attendance + grade → certificate auto-issues
 - Sign Out → log in as **Instructor** — chip **"Kostas Papadopoulos"** (`k.papa@wimas.io`).
-- **My Sessions** (only his sessions) → open the STCW session → **Attendance**: mark **Petros = Present** → **Grades**: enter **88** → **💾 Save & Issue Certs**.
+- **My Sessions** (only his sessions) → open the Advanced Firefighting session → **Attendance**: mark **Petros = Present** → **Grades**: enter **88** → **💾 Save & Issue Certs**.
 - *You'll see:* toast "certificate issued". A new cert appears in `DATA.certs` (idempotent — saving again issues no duplicate).
 
 ### 7. Seafarer — sees the certificate, notification, and upcoming training
 - Sign Out → log in as **Seafarer** — chip **"Petros Nikolaou"** (`petros@seafarer.io`).
-- **My Certificates** → the new STCW certificate is listed (same cert the admin sees — single source).
+- **My Certificates** → the new Advanced Firefighting certificate is listed (same cert the admin sees — single source).
 - **Notifications** → "Certificate issued" **and** "Enrolled in course".
 - **Upcoming Training** → the session he was enrolled into.
 
