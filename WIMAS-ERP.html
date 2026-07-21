@@ -1289,7 +1289,6 @@ var SEED_DATA = {
     { id:6, course:'Advanced Firefighting',      center:'WIMAS',    instructor:'K. Papadopoulos', start:'2026-03-25', end:'2026-03-27', capacity:12, enrolled:12, room:'Simulation',status:'full',      pub:true  },
   ],
   enrollments: [
-    { sessionId:1, seafarer:'Petros Nikolaou',  present:null, grade:null, passed:null, certId:null },
     { sessionId:1, seafarer:'Maria Papadaki',   present:null, grade:null, passed:null, certId:null },
     { sessionId:1, seafarer:'Nikos Drakos',     present:null, grade:null, passed:null, certId:null },
     { sessionId:6, seafarer:'Petros Nikolaou',  present:null, grade:null, passed:null, certId:null },
@@ -2993,7 +2992,16 @@ function saveState(){
   try { localStorage.setItem(WM_STATE_KEY, JSON.stringify({ v:1, data: DATA, users: USERS_LIST })); } catch(e){}
 }
 function loadState(){
-  try { var raw = localStorage.getItem(WM_STATE_KEY); if(!raw) return null; var o = JSON.parse(raw); return (o && o.data && o.users) ? o : null; } catch(e){ return null; }
+  try {
+    var raw = localStorage.getItem(WM_STATE_KEY); if(!raw) return null;
+    var o = JSON.parse(raw); if(!(o && o.data && o.users)) return null;
+    /* forward-compat: backfill any SEED collection missing from an older stored state (generic, not hardcoded) */
+    var changed = false;
+    for (var k in SEED_DATA){ if(SEED_DATA.hasOwnProperty(k) && typeof o.data[k] === "undefined"){ o.data[k] = JSON.parse(JSON.stringify(SEED_DATA[k])); changed = true; } }
+    if (typeof o.users === "undefined"){ o.users = JSON.parse(JSON.stringify(SEED_USERS)); changed = true; }
+    if (changed){ try { localStorage.setItem(WM_STATE_KEY, JSON.stringify(o)); } catch(e){} }
+    return o;
+  } catch(e){ return null; }
 }
 
 /* live, mutable state: restored from localStorage if present, else a deep clone of the immutable SEED */
