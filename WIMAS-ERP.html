@@ -535,6 +535,11 @@ html, body { height: 100%; font-family: var(--font); background: var(--navy-900)
 @media (max-width: 768px) {
   .sf-portal { max-width: 100%; }
 }
+
+/* Φ6 polish — admin modal field-grids stack to 1 column on mobile (scoped to modals; desktop untouched) */
+@media (max-width: 768px) {
+  .modal-box .form-row.cols-2, .modal-box .form-row.cols-3 { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
