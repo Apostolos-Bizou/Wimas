@@ -932,6 +932,14 @@ html, body { height: 100%; font-family: var(--font); background: var(--navy-900)
   </div>
 </div>
 
+<!-- Drill-down Modal (Φ5c) -->
+<div class="modal-overlay" id="modal-drill">
+  <div class="modal-box modal-box-lg">
+    <div class="modal-header"><span class="modal-title" id="drill-title">Drill-down</span><button class="modal-close" onclick="closeModal('modal-drill')">✕</button></div>
+    <div class="modal-body" id="drill-body"></div>
+  </div>
+</div>
+
 <!-- Create Session Modal -->
 <div class="modal-overlay" id="modal-create-session">
   <div class="modal-box modal-box-lg">
@@ -1395,7 +1403,8 @@ var SEED_DATA = {
     { key:'MarineEd', name:'MarineEd Institute', type:'External', loc:'Heraklion, Crete', contact:'Petros Manolis', email:'contact@marineed.gr', status:'review', accred:['STCW'], courses:1, sessions:0, logo:'🎓', color:'#f59e0b' }
   ],
   profiles: {},
-  waitlist: []
+  waitlist: [],
+  org: { name:'Wimas Training Center', accent:'#0ea5e9', defaultCenter:'WIMAS' }
 };
 
 /* ─────────────────────────────────────────────
@@ -2031,7 +2040,7 @@ function renderCIInv(){
       var ed=inv.wf==="draft"||inv.wf==="ready_for_approval";
       var pB=inv.status==="paid"?"badge-green":inv.status==="sent"?"badge-teal":inv.status==="overdue"?"badge-red":inv.status==="pending"?"badge-orange":"badge-muted";
       return '<tr><td class="text-mono fs-11 text-teal">'+inv.id+'</td>'+
-        '<td><div class="fs-13 fw-600 text-white">'+inv.agent+'</div><div class="fs-11 text-muted">'+inv.principal+'</div></td>'+
+        '<td><div class="fs-13 fw-600 text-white" style="cursor:pointer;text-decoration:underline dotted" onclick="showMAProfile(\''+inv.agent+'\')">'+inv.agent+'</div><div class="fs-11 text-muted">'+inv.principal+'</div></td>'+
         '<td class="text-mono fs-11">'+inv.date+'</td>'+
         '<td class="fw-700 text-white">\u20ac'+inv.total.toLocaleString()+'</td>'+
         '<td>'+renderWF(inv.wf)+'</td>'+
@@ -2128,7 +2137,7 @@ function renderComplianceBody() {
         '<td class="fs-12">' + r.freq + '</td>' +
         '<td class="text-mono fs-11">' + r.last + '</td>' +
         '<td class="text-mono fs-11" style="color:' + (r.status==='expiring'?'var(--orange)':r.status==='missing'||r.status==='expired'?'var(--red)':'inherit') + '">' + r.expiry + '</td>' +
-        '<td><span class="badge ' + (r.status==='valid'?'badge-green':r.status==='expiring'?'badge-orange':r.status==='missing'?'badge-muted':'badge-red') + '">' + r.status + '</span></td>' +
+        '<td style="cursor:pointer" onclick="drillRequirement(\''+principal+'\',\''+r.course.replace(/\x27/g,"\\\x27")+'\')"><span class="badge ' + (r.status==='valid'?'badge-green':r.status==='expiring'?'badge-orange':r.status==='missing'?'badge-muted':'badge-red') + '">' + r.status + '</span></td>' +
         '<td>' + (r.status!=='valid'?'<button class="btn btn-primary btn-sm" onclick="openModal(\'modal-create-otr\')">+ OTR</button>':'<button class="btn btn-ghost btn-sm">PDF \u2193</button>') + '</td>' +
         '</tr>';
     }).join('') +
@@ -2358,8 +2367,8 @@ function renderReports() {
     '<div class="grid-2 section-mb">' +
     '<div class="card"><div class="card-header"><span class="card-title">🛡 Compliance by Principal</span><span class="fs-12 text-muted">Mar 2026</span></div>' +
     '<div class="card-body">' +
-    [['Shell',87,89,'var(--green)'],['Pioneer',64,76,'var(--teal)'],['Crossover',45,68,'var(--orange)'],['Global Marine',18,94,'var(--green)']].map(function(p) {
-      return '<div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;margin-bottom:5px">' +
+    (function(){ var g={}; DATA.seafarers.forEach(function(s){ (g[s.principal]=g[s.principal]||[]).push(s); }); return Object.keys(g).map(function(k){ var arr=g[k]; var avg=Math.round(arr.reduce(function(a,b){return a+b.compliance;},0)/arr.length); return [k, arr.length, avg, (avg>=90?'var(--green)':avg>=70?'var(--orange)':'var(--red)')]; }); })().map(function(p) {
+      return '<div style="margin-bottom:14px;cursor:pointer" onclick="drillPrincipal(\''+p[0]+'\')"><div style="display:flex;justify-content:space-between;margin-bottom:5px">' +
         '<div><span class="fs-13 fw-600 text-white">' + p[0] + '</span> <span class="fs-11 text-muted">' + p[1] + ' seafarers</span></div>' +
         '<span style="font-size:13px;font-weight:700;color:' + p[3] + '">' + p[2] + '%</span></div>' +
         '<div class="progress"><div class="progress-bar" style="width:' + p[2] + '%;background:' + p[3] + '"></div></div></div>';
@@ -2540,6 +2549,11 @@ function renderSettings() {
         '<div style="width:16px;height:16px;background:#fff;border-radius:50%;position:absolute;top:3px;' + (p[1]?'right:3px':'left:3px') + ';transition:all .2s"></div></div>' +
         '</div>';
     }).join('') +
+    '</div></div>' +
+    '<div class="card"><div class="card-header"><span class="card-title">🏢 Organization &amp; Branding</span></div><div class="card-body">' +
+    '<div class="form-group"><label class="form-label">Organization Name</label><input class="form-input" id="so-name" value="'+((DATA.org&&DATA.org.name)||'')+'"></div>' +
+    '<div class="form-group"><label class="form-label">Brand Accent (hex)</label><input class="form-input" id="so-accent" value="'+((DATA.org&&DATA.org.accent)||'')+'"></div>' +
+    '<button class="btn btn-primary" onclick="saveOrg()">Save Organization</button>' +
     '</div></div>' +
     '<div class="card"><div class="card-header"><span class="card-title">🧪 Demo Data</span></div><div class="card-body">' +
     '<div class="fs-13 text-muted" style="margin-bottom:12px">Changes you make (new OTRs, users, issued certificates, approvals) are saved locally in this browser and survive a refresh. Reset restores the original demo data.</div>' +
@@ -3819,6 +3833,71 @@ function enrollConfirm(){
     saveState(); closeModal('modal-enroll');
     showToast(s.course+' is full — '+sea+' added to waitlist','orange'); showSection(activeSection);
   }
+}
+
+/* ===== Φ5c — analytics: drill-down + MA profile + org settings. Global scope, no IIFE. Reads are read-only. ===== */
+
+/* E07-04 / E08-04 drill-down (read-only) */
+function drillPrincipal(p){
+  var fleet = DATA.seafarers.filter(function(s){ return s.principal===p; });
+  var t=document.getElementById('drill-title'); if(t) t.textContent = p + ' — Fleet Compliance ('+fleet.length+')';
+  var b=document.getElementById('drill-body'); if(b) b.innerHTML = fleet.length
+    ? '<table class="tbl"><thead><tr><th>Seafarer</th><th>Rank</th><th>Compliance</th><th>Status</th></tr></thead><tbody>' +
+      fleet.map(function(s){ var c=s.compliance>=90?'var(--green)':s.compliance>=70?'var(--orange)':'var(--red)'; return '<tr><td class="fw-600 text-white">'+s.name+'</td><td class="fs-12">'+s.rank+'</td><td style="color:'+c+';font-weight:700">'+s.compliance+'%</td><td><span class="badge '+(s.status==='active'?'badge-green':'badge-muted')+'">'+s.status+'</span></td></tr>'; }).join('') +
+      '</tbody></table>'
+    : '<div class="fs-12 text-muted">No seafarers for '+p+'.</div>';
+  wmOrigOpenModal('modal-drill');
+}
+function drillRequirement(p, course){
+  var fleet = DATA.seafarers.filter(function(s){ return s.principal===p; });
+  var rows = fleet.map(function(s){ var cert=DATA.certs.find(function(c){ return c.seafarer===s.name && c.course===course; }); return { name:s.name, rank:s.rank, status:(cert?cert.status:'missing') }; });
+  var counts={valid:0,expiring:0,expired:0,missing:0}; rows.forEach(function(r){ counts[r.status]=(counts[r.status]||0)+1; });
+  var t=document.getElementById('drill-title'); if(t) t.textContent = p + ' — ' + course;
+  var b=document.getElementById('drill-body'); if(b) b.innerHTML =
+    '<div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">' +
+    [['valid','badge-green'],['expiring','badge-orange'],['expired','badge-red'],['missing','badge-muted']].map(function(x){ return '<span class="badge '+x[1]+'">'+x[0]+': '+(counts[x[0]]||0)+'</span>'; }).join('') +
+    '</div>' +
+    '<table class="tbl"><thead><tr><th>Seafarer</th><th>Rank</th><th>'+course+'</th></tr></thead><tbody>' +
+    rows.map(function(r){ var bd=r.status==='valid'?'badge-green':r.status==='expiring'?'badge-orange':r.status==='expired'?'badge-red':'badge-muted'; return '<tr><td class="fw-600 text-white">'+r.name+'</td><td class="fs-12">'+r.rank+'</td><td><span class="badge '+bd+'">'+r.status+'</span></td></tr>'; }).join('') +
+    '</tbody></table>';
+  wmOrigOpenModal('modal-drill');
+}
+
+/* E02-02 Money Agent profile (drill-down from invoice agent) — read-only */
+function showMAProfile(agent){
+  var invs = DATA.invoices.filter(function(i){ return i.agent===agent; });
+  var pset={}; invs.forEach(function(i){ pset[i.principal]=true; }); var pk=Object.keys(pset);
+  var fleet = DATA.seafarers.filter(function(s){ return pk.indexOf(s.principal)>-1; });
+  var otrs  = DATA.otrs.filter(function(o){ return pk.indexOf(o.principal)>-1; });
+  var billed = invs.reduce(function(a,b){ return a+(b.total||0); },0);
+  activeSection='certinvoices';
+  var bc=document.getElementById('breadcrumb'); if(bc) bc.innerHTML = '<span class="link" onclick="showSection(\'certinvoices\')">Certificates &amp; Invoices</span><span class="sep">›</span><span class="current">'+agent+'</span>';
+  document.getElementById('page-area').innerHTML =
+    '<div class="page-header"><div><div class="page-title">🏢 '+agent+'</div><div class="page-subtitle">Money Agent profile — principals: '+(pk.join(', ')||'—')+'</div></div>' +
+    '<div class="page-actions"><button class="btn btn-ghost" onclick="showSection(\'certinvoices\')">← Back</button></div></div>' +
+    '<div class="stat-grid">' +
+    '<div class="stat-card teal"><div class="stat-icon teal">🧾</div><div class="stat-val text-teal">'+invs.length+'</div><div class="stat-label">Invoices</div></div>' +
+    '<div class="stat-card green"><div class="stat-icon green">💶</div><div class="stat-val text-green">€'+billed.toLocaleString()+'</div><div class="stat-label">Total Billed</div></div>' +
+    '<div class="stat-card purple"><div class="stat-icon purple">⚓</div><div class="stat-val" style="color:var(--purple)">'+fleet.length+'</div><div class="stat-label">Fleet</div></div>' +
+    '<div class="stat-card orange"><div class="stat-icon orange">📋</div><div class="stat-val text-orange">'+otrs.length+'</div><div class="stat-label">OTRs</div></div>' +
+    '</div>' +
+    '<div class="grid-2">' +
+    '<div class="card"><div class="card-header"><span class="card-title">⚓ Fleet ('+fleet.length+')</span></div><div class="card-body">' +
+    (fleet.length?fleet.map(function(s){ return '<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(30,48,80,.3)"><span class="fs-12 fw-600 text-white">'+s.name+'</span><span class="fs-11 text-muted">'+s.rank+' · '+s.principal+'</span></div>'; }).join(''):'<div class="fs-12 text-muted">No fleet.</div>') +
+    '</div></div>' +
+    '<div class="card"><div class="card-header"><span class="card-title">📋 OTRs ('+otrs.length+')</span></div><div class="card-body">' +
+    (otrs.length?otrs.map(function(o){ return '<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(30,48,80,.3)"><span class="fs-12 fw-600 text-teal text-mono">'+o.num+'</span><span class="fs-11 text-muted">'+o.seafarer+' · '+o.status+'</span></div>'; }).join(''):'<div class="fs-12 text-muted">No OTRs.</div>') +
+    '</div></div></div>';
+}
+
+/* Settings — Organization & Branding (persisted to DATA.org) */
+function saveOrg(){
+  DATA.org = DATA.org || {};
+  DATA.org.name = wmVal('so-name') || DATA.org.name;
+  DATA.org.accent = wmVal('so-accent') || DATA.org.accent;
+  saveState();
+  showToast('Organization settings saved','green');
+  showSection('settings');
 }
 </script>
 </body>
