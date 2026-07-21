@@ -819,30 +819,30 @@ html, body { height: 100%; font-family: var(--font); background: var(--navy-900)
     <div class="modal-body">
       <div class="form-group">
         <label class="form-label">Seafarer *</label>
-        <select class="form-input">
+        <select class="form-input" id="uc-seafarer">
           <option>Petros Nikolaou</option><option>Vasilis Katsaros</option><option>Ioannis Stefanou</option>
         </select>
       </div>
       <div class="form-row cols-2">
         <div class="form-group">
           <label class="form-label">Course Type *</label>
-          <select class="form-input">
+          <select class="form-input" id="uc-course">
             <option>STCW BST</option><option>GMDSS GOC</option><option>ECDIS</option><option>Medical First Aid</option>
           </select>
         </div>
         <div class="form-group">
           <label class="form-label">Training Center *</label>
-          <input class="form-input" type="text" placeholder="e.g. STI Maritime">
+          <input class="form-input" type="text" placeholder="e.g. STI Maritime" id="uc-center">
         </div>
       </div>
       <div class="form-row cols-2">
         <div class="form-group">
           <label class="form-label">Issue Date *</label>
-          <input class="form-input" type="date">
+          <input class="form-input" type="date" id="uc-issued">
         </div>
         <div class="form-group">
           <label class="form-label">Expiry Date</label>
-          <input class="form-input" type="date">
+          <input class="form-input" type="date" id="uc-expiry">
         </div>
       </div>
       <div class="form-group">
@@ -856,8 +856,66 @@ html, body { height: 100%; font-family: var(--font); background: var(--navy-900)
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modal-upload-cert')">Cancel</button>
-      <button class="btn btn-primary" onclick="closeModal('modal-upload-cert');showToast('Certificate uploaded successfully','green')">Upload Certificate</button>
+      <button class="btn btn-primary" onclick="uploadCert()">Upload Certificate</button>
     </div>
+  </div>
+</div>
+
+<!-- Add Center Modal (Φ5a) -->
+<div class="modal-overlay" id="modal-add-center">
+  <div class="modal-box">
+    <div class="modal-header"><span class="modal-title">🏢 Add Training Center</span><button class="modal-close" onclick="closeModal('modal-add-center')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Center Name *</label><input class="form-input" id="ac-name" placeholder="e.g. Piraeus Marine Academy"></div>
+      <div class="form-row cols-2">
+        <div class="form-group"><label class="form-label">Type</label><select class="form-input" id="ac-type"><option>External</option><option>Internal</option></select></div>
+        <div class="form-group"><label class="form-label">Status</label><select class="form-input" id="ac-status"><option>active</option><option>review</option><option>inactive</option></select></div>
+      </div>
+      <div class="form-group"><label class="form-label">Location</label><input class="form-input" id="ac-loc" placeholder="City, Country"></div>
+      <div class="form-row cols-2">
+        <div class="form-group"><label class="form-label">Contact Person</label><input class="form-input" id="ac-contact" placeholder="Contact"></div>
+        <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="ac-email" placeholder="email@center"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Accreditations (comma-separated)</label><input class="form-input" id="ac-accred" placeholder="STCW, GMDSS, ISO 9001"></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('modal-add-center')">Cancel</button><button class="btn btn-primary" onclick="addCenter()">Add Center</button></div>
+  </div>
+</div>
+
+<!-- New Seafarer Modal (Φ5a) -->
+<div class="modal-overlay" id="modal-create-seafarer">
+  <div class="modal-box">
+    <div class="modal-header"><span class="modal-title">⚓ New Seafarer</span><button class="modal-close" onclick="closeModal('modal-create-seafarer')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Full Name *</label><input class="form-input" id="ns-name" placeholder="Full name"></div>
+      <div class="form-row cols-2">
+        <div class="form-group"><label class="form-label">Rank</label><input class="form-input" id="ns-rank" placeholder="e.g. AB"></div>
+        <div class="form-group"><label class="form-label">Principal</label><select class="form-input" id="ns-principal"><option>Shell</option><option>Pioneer</option><option>Crossover</option><option>Global Marine</option></select></div>
+      </div>
+      <div class="form-row cols-2">
+        <div class="form-group"><label class="form-label">Passport</label><input class="form-input" id="ns-passport" placeholder="Passport no."></div>
+        <div class="form-group"><label class="form-label">Nationality</label><input class="form-input" id="ns-nat" placeholder="Nationality"></div>
+      </div>
+      <div class="form-group" style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="ns-gdpr" style="width:auto"><label class="form-label" for="ns-gdpr" style="margin:0">GDPR data-processing consent (required)</label></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('modal-create-seafarer')">Cancel</button><button class="btn btn-primary" onclick="createSeafarer()">Create Seafarer</button></div>
+  </div>
+</div>
+
+<!-- Create Invoice Modal (Φ5a) -->
+<div class="modal-overlay" id="modal-create-invoice">
+  <div class="modal-box">
+    <div class="modal-header"><span class="modal-title">🧾 Create Invoice</span><button class="modal-close" onclick="closeModal('modal-create-invoice')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Agent *</label><input class="form-input" id="civ-agent" placeholder="e.g. Aegean Crew Mgmt"></div>
+      <div class="form-row cols-2">
+        <div class="form-group"><label class="form-label">Principal</label><select class="form-input" id="civ-principal"><option>Shell</option><option>Pioneer</option><option>Crossover</option><option>Global Marine</option></select></div>
+        <div class="form-group"><label class="form-label">Amount (€) *</label><input class="form-input" type="number" id="civ-amount" placeholder="0"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Due Date</label><input class="form-input" type="date" id="civ-due"></div>
+      <div class="fs-12 text-muted">Creates a draft invoice → Send for Approval → CFO approves (segregation of duties).</div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('modal-create-invoice')">Cancel</button><button class="btn btn-primary" onclick="createInvoice()">Create Draft</button></div>
   </div>
 </div>
 
@@ -1088,7 +1146,8 @@ function doLogin() {
   var u = USERS[email];
   if (!u || u.pass !== pass) { err.classList.add('show'); return; }
   err.classList.remove('show');
-  currentUser = u;
+  currentUser = u; currentUser.email = email;
+  if(DATA.profiles && DATA.profiles[email]){ currentUser.name = DATA.profiles[email].name; }
   bootApp();
 }
 
@@ -1315,7 +1374,14 @@ var SEED_DATA = {
     { seafarer:'Petros Nikolaou', icon:'📅', title:'Course reminder',    body:'Advanced Firefighting starts 25 Mar 2026 · WIMAS Simulation', when:'2 days ago', tag:'badge-teal',   tagt:'Reminder' },
     { seafarer:'Petros Nikolaou', icon:'🎓', title:'Certificate issued', body:'STCW BST — valid until 15 Jan 2031',                          when:'12 Jan 2026', tag:'badge-green',  tagt:'Issued' },
     { seafarer:'Petros Nikolaou', icon:'⚠️', title:'Compliance notice',  body:'Your compliance is 85% — 1 item needs attention',            when:'Today',       tag:'badge-orange', tagt:'Action' }
-  ]
+  ],
+  centers: [
+    { key:'WIMAS', name:'WIMAS Training Center', type:'Internal', loc:'Piraeus, Greece', contact:'Charlene Wima', email:'training@wimas.io', status:'active', accred:['STCW','GMDSS','ISO 9001'], courses:7, sessions:8, logo:'🏫', color:'#0ea5e9' },
+    { key:'STI', name:'STI Maritime Center', type:'External', loc:'Thessaloniki, GR', contact:'Andreas Stavros', email:'info@sti-maritime.gr', status:'active', accred:['STCW','DNV','MCA'], courses:5, sessions:5, logo:'⚓', color:'#10b981' },
+    { key:'Compass', name:'Compass Training', type:'External', loc:'Athens, Greece', contact:'Sofia Alexiou', email:'admin@compass.gr', status:'active', accred:['STCW','Flag State'], courses:4, sessions:3, logo:'🧭', color:'#8b5cf6' },
+    { key:'MarineEd', name:'MarineEd Institute', type:'External', loc:'Heraklion, Crete', contact:'Petros Manolis', email:'contact@marineed.gr', status:'review', accred:['STCW'], courses:1, sessions:0, logo:'🎓', color:'#f59e0b' }
+  ],
+  profiles: {}
 };
 
 /* ─────────────────────────────────────────────
@@ -1470,7 +1536,7 @@ function renderSeafarers() {
     '<div class="page-subtitle">Manage seafarer profiles, training history and compliance</div></div>' +
     '<div class="page-actions">' +
     '<button class="btn btn-secondary">📤 Export</button>' +
-    '<button class="btn btn-primary">＋ New Seafarer</button>' +
+    '<button class="btn btn-primary" onclick="openModal(\'modal-create-seafarer\')">＋ New Seafarer</button>' +
     '</div></div>' +
 
     '<div class="card">' +
@@ -1908,7 +1974,7 @@ function renderCertInvoices(){
     '<div class="page-subtitle">Unified view \u2014 manage certificates, invoicing and approval workflow</div></div>'+
     '<div class="page-actions">'+
     '<button class="btn btn-secondary" onclick="openModal(\'modal-upload-cert\')">Upload External</button>'+
-    '<button class="btn btn-primary" onclick="showToast(\'Select certificates to invoice\',\'teal\')">+ New Invoice</button></div></div>'+
+    '<button class="btn btn-primary" onclick="openModal(\'modal-create-invoice\')">+ New Invoice</button></div></div>'+
     '<div class="stat-grid">'+
     '<div class="stat-card green"><div class="stat-icon green">\uD83C\uDF93</div><div class="stat-val text-green">'+DATA.certs.length+'</div><div class="stat-label">Total Certs</div></div>'+
     '<div class="stat-card teal"><div class="stat-icon teal">\uD83D\uDCB3</div><div class="stat-val text-teal">'+DATA.invoices.length+'</div><div class="stat-label">Total Invoices</div></div>'+
@@ -2332,23 +2398,18 @@ function renderReports() {
    TRAINING CENTERS
 ───────────────────────────────────────────── */
 function renderCenters() {
-  var centers = [
-    { name:'WIMAS Training Center', type:'Internal', loc:'Piraeus, Greece', contact:'Charlene Wima', email:'training@wimas.io', status:'active', accred:['STCW','GMDSS','ISO 9001'], courses:7, sessions:8, logo:'🏫', color:'#0ea5e9' },
-    { name:'STI Maritime Center',  type:'External', loc:'Thessaloniki, GR', contact:'Andreas Stavros', email:'info@sti-maritime.gr', status:'active', accred:['STCW','DNV','MCA'], courses:5, sessions:5, logo:'⚓', color:'#10b981' },
-    { name:'Compass Training',     type:'External', loc:'Athens, Greece', contact:'Sofia Alexiou', email:'admin@compass.gr', status:'active', accred:['STCW','Flag State'], courses:4, sessions:3, logo:'🧭', color:'#8b5cf6' },
-    { name:'MarineEd Institute',   type:'External', loc:'Heraklion, Crete', contact:'Petros Manolis', email:'contact@marineed.gr', status:'review', accred:['STCW'], courses:1, sessions:0, logo:'🎓', color:'#f59e0b' },
-  ];
+  var centers = DATA.centers;
 
   return '<div class="page-header">' +
     '<div><div class="page-title">🏢 Training Centers</div>' +
     '<div class="page-subtitle">Manage internal and external training center profiles and accreditations</div></div>' +
-    '<div class="page-actions"><button class="btn btn-primary" onclick="showToast(\'Add center form — coming next sprint\',\'teal\')">＋ Add Center</button></div></div>' +
+    '<div class="page-actions"><button class="btn btn-primary" onclick="openModal(\'modal-add-center\')">＋ Add Center</button></div></div>' +
 
     '<div class="stat-grid">' +
-    '<div class="stat-card teal"><div class="stat-icon teal">🏢</div><div class="stat-val text-teal">4</div><div class="stat-label">Total Centers</div></div>' +
-    '<div class="stat-card green"><div class="stat-icon green">✅</div><div class="stat-val text-green">3</div><div class="stat-label">Active</div></div>' +
+    '<div class="stat-card teal"><div class="stat-icon teal">🏢</div><div class="stat-val text-teal">'+centers.length+'</div><div class="stat-label">Total Centers</div></div>' +
+    '<div class="stat-card green"><div class="stat-icon green">✅</div><div class="stat-val text-green">'+centers.filter(function(c){return c.status==="active";}).length+'</div><div class="stat-label">Active</div></div>' +
     '<div class="stat-card teal"><div class="stat-icon teal">📅</div><div class="stat-val text-teal">16</div><div class="stat-label">Sessions This Month</div></div>' +
-    '<div class="stat-card orange"><div class="stat-icon orange">🔍</div><div class="stat-val text-orange">1</div><div class="stat-label">Under Review</div></div>' +
+    '<div class="stat-card orange"><div class="stat-icon orange">🔍</div><div class="stat-val text-orange">'+centers.filter(function(c){return c.status==="review";}).length+'</div><div class="stat-label">Under Review</div></div>' +
     '</div>' +
 
     '<div class="grid-2">' +
@@ -2447,9 +2508,9 @@ function renderSettings() {
     '<div style="display:flex;align-items:center;gap:14px;margin-bottom:20px">' +
     '<div style="width:56px;height:56px;border-radius:12px;background:' + currentUser.color + ';display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#fff">' + currentUser.av + '</div>' +
     '<div><div class="fs-16 fw-700">' + currentUser.name + '</div><div class="fs-12 text-muted">' + currentUser.email + '</div><span class="badge badge-teal" style="margin-top:4px">' + currentUser.role + '</span></div></div>' +
-    '<div class="form-group"><label class="form-label">Display Name</label><input class="form-input" value="' + currentUser.name + '"></div>' +
+    '<div class="form-group"><label class="form-label">Display Name</label><input class="form-input" id="sp-name" value="' + currentUser.name + '"></div>' +
     '<div class="form-group"><label class="form-label">Email (read-only)</label><input class="form-input" value="' + currentUser.email + '" disabled style="opacity:.5"></div>' +
-    '<button class="btn btn-primary" onclick="showToast(\'Profile updated\',\'green\')">Save Changes</button>' +
+    '<button class="btn btn-primary" onclick="saveProfile()">Save Changes</button>' +
     '</div></div>' +
     '<div class="card"><div class="card-header"><span class="card-title">🔒 Change Password</span></div><div class="card-body">' +
     '<div class="form-group"><label class="form-label">Current Password</label><input class="form-input" type="password" placeholder="••••••••"></div>' +
@@ -3115,8 +3176,7 @@ function assignOTR(){
 
 function createSession(){
   var course = wmVal("cs-course") || "STCW Basic Safety Training";
-  var craw = wmVal("cs-center");
-  var center = craw.indexOf("WIMAS")>-1?"WIMAS":craw.indexOf("STI")>-1?"STI":craw.indexOf("Compass")>-1?"Compass":(craw||"WIMAS");
+  var center = wmVal("cs-center") || "WIMAS";
   var start = wmVal("cs-start"), end = wmVal("cs-end");
   if(!start || !end){ showToast("Please set start and end dates","orange"); return; }
   var cap = parseInt(wmVal("cs-capacity"),10); if(isNaN(cap)) cap = 12;
@@ -3634,6 +3694,85 @@ showSection = function(id){
   }
   return wmCfoOrigShowSection(id);
 };
+
+/* ===== Φ5a — real creates/edits (persisted via DATA + saveState). Global scope, no IIFE. ===== */
+
+/* dynamic option fillers (so newly-created records appear immediately) */
+function wmFillCenters(selId){ var s=document.getElementById(selId); if(!s) return; s.innerHTML = DATA.centers.map(function(c){ return '<option value="'+c.key+'">'+c.name+'</option>'; }).join(''); }
+function wmFillSeafarers(selId){ var s=document.getElementById(selId); if(!s) return; s.innerHTML = DATA.seafarers.map(function(sf){ return '<option>'+sf.name+'</option>'; }).join(''); }
+
+/* openModal wrapper: refresh dynamic selects before showing */
+var wmOrigOpenModal = openModal;
+openModal = function(id){
+  if(id==='modal-create-session') wmFillCenters('cs-center');
+  if(id==='modal-create-otr') wmFillSeafarers('otr-seafarer');
+  if(id==='modal-upload-cert') wmFillSeafarers('uc-seafarer');
+  wmOrigOpenModal(id);
+};
+
+/* E02-01 — Add Center -> DATA.centers */
+function addCenter(){
+  var name = wmVal('ac-name'); if(!name){ showToast('Center name required','orange'); return; }
+  var key = (name.replace(/[^A-Za-z0-9]/g,'').slice(0,8).toUpperCase()) || ('C'+DATA.centers.length);
+  var accred = wmVal('ac-accred').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+  var colors = ['#0ea5e9','#10b981','#8b5cf6','#f59e0b','#ec4899','#14b8a6'];
+  DATA.centers.push({ key:key, name:name, type:(wmVal('ac-type')||'External'), loc:(wmVal('ac-loc')||'—'), contact:(wmVal('ac-contact')||'—'), email:(wmVal('ac-email')||'—'), status:(wmVal('ac-status')||'active'), accred:(accred.length?accred:['STCW']), courses:0, sessions:0, logo:'🏫', color:colors[DATA.centers.length % colors.length] });
+  saveState();
+  closeModal('modal-add-center');
+  showToast('Center "'+name+'" added','green');
+  ['ac-name','ac-loc','ac-contact','ac-email','ac-accred'].forEach(function(i){ var e=document.getElementById(i); if(e) e.value=''; });
+  showSection('centers');
+}
+
+/* E02-03 — New Seafarer -> DATA.seafarers */
+function createSeafarer(){
+  var name = wmVal('ns-name'); if(!name){ showToast('Name required','orange'); return; }
+  var g = document.getElementById('ns-gdpr'); if(!g || !g.checked){ showToast('GDPR consent required','orange'); return; }
+  if(DATA.seafarers.some(function(s){ return s.name===name; })){ showToast('Seafarer already exists','orange'); return; }
+  DATA.seafarers.push({ name:name, rank:(wmVal('ns-rank')||'AB'), principal:(wmVal('ns-principal')||'Shell'), passport:(wmVal('ns-passport')||'—'), nat:(wmVal('ns-nat')||'—'), compliance:0, status:'active' });
+  saveState();
+  closeModal('modal-create-seafarer');
+  showToast('Seafarer "'+name+'" created','green');
+  ['ns-name','ns-rank','ns-passport','ns-nat'].forEach(function(i){ var e=document.getElementById(i); if(e) e.value=''; });
+  if(g) g.checked=false;
+  showSection('seafarers');
+}
+
+/* E06-02 — Upload external cert -> DATA.certs (single source; shows in admin + portal) */
+function uploadCert(){
+  var name = wmVal('uc-seafarer'), course = wmVal('uc-course');
+  if(!name || !course){ showToast('Seafarer and course required','orange'); return; }
+  var id = wmNextSeq(DATA.certs, 'id', 'CERT-2026-');
+  DATA.certs.unshift({ id:id, seafarer:name, course:course, center:(wmVal('uc-center')||'External'), issued:(wmVal('uc-issued')||'Today'), expiry:(wmVal('uc-expiry')||'—'), status:'valid', external:true });
+  saveState();
+  closeModal('modal-upload-cert');
+  showToast('External certificate '+id+' uploaded','green');
+  showSection(activeSection);
+}
+
+/* E06-03 — Create invoice draft -> DATA.invoices (feeds Φ4 send->CFO chain) */
+function createInvoice(){
+  var agent = wmVal('civ-agent'), amount = parseInt(wmVal('civ-amount'),10);
+  if(!agent || isNaN(amount)){ showToast('Agent and amount required','orange'); return; }
+  var id = wmNextSeq(DATA.invoices, 'id', 'INV-2026-');
+  DATA.invoices.unshift({ id:id, agent:agent, principal:(wmVal('civ-principal')||'Shell'), date:'Today', due:(wmVal('civ-due')||'Today'), total:amount, status:'draft', wf:'draft', approver:null, appAt:null, rejectReason:null });
+  saveState();
+  closeModal('modal-create-invoice');
+  showToast('Invoice '+id+' created (draft) — Send for Approval next','green');
+  showSection('certinvoices');
+}
+
+/* E01-03 — Profile edit -> persist name (DATA.profiles by email + USERS_LIST record) */
+function saveProfile(){
+  var nm = wmVal('sp-name'); if(!nm){ showToast('Name required','orange'); return; }
+  var em = currentUser.email || null;
+  currentUser.name = nm;
+  if(em){ DATA.profiles[em] = { name:nm }; var ul = USERS_LIST.find(function(u){ return u.email===em; }); if(ul) ul.name=nm; }
+  saveState();
+  var n=document.getElementById('nav-user-name'); if(n) n.textContent=nm;
+  showToast('Profile updated','green');
+  showSection('settings');
+}
 </script>
 </body>
 </html>
