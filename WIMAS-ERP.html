@@ -3913,12 +3913,12 @@ function figBusiness(){
   var L = el
     ? { t:"Η πλήρης ροή — 7 ρόλοι, ένας κύκλος", m:"Μητρώο Συμμόρφωσης (ΚΑΝΟΝΑΣ)", gap:"κενό / λήξη → +OTR",
         admin:"⚙ System Admin — διακυβέρνηση: χρήστες · κέντρα · ρυθμίσεις", sea:"🧑‍✈️ Πύλη Ναυτικού (read-only)",
-        loop:"↩ το πιστοποιητικό ενημερώνει το μητρώο", toSea:"πιστοποιητικό + ειδοποίηση",
+        loop:"↩ το πιστοποιητικό ενημερώνει το μητρώο", toSea:"πιστοποιητικό + ειδοποίηση", decline:"✖ Decline → πίσω στον Admin",
         s:[["Αίτημα OTR","Money Agent / Admin"],["Δρομολόγηση & Confirm","Training Admin → Center Staff"],["Πρόγραμμα & Enroll","Training Admin"],["Παρουσίες & Βαθμοί","Εκπαιδευτής"],["Πιστοποιητικό","αυτόματο"],["Τιμολόγιο & Έγκριση","Admin → CFO"]],
         cap:"Κάθε κενό γίνεται OTR· ο εκπαιδευτής εκδίδει πιστοποιητικό· ο ναυτικός το βλέπει· ο CFO εγκρίνει το τιμολόγιο (drafter ≠ approver)." }
     : { t:"The full flow — 7 roles, one cycle", m:"Compliance Matrix (the RULE)", gap:"gap / expiry → +OTR",
         admin:"⚙ System Admin — governance: users · centers · settings", sea:"🧑‍✈️ Seafarer portal (read-only)",
-        loop:"↩ the certificate updates the matrix", toSea:"certificate + notification",
+        loop:"↩ the certificate updates the matrix", toSea:"certificate + notification", decline:"✖ Decline → back to Admin",
         s:[["OTR Request","Money Agent / Admin"],["Route & Confirm","Training Admin → Center Staff"],["Schedule & Enroll","Training Admin"],["Attendance & Grades","Instructor"],["Certificate","automatic"],["Invoice & Approve","Admin → CFO"]],
         cap:"Every gap becomes an OTR; the instructor issues the certificate; the seafarer sees it; the CFO approves the invoice (drafter ≠ approver)." };
   var x=[20,210,400,590,780,970], y=168, w=165, h=74, col=["#F59E0B","#8B5CF6","#0EA5E9","#10B981","#0E7490","#F59E0B"];
@@ -3935,7 +3935,8 @@ function figBusiness(){
    +'<svg viewBox="0 0 1180 340" width="100%" preserveAspectRatio="xMidYMid meet" role="img">'
    +'<defs><marker id="ahb" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#94A3B8"/></marker>'
    +'<marker id="ahbr" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#EF4444"/></marker>'
-   +'<marker id="ahbg" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#10B981"/></marker></defs>'
+   +'<marker id="ahbg" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#10B981"/></marker>'
+   +'<marker id="ahbo" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#F59E0B"/></marker></defs>'
    /* compliance matrix (RULE) top-left, feeds step 1 */
    +'<rect x="20" y="28" width="360" height="54" rx="12" fill="#FEF2F2" stroke="#EF4444" stroke-width="2"/>'
    +'<text x="200" y="52" text-anchor="middle" font-family="Sora" font-size="12.5" font-weight="700" fill="#991B1B">📋 '+L.m+'</text>'
@@ -3945,6 +3946,9 @@ function figBusiness(){
    +'<rect x="470" y="34" width="690" height="40" rx="10" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1.5"/>'
    +'<text x="815" y="59" text-anchor="middle" font-family="Sora" font-size="11.5" font-weight="600" fill="#475569">'+L.admin+'</text>'
    +boxes+arrows
+   /* decline loopback: Center Staff declines -> back to Admin (step 2 -> step 1) */
+   +'<path d="M 292 168 V 150 H 140 V 166" fill="none" stroke="#F59E0B" stroke-width="2" stroke-dasharray="4,4" marker-end="url(#ahbo)"/>'
+   +'<text x="150" y="145" font-family="Sora" font-size="10.5" fill="#B45309">'+L.decline+'</text>'
    /* compliance loop: certificate back up to matrix (teal dashed) */
    +'<path d="M '+cx+' '+(y+h)+' V 300 H 102 V 82" fill="none" stroke="#0E7490" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#ahbr)"/>'
    +'<text x="120" y="296" font-family="Sora" font-size="11" fill="#0E7490">'+L.loop+'</text>'
@@ -3967,6 +3971,18 @@ function wgCardObj(a,tE,tN,sE,sN,dE,dN,steps,rE,rN){
 var _ov = WG_TABS.filter(function(t){return t.id==='overview';})[0];
 if(_ov){
   _ov.fig = figBusiness;
+  _ov.cards[0] = wgCardObj('#0EA5E9',
+    'Η δομή: 6 βήματα, 7 ρόλοι + η μηχανή συμμόρφωσης','The structure: 6 steps, 7 roles + the compliance engine',
+    'Έξι ενότητες σε σειρά — από το OTR ως το τιμολόγιο — με έναν ρόλο υπεύθυνο σε κάθε βήμα και το Μητρώο Συμμόρφωσης να τις τροφοδοτεί.','Six sections in sequence — from OTR to invoice — each step owned by a role, with the Compliance Matrix feeding them.',
+    'Κάθε βήμα ανήκει σε ρόλο· το κενό γεννά OTR, το πιστοποιητικό κλείνει τον κύκλο.','Each step is owned by a role; a gap spawns an OTR, the certificate closes the loop.',
+    [['1 Αίτημα OTR — Money Agent / Training Admin (με έλεγχο συμμόρφωσης).','1 OTR Request — Money Agent / Training Admin (with a compliance check).'],
+     ['2 Δρομολόγηση & Confirm — Training Admin δρομολογεί· το Στέλεχος Κέντρου επιβεβαιώνει (ή απορρίπτει με λόγο πίσω στον Admin).','2 Route & Confirm — Training Admin routes; Center Staff confirms (or declines with a reason back to the Admin).'],
+     ['3 Πρόγραμμα & Enroll — Training Admin (έλεγχος σύγκρουσης· γεμάτο → waitlist).','3 Schedule & Enroll — Training Admin (conflict check; full → waitlist).'],
+     ['4 Παρουσίες & Βαθμοί — Εκπαιδευτής (μόνο τα δικά του sessions).','4 Attendance & Grades — Instructor (their own sessions only).'],
+     ['5 Πιστοποιητικό — αυτόματη έκδοση με Pass· εμφανίζεται στην Πύλη Ναυτικού (single source).','5 Certificate — auto-issued on Pass; appears in the Seafarer Portal (single source).'],
+     ['6 Τιμολόγιο & Έγκριση — ο Admin δημιουργεί/στέλνει, ο CFO εγκρίνει (segregation of duties).','6 Invoice & Approve — Admin creates/sends, CFO approves (segregation of duties).'],
+     ['↩ Το πιστοποιητικό ενημερώνει το Μητρώο Συμμόρφωσης — κάθε νέο κενό γίνεται νέο OTR.','↩ The certificate updates the Compliance Matrix — every new gap becomes a new OTR.']],
+    'Επτά ρόλοι, ένας κύκλος — καμία διαδικασία εκτός συστήματος.','Seven roles, one lifecycle — no process left outside the system.');
   _ov.cards.push(wgCardObj('#0EA5E9',
     'Οι αρχές του συστήματος','System principles',
     'Πέντε αρχές που διατρέχουν ΟΛΟ το ταξίδι — από το OTR ως το τιμολόγιο.','Five principles that run through the WHOLE journey — from OTR to invoice.',
@@ -4099,6 +4115,9 @@ Object.keys(WG_UPDATES).forEach(function(id){ var t=WG_TABS.filter(function(x){r
   if(NAV_MENUS[role] && !NAV_MENUS[role].some(function(x){return x.id==='guide';})){ NAV_MENUS[role].push({ id:'guide', label:'User Guide', icon:'📘' }); }
   REN.guide = renderGuide; LAB.guide = 'User Guide';
 });
+
+var _kf = WG_KPIS.overview.filter(function(k){ return k.l && k.l.en==='flow steps'; })[0]; if(_kf) _kf.v = '6';
+var _ks = WG_KPIS.overview.filter(function(k){ return k.l && k.l.en==='guide sections'; })[0]; if(_ks) _ks.v = String(WG_TABS.length);
 
 /* Dashboard CTA helper (reused by admin dashboard + role landings) */
 function wgCTA(){
