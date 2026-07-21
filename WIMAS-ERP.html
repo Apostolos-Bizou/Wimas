@@ -505,6 +505,36 @@ html, body { height: 100%; font-family: var(--font); background: var(--navy-900)
   }
   .modal-body { padding: 16px; }
 }
+
+/* ============================================================
+   SEAFARER SELF-SERVICE PORTAL (US-E08-05, Phase 1, read-only)
+   Scoped to .sf-portal only — admin styles/roles untouched.
+============================================================ */
+.sf-portal { max-width: 480px; margin: 0 auto; }
+.sf-portal .sfp-greet { font-size: 22px; font-weight: 700; letter-spacing: -.3px; margin-bottom: 2px; }
+.sf-portal .sfp-sub { font-size: 13px; color: var(--muted); margin-bottom: 18px; }
+.sf-portal .card { margin-bottom: 14px; }
+.sf-portal .sfp-row { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(30,48,80,.4); }
+.sf-portal .sfp-row:last-child { border-bottom: 0; }
+.sf-portal .sfp-ic { font-size: 20px; flex-shrink: 0; width: 32px; text-align: center; }
+.sf-portal .sfp-main { flex: 1; min-width: 0; }
+.sf-portal .sfp-title { font-size: 13px; font-weight: 600; color: var(--white); }
+.sf-portal .sfp-meta { font-size: 11.5px; color: var(--muted); margin-top: 2px; line-height: 1.45; }
+.sf-portal .sfp-btn { display: flex; width: 100%; min-height: 44px; margin-top: 12px; justify-content: center; }
+.sf-portal .sfp-quick { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 2px; }
+.sf-portal .sfp-q { min-height: 64px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; background: var(--navy-600); border: 1px solid var(--navy-border); border-radius: 10px; cursor: pointer; color: var(--white); font-size: 12px; font-weight: 600; transition: border-color .15s; }
+.sf-portal .sfp-q:hover { border-color: var(--teal); }
+.sf-portal .sfp-q span { font-size: 12px; }
+.sf-portal .sfp-kv { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-bottom: 1px solid rgba(30,48,80,.4); font-size: 13px; }
+.sf-portal .sfp-kv:last-child { border-bottom: 0; }
+.sf-portal .sfp-kv .k { color: var(--muted); }
+.sf-portal .sfp-kv .v { color: var(--white); font-weight: 600; text-align: right; }
+.sf-portal .sfp-gdpr { background: var(--navy-600); border: 1px solid var(--navy-border); border-radius: 10px; padding: 10px 14px 10px 0; margin: 10px 0; }
+.sf-portal .sfp-gdpr li { font-size: 12px; color: var(--muted-light); margin: 5px 0 5px 28px; line-height: 1.4; }
+.sf-portal label, .sf-portal input, .sf-portal .sfp-16 { font-size: 16px; }
+@media (max-width: 768px) {
+  .sf-portal { max-width: 100%; }
+}
 </style>
 </head>
 <body>
@@ -549,6 +579,11 @@ html, body { height: 100%; font-family: var(--font); background: var(--navy-900)
       <div class="demo-btn" onclick="fillDemo('admin@wimas.io','System Admin','AD','#8b5cf6')">
         <div class="demo-av" style="background:#8b5cf6">AD</div>
         <div><div class="demo-name">System Admin</div><div class="demo-role">Administrator</div></div>
+        <div style="margin-left:auto;font-size:11px;color:var(--muted)">→</div>
+      </div>
+      <div class="demo-btn" onclick="fillDemo('petros@seafarer.io','Seafarer','PN','#14b8a6')">
+        <div class="demo-av" style="background:#14b8a6">PN</div>
+        <div><div class="demo-name">Petros Nikolaou</div><div class="demo-role">Seafarer</div></div>
         <div style="margin-left:auto;font-size:11px;color:var(--muted)">→</div>
       </div>
     </div>
@@ -3044,6 +3079,171 @@ function createSession(){
   showToast("Session created successfully","green");
   showSection(activeSection);
 }
+/* ===== SEAFARER SELF-SERVICE PORTAL (US-E08-05, Phase 1, read-only, global scope, no IIFE/DOMContentLoaded) ===== */
+
+/* --- additive user + nav (no edits to the USERS / NAV_MENUS literals) --- */
+USERS['petros@seafarer.io'] = { name:'Petros Nikolaou', role:'seafarer', pass:'demo123', av:'PN', color:'#14b8a6', seafarerName:'Petros Nikolaou' };
+NAV_MENUS.seafarer = [
+  { section:'MAIN' },
+  { id:'sfhome',         label:'Home',              icon:'🏠' },
+  { id:'sfcerts',        label:'My Certificates',   icon:'🎓' },
+  { id:'sftraining',     label:'Upcoming Training', icon:'📅' },
+  { id:'sfelearning',    label:'E-Learning',        icon:'💻' },
+  { id:'sfprofile',      label:'My Profile',        icon:'👤' },
+  { id:'sfnotifications',label:'Notifications',     icon:'🔔' }
+];
+
+/* --- additive portal-only seed (read-only; certs come from DATA.certs — single source) --- */
+var ELEARNING_SF = [
+  { course:'Maritime English Refresher', status:'In Progress', progress:60 },
+  { course:'Cyber Awareness at Sea',     status:'Not Started',  progress:0 },
+  { course:'ECDIS Fundamentals (CBT)',   status:'Completed',    progress:100 }
+];
+var NOTIFICATIONS_SF = [
+  { icon:'📅', title:'Course reminder',    body:'Advanced Firefighting starts 25 Mar 2026 · WIMAS Simulation', when:'2 days ago', tag:'badge-teal',   tagt:'Reminder' },
+  { icon:'🎓', title:'Certificate issued', body:'STCW BST — valid until 15 Jan 2031',                          when:'12 Jan 2026', tag:'badge-green',  tagt:'Issued' },
+  { icon:'⚠️', title:'Compliance notice',  body:'Your compliance is 85% — 1 item needs attention',            when:'Today',       tag:'badge-orange', tagt:'Action' }
+];
+
+/* --- helpers --- */
+function sfMe(){ return (currentUser && DATA.seafarers.find(function(s){ return s.name===currentUser.seafarerName; })) || null; }
+function sfCompColor(v){ return v>=90?'var(--green)':v>=70?'var(--orange)':'var(--red)'; }
+function sfStatusBadge(st){ return st==='valid'?'badge-green':st==='expiring'?'badge-orange':st==='expired'?'badge-red':'badge-muted'; }
+/* read-only stubs (no create/edit/delete anywhere in the portal) */
+function sfDownloadCert(id){ showToast('Preparing PDF for '+id+' …','teal'); }
+function sfOpenLMS(course){ showToast('Opening “'+course+'” in the LMS…','teal'); }
+function sfRequestCorrection(){ showToast('Correction request sent to your training administrator','green'); }
+
+/* --- renderers (all read-only) --- */
+function renderSeafarerHome(){
+  var me = sfMe(); if(!me) return '<div class="sf-portal"><div class="card"><div class="card-body">No seafarer record.</div></div></div>';
+  var first = me.name.split(' ')[0];
+  var next = DATA.sessions.filter(function(s){ return s.status==='scheduled'||s.status==='ongoing'; })[0];
+  var notes = NOTIFICATIONS_SF.slice(0,2);
+  return '<div class="sf-portal">' +
+    '<div class="sfp-greet">Hi '+first+' 👋</div>' +
+    '<div class="sfp-sub">'+me.rank+' · '+me.principal+'</div>' +
+    '<div class="card"><div class="card-header"><span class="card-title">🛡 My Compliance</span>' +
+      '<span class="badge '+sfStatusBadge(me.compliance>=90?'valid':me.compliance>=70?'expiring':'expired')+'">'+me.compliance+'%</span></div>' +
+      '<div class="card-body"><div class="progress"><div class="progress-bar" style="width:'+me.compliance+'%;background:'+sfCompColor(me.compliance)+'"></div></div></div></div>' +
+    '<div class="card"><div class="card-header"><span class="card-title">📅 Next Training</span></div><div class="card-body">' +
+      (next ? '<div class="sfp-title">'+next.course+'</div><div class="sfp-meta">'+next.start+' → '+next.end+' · '+next.center+' · '+next.room+'</div>' : '<div class="sfp-meta">No upcoming sessions.</div>') +
+      '</div></div>' +
+    '<div class="card"><div class="card-header"><span class="card-title">🔔 Recent Notifications</span></div><div class="card-body" style="padding-top:2px;padding-bottom:2px">' +
+      notes.map(function(n){ return '<div class="sfp-row"><div class="sfp-ic">'+n.icon+'</div><div class="sfp-main"><div class="sfp-title">'+n.title+'</div><div class="sfp-meta">'+n.body+'</div></div></div>'; }).join('') +
+      '</div></div>' +
+    '<div class="sfp-quick">' +
+      '<div class="sfp-q" onclick="showSection(\'sfcerts\')">🎓<span>Certificates</span></div>' +
+      '<div class="sfp-q" onclick="showSection(\'sftraining\')">📅<span>Training</span></div>' +
+      '<div class="sfp-q" onclick="showSection(\'sfelearning\')">💻<span>E-Learning</span></div>' +
+      '<div class="sfp-q" onclick="showSection(\'sfprofile\')">👤<span>Profile</span></div>' +
+    '</div>' +
+    '</div>';
+}
+
+function renderMyCertificates(){
+  var name = currentUser.seafarerName;
+  var certs = DATA.certs.filter(function(c){ return c.seafarer===name; });
+  return '<div class="sf-portal">' +
+    '<div class="sfp-greet">My Certificates</div><div class="sfp-sub">'+certs.length+' certificate'+(certs.length===1?'':'s')+' on file</div>' +
+    (certs.length ? certs.map(function(c){
+      return '<div class="card"><div class="card-header"><span class="card-title">'+c.course+'</span><span class="badge '+sfStatusBadge(c.status)+'">'+c.status+'</span></div>' +
+        '<div class="card-body">' +
+        '<div class="sfp-kv"><span class="k">Certificate No.</span><span class="v">'+c.id+'</span></div>' +
+        '<div class="sfp-kv"><span class="k">Center</span><span class="v">'+c.center+'</span></div>' +
+        '<div class="sfp-kv"><span class="k">Issued</span><span class="v">'+c.issued+'</span></div>' +
+        '<div class="sfp-kv"><span class="k">Expiry</span><span class="v">'+c.expiry+'</span></div>' +
+        '<button class="btn btn-ghost sfp-btn" onclick="sfDownloadCert(\''+c.id+'\')">⬇ Download PDF</button>' +
+        '</div></div>';
+    }).join('') : '<div class="card"><div class="card-body"><div class="sfp-meta">No certificates on file.</div></div></div>') +
+    '</div>';
+}
+
+function renderUpcomingTraining(){
+  var name = currentUser.seafarerName;
+  var myCourses = {};
+  DATA.otrs.filter(function(o){ return o.seafarer===name; }).forEach(function(o){ (o.courses||'').split(',').forEach(function(c){ myCourses[c.trim().toLowerCase()]=true; }); });
+  var sessions = DATA.sessions.filter(function(s){ return s.status==='scheduled'||s.status==='ongoing'; });
+  return '<div class="sf-portal">' +
+    '<div class="sfp-greet">Upcoming Training</div><div class="sfp-sub">Scheduled &amp; ongoing sessions</div>' +
+    (sessions.length ? sessions.map(function(s){
+      var mine = Object.keys(myCourses).some(function(mc){ return mc && (s.course.toLowerCase().indexOf(mc)>-1 || mc.indexOf(s.course.toLowerCase())>-1); });
+      return '<div class="card"><div class="card-header"><span class="card-title">'+s.course+'</span>' +
+        (mine ? '<span class="badge badge-teal">For you</span>' : '<span class="badge '+(s.status==='ongoing'?'badge-green':'badge-muted')+'">'+s.status+'</span>')+'</div>' +
+        '<div class="card-body">' +
+        '<div class="sfp-kv"><span class="k">Dates</span><span class="v">'+s.start+' → '+s.end+'</span></div>' +
+        '<div class="sfp-kv"><span class="k">Center</span><span class="v">'+s.center+'</span></div>' +
+        '<div class="sfp-kv"><span class="k">Location</span><span class="v">'+s.room+'</span></div>' +
+        '</div></div>';
+    }).join('') : '<div class="card"><div class="card-body"><div class="sfp-meta">No upcoming sessions.</div></div></div>') +
+    '</div>';
+}
+
+function renderMyELearning(){
+  return '<div class="sf-portal">' +
+    '<div class="sfp-greet">E-Learning</div><div class="sfp-sub">My online courses</div>' +
+    ELEARNING_SF.map(function(e){
+      var badge = e.status==='Completed'?'badge-green':e.status==='In Progress'?'badge-orange':'badge-muted';
+      return '<div class="card"><div class="card-header"><span class="card-title">'+e.course+'</span><span class="badge '+badge+'">'+e.status+'</span></div>' +
+        '<div class="card-body">' +
+        '<div class="progress"><div class="progress-bar" style="width:'+e.progress+'%;background:'+(e.progress===100?'var(--green)':'var(--teal)')+'"></div></div>' +
+        '<button class="btn btn-ghost sfp-btn" onclick="sfOpenLMS(\''+e.course.replace(/'/g,"\\'")+'\')">↗ Open in LMS</button>' +
+        '</div></div>';
+    }).join('') +
+    '</div>';
+}
+
+function renderMyProfile(){
+  var me = sfMe(); if(!me) return '<div class="sf-portal"><div class="card"><div class="card-body">No seafarer record.</div></div></div>';
+  return '<div class="sf-portal">' +
+    '<div class="sfp-greet">My Profile</div><div class="sfp-sub">Read-only — contact your administrator to make changes</div>' +
+    '<div class="card"><div class="card-header"><span class="card-title">👤 '+me.name+'</span><span class="badge badge-purple">'+me.rank+'</span></div>' +
+      '<div class="card-body">' +
+      '<div class="sfp-kv"><span class="k">Principal</span><span class="v">'+me.principal+'</span></div>' +
+      '<div class="sfp-kv"><span class="k">Passport</span><span class="v">'+me.passport+'</span></div>' +
+      '<div class="sfp-kv"><span class="k">Nationality</span><span class="v">'+me.nat+'</span></div>' +
+      '<div class="sfp-kv"><span class="k">Compliance</span><span class="v">'+me.compliance+'%</span></div>' +
+      '<div class="sfp-kv"><span class="k">Status</span><span class="v">'+me.status+'</span></div>' +
+      '</div></div>' +
+    '<div class="card"><div class="card-header"><span class="card-title">🔒 Data we store about you</span></div><div class="card-body">' +
+      '<div class="sfp-meta">Under GDPR, WIMAS stores the following personal data to manage your maritime training &amp; compliance:</div>' +
+      '<ul class="sfp-gdpr"><li>Full name, rank &amp; nationality</li><li>Passport / ID number</li><li>Principal / employer assignment</li><li>Certificate records &amp; expiry dates</li><li>Training history &amp; compliance status</li></ul>' +
+      '<button class="btn btn-ghost sfp-btn" onclick="sfRequestCorrection()">✎ Request correction</button>' +
+      '</div></div>' +
+    '</div>';
+}
+
+function renderMyNotifications(){
+  return '<div class="sf-portal">' +
+    '<div class="sfp-greet">Notifications</div><div class="sfp-sub">'+NOTIFICATIONS_SF.length+' recent</div>' +
+    '<div class="card"><div class="card-body" style="padding-top:2px;padding-bottom:2px">' +
+    NOTIFICATIONS_SF.map(function(n){
+      return '<div class="sfp-row"><div class="sfp-ic">'+n.icon+'</div><div class="sfp-main">' +
+        '<div class="sfp-title">'+n.title+' <span class="badge '+n.tag+'" style="font-size:9px">'+n.tagt+'</span></div>' +
+        '<div class="sfp-meta">'+n.body+'</div><div class="sfp-meta">'+n.when+'</div></div></div>';
+    }).join('') +
+    '</div></div></div>';
+}
+
+/* --- portal routing: additive wrapper around showSection (no edits to the original) --- */
+var SF_RENDERERS = { sfhome:renderSeafarerHome, sfcerts:renderMyCertificates, sftraining:renderUpcomingTraining, sfelearning:renderMyELearning, sfprofile:renderMyProfile, sfnotifications:renderMyNotifications };
+var SF_LABELS = { sfhome:'Home', sfcerts:'My Certificates', sftraining:'Upcoming Training', sfelearning:'E-Learning', sfprofile:'My Profile', sfnotifications:'Notifications' };
+var SF_REMAP = { dashboard:'sfhome', compliance:'sfnotifications', settings:'sfprofile' };
+var wmPortalOrigShowSection = showSection;
+showSection = function(id){
+  if (currentUser && currentUser.role === 'seafarer') {
+    if (SF_REMAP[id]) id = SF_REMAP[id];
+    if (!SF_RENDERERS[id]) id = 'sfhome';
+    activeSection = id;
+    document.querySelectorAll('.nav-item').forEach(function(el){ el.classList.remove('active'); });
+    var nav = document.getElementById('nav-'+id); if (nav) nav.classList.add('active');
+    var bc = document.getElementById('breadcrumb'); if (bc) bc.innerHTML = '<span class="current">'+(SF_LABELS[id]||id)+'</span>';
+    var app = document.getElementById('app'); if (app) app.classList.remove('nav-open');
+    document.getElementById('page-area').innerHTML = SF_RENDERERS[id]();
+    return;
+  }
+  return wmPortalOrigShowSection(id);
+};
 </script>
 </body>
 </html>
