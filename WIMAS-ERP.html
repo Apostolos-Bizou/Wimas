@@ -2713,7 +2713,7 @@ var WG_TABS = [
    aud:[{el:"Νέος χρήστης",en:"New user"},{el:"Διοίκηση",en:"Management"},{el:"Manning / Principal",en:"Manning / Principal"}]},
   fig:figOverview,
   cards:[
-   {a:"#0EA5E9",title:{el:"Η δομή: 5 βήματα + η μηχανή συμμόρφωσης",en:"The structure: 5 steps + the compliance engine"},
+   {a:"#0EA5E9",title:{el:"Η δομή: 6 βήματα, 7 ρόλοι + η μηχανή συμμόρφωσης",en:"The structure: 6 steps, 7 roles + the compliance engine"},
     see:{el:"Πέντε ενότητες σε σειρά (OTR → Πρόγραμμα → Παρουσίες → Πιστοποιητικό → Τιμολόγιο) και το Μητρώο Συμμόρφωσης που τις τροφοδοτεί.",en:"Five sections in sequence (OTR → Schedule → Attendance → Certificate → Invoice) and the Compliance Matrix that feeds them."},
     does:{el:"Κάθε ενότητα αναλαμβάνει μια φάση· το μητρώο εντοπίζει κενά και γεννά νέα OTR.",en:"Each section owns one phase; the matrix spots gaps and spawns new OTRs."},
     steps:[{el:"Ξεκίνα από «Αιτήματα OTR» και άνοιξε (ή δημιούργησε) ένα OTR για τον ναυτικό.",en:"Start at OTR Requests and open (or create) an OTR for the seafarer."},{el:"Ως Training Admin πάτα «Assign & Confirm» για να το συνδέσεις με κέντρο + session στο «Πρόγραμμα».",en:"As Training Admin press Assign & Confirm to link it to a center + session in Schedule."},{el:"Ο εκπαιδευτής στις «Παρουσίες & Βαθμοί» καταγράφει παρουσία και βαθμό και πατά «Submit Grades».",en:"In Attendance & Grades the instructor records attendance and a grade, then presses Submit Grades."},{el:"Με Pass + επαρκή παρουσία, στα «Πιστοποιητικά» εκδίδεται αυτόματα το PDF.",en:"With Pass + enough attendance, the PDF is auto-issued in Certificates."},{el:"Στα «Τιμολόγια» δημιουργείται το τιμολόγιο και ο CFO/Accounting το εγκρίνει.",en:"In Invoices the invoice is created and CFO/Accounting approves it."},{el:"Το ολοκληρωμένο πιστοποιητικό ενημερώνει το «Μητρώο Συμμόρφωσης» — ο κύκλος κλείνει.",en:"The completed certificate updates the Compliance Matrix — the loop closes."},{el:"Όποτε χαθείς, γύρνα εδώ (Επισκόπηση) για να δεις σε ποιο βήμα βρίσκεσαι.",en:"Whenever you get lost, come back here (Overview) to see which step you are on."}],
@@ -2914,7 +2914,7 @@ var WG_CALLOUTS = {
 };
 var WG_FAQ = {
  overview:[
-  {q:{el:"Από πού ξεκινάω;",en:"Where do I start?"},a:{el:"Από τα «Αιτήματα OTR» — εκεί γεννιέται κάθε εκπαίδευση. Μετά ακολούθησε τη ροή των 5 βημάτων.",en:"From OTR Requests — every training starts there. Then follow the 5-step flow."}},
+  {q:{el:"Από πού ξεκινάω;",en:"Where do I start?"},a:{el:"Από τα «Αιτήματα OTR» — εκεί γεννιέται κάθε εκπαίδευση. Μετά ακολούθησε τη ροή που δείχνει το διάγραμμα.",en:"From OTR Requests — every training starts there. Then follow the flow shown in the diagram."}},
   {q:{el:"Ποιος βλέπει τι;",en:"Who sees what?"},a:{el:"Κάθε ρόλος βλέπει μόνο ό,τι του αναλογεί (RBAC). Δες την ενότητα «Χρήστες & Ρόλοι».",en:"Each role sees only what it is allowed to (RBAC). See the Users & Roles section."}}
  ],
  otr:[
@@ -3907,7 +3907,7 @@ function saveOrg(){
 
 /* ===== Φ7 GUIDE EXPANSION — 7-role business diagram + 4 new sections + updates + all-role access. Global scope, no IIFE. ===== */
 
-/* A) full-business diagram (7 roles). Replaces the 5-step diagram in Overview. Same gd-* SVG style. */
+/* A) full-business diagram (7 roles). Replaces the earlier lifecycle diagram in Overview. Same gd-* SVG style. */
 function figBusiness(){
   var el = WG_LANG==='el';
   var L = el
