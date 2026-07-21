@@ -3914,53 +3914,54 @@ function figBusiness(){
     ? { t:"Η πλήρης ροή — 7 ρόλοι, ένας κύκλος", m:"Μητρώο Συμμόρφωσης (ΚΑΝΟΝΑΣ)", gap:"κενό / λήξη → +OTR",
         admin:"⚙ System Admin — διακυβέρνηση: χρήστες · κέντρα · ρυθμίσεις", sea:"🧑‍✈️ Πύλη Ναυτικού (read-only)",
         loop:"↩ το πιστοποιητικό ενημερώνει το μητρώο", toSea:"πιστοποιητικό + ειδοποίηση", decline:"✖ Decline → πίσω στον Admin",
-        s:[["Αίτημα OTR","Money Agent / Admin"],["Δρομολόγηση & Confirm","Training Admin → Center Staff"],["Πρόγραμμα & Enroll","Training Admin"],["Παρουσίες & Βαθμοί","Εκπαιδευτής"],["Πιστοποιητικό","αυτόματο"],["Τιμολόγιο & Έγκριση","Admin → CFO"]],
+        s:[["Αίτημα OTR","Money Agent / Admin"],["Δρομολόγηση & Confirm","Training Admin →","Στέλεχος Κέντρου"],["Πρόγραμμα & Enroll","Training Admin"],["Παρουσίες & Βαθμοί","Εκπαιδευτής"],["Πιστοποιητικό","αυτόματο"],["Τιμολόγιο & Έγκριση","Admin →","CFO"]],
         cap:"Κάθε κενό γίνεται OTR· ο εκπαιδευτής εκδίδει πιστοποιητικό· ο ναυτικός το βλέπει· ο CFO εγκρίνει το τιμολόγιο (drafter ≠ approver)." }
     : { t:"The full flow — 7 roles, one cycle", m:"Compliance Matrix (the RULE)", gap:"gap / expiry → +OTR",
         admin:"⚙ System Admin — governance: users · centers · settings", sea:"🧑‍✈️ Seafarer portal (read-only)",
         loop:"↩ the certificate updates the matrix", toSea:"certificate + notification", decline:"✖ Decline → back to Admin",
-        s:[["OTR Request","Money Agent / Admin"],["Route & Confirm","Training Admin → Center Staff"],["Schedule & Enroll","Training Admin"],["Attendance & Grades","Instructor"],["Certificate","automatic"],["Invoice & Approve","Admin → CFO"]],
+        s:[["OTR Request","Money Agent / Admin"],["Route & Confirm","Training Admin →","Center Staff"],["Schedule & Enroll","Training Admin"],["Attendance & Grades","Instructor"],["Certificate","automatic"],["Invoice & Approve","Admin →","CFO"]],
         cap:"Every gap becomes an OTR; the instructor issues the certificate; the seafarer sees it; the CFO approves the invoice (drafter ≠ approver)." };
-  var x=[20,210,400,590,780,970], y=168, w=165, h=74, col=["#F59E0B","#8B5CF6","#0EA5E9","#10B981","#0E7490","#F59E0B"];
+  var x=[20,210,400,590,780,970], y=170, w=165, h=86, col=["#F59E0B","#8B5CF6","#0EA5E9","#10B981","#0E7490","#F59E0B"];
   var boxes="", arrows="";
   for(var i=0;i<6;i++){
+    var r1=L.s[i][1], r2=L.s[i].length>2?L.s[i][2]:null, cxb=x[i]+w/2;
     boxes+='<g><rect x="'+x[i]+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="12" fill="#fff" stroke="'+col[i]+'" stroke-width="2"/>'
-      +'<text x="'+(x[i]+w/2)+'" y="'+(y+22)+'" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="700" fill="'+col[i]+'">'+(i+1)+'</text>'
-      +'<text x="'+(x[i]+w/2)+'" y="'+(y+43)+'" text-anchor="middle" font-family="Sora" font-size="12" font-weight="700" fill="#0F2A43">'+L.s[i][0]+'</text>'
-      +'<text x="'+(x[i]+w/2)+'" y="'+(y+61)+'" text-anchor="middle" font-family="JetBrains Mono" font-size="9.5" fill="#64748B">'+L.s[i][1]+'</text></g>';
+      +'<text x="'+cxb+'" y="'+(y+20)+'" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="700" fill="'+col[i]+'">'+(i+1)+'</text>'
+      +'<text x="'+cxb+'" y="'+(y+41)+'" text-anchor="middle" font-family="Sora" font-size="11.5" font-weight="700" fill="#0F2A43">'+L.s[i][0]+'</text>';
+    if(r2){
+      boxes+='<text x="'+cxb+'" y="'+(y+58)+'" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#64748B">'+r1+'</text>'
+        +'<text x="'+cxb+'" y="'+(y+71)+'" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#64748B">'+r2+'</text>';
+    } else {
+      boxes+='<text x="'+cxb+'" y="'+(y+63)+'" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#64748B">'+r1+'</text>';
+    }
+    boxes+='</g>';
     if(i<5){var ax=x[i]+w, bx=x[i+1];arrows+='<line x1="'+ax+'" y1="'+(y+h/2)+'" x2="'+(bx-6)+'" y2="'+(y+h/2)+'" stroke="#94A3B8" stroke-width="2" marker-end="url(#ahb)"/>';}
   }
-  var cx=x[4]+w/2; /* certificate box center */
+  var cx=x[4]+w/2, by=y+h;
   return '<div class="gd-figwrap"><p class="gd-figtitle">🗺️ '+L.t+'</p>'
-   +'<svg viewBox="0 0 1180 340" width="100%" preserveAspectRatio="xMidYMid meet" role="img">'
+   +'<svg viewBox="0 0 1180 360" width="100%" preserveAspectRatio="xMidYMid meet" role="img">'
    +'<defs><marker id="ahb" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#94A3B8"/></marker>'
    +'<marker id="ahbr" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#EF4444"/></marker>'
    +'<marker id="ahbg" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#10B981"/></marker>'
    +'<marker id="ahbo" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#F59E0B"/></marker></defs>'
-   /* compliance matrix (RULE) top-left, feeds step 1 */
    +'<rect x="20" y="28" width="360" height="54" rx="12" fill="#FEF2F2" stroke="#EF4444" stroke-width="2"/>'
    +'<text x="200" y="52" text-anchor="middle" font-family="Sora" font-size="12.5" font-weight="700" fill="#991B1B">📋 '+L.m+'</text>'
    +'<text x="200" y="70" text-anchor="middle" font-family="Sora" font-size="11" fill="#B91C1C">'+L.gap+'</text>'
    +'<line x1="102" y1="82" x2="102" y2="'+(y-6)+'" stroke="#EF4444" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#ahbr)"/>'
-   /* System Admin — small governance chip, top-right (not a band) */
    +'<rect x="470" y="34" width="690" height="40" rx="10" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1.5"/>'
    +'<text x="815" y="59" text-anchor="middle" font-family="Sora" font-size="11.5" font-weight="600" fill="#475569">'+L.admin+'</text>'
    +boxes+arrows
-   /* decline loopback: Center Staff declines -> back to Admin (step 2 -> step 1) */
-   +'<path d="M 292 168 V 150 H 140 V 166" fill="none" stroke="#F59E0B" stroke-width="2" stroke-dasharray="4,4" marker-end="url(#ahbo)"/>'
-   +'<text x="150" y="145" font-family="Sora" font-size="10.5" fill="#B45309">'+L.decline+'</text>'
-   /* compliance loop: certificate back up to matrix (teal dashed) */
-   +'<path d="M '+cx+' '+(y+h)+' V 300 H 102 V 82" fill="none" stroke="#0E7490" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#ahbr)"/>'
-   +'<text x="120" y="296" font-family="Sora" font-size="11" fill="#0E7490">'+L.loop+'</text>'
-   /* certificate -> seafarer portal (green) */
-   +'<rect x="880" y="270" width="280" height="46" rx="12" fill="#ECFDF5" stroke="#10B981" stroke-width="2"/>'
-   +'<text x="1020" y="298" text-anchor="middle" font-family="Sora" font-size="12" font-weight="700" fill="#065F46">'+L.sea+'</text>'
-   +'<path d="M '+cx+' '+(y+h)+' V 250 H 1020 V 268" fill="none" stroke="#10B981" stroke-width="2" stroke-dasharray="4,4" marker-end="url(#ahbg)"/>'
-   +'<text x="'+(cx+16)+'" y="246" font-family="Sora" font-size="11" fill="#065F46">'+L.toSea+'</text>'
+   +'<path d="M 292 '+y+' V 152 H 140 V '+(y-6)+'" fill="none" stroke="#F59E0B" stroke-width="2" stroke-dasharray="4,4" marker-end="url(#ahbo)"/>'
+   +'<text x="150" y="148" font-family="Sora" font-size="10.5" fill="#B45309">'+L.decline+'</text>'
+   +'<path d="M '+cx+' '+by+' V 332 H 102 V 82" fill="none" stroke="#0E7490" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#ahbr)"/>'
+   +'<text x="120" y="328" font-family="Sora" font-size="11" fill="#0E7490">'+L.loop+'</text>'
+   +'<rect x="880" y="302" width="280" height="44" rx="12" fill="#ECFDF5" stroke="#10B981" stroke-width="2"/>'
+   +'<text x="1020" y="329" text-anchor="middle" font-family="Sora" font-size="12" font-weight="700" fill="#065F46">'+L.sea+'</text>'
+   +'<path d="M '+cx+' '+by+' V 284 H 1020 V 300" fill="none" stroke="#10B981" stroke-width="2" stroke-dasharray="4,4" marker-end="url(#ahbg)"/>'
+   +'<text x="'+(cx+14)+'" y="273" font-family="Sora" font-size="11" fill="#065F46">'+L.toSea+'</text>'
    +'</svg><p class="gd-figcap">'+L.cap+'</p></div>';
 }
 
-/* helper: build a standard guide card object from bilingual pieces */
 function wgCardObj(a,tE,tN,sE,sN,dE,dN,steps,rE,rN){
   return { a:a, title:{el:tE,en:tN}, see:{el:sE,en:sN}, does:{el:dE,en:dN},
     steps:steps.map(function(p){return {el:p[0],en:p[1]};}), result:{el:rE,en:rN} };
