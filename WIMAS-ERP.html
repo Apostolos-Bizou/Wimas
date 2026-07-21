@@ -596,6 +596,11 @@ html, body { height: 100%; font-family: var(--font); background: var(--navy-900)
         <div><div class="demo-name">WIMAS Center Ops</div><div class="demo-role">Center Staff</div></div>
         <div style="margin-left:auto;font-size:11px;color:var(--muted)">→</div>
       </div>
+      <div class="demo-btn" onclick="fillDemo('niki@wimas.io','Final Approver','NV','#8b5cf6')">
+        <div class="demo-av" style="background:#8b5cf6">NV</div>
+        <div><div class="demo-name">Niki Varia</div><div class="demo-role">CFO / Final Approver</div></div>
+        <div style="margin-left:auto;font-size:11px;color:var(--muted)">→</div>
+      </div>
     </div>
 
     <div class="divider-text">or sign in manually</div>
@@ -1955,7 +1960,7 @@ function renderCIInv(){
         '<td><div style="display:flex;gap:4px">'+
         (ed?'<button class="btn btn-ghost btn-sm" onclick="showToast(\'Edit mode\',\'teal\')" title="Editable">✏️</button>':'<button class="btn btn-ghost btn-sm" style="opacity:.4" title="Locked">🔒</button>')+
         '<button class="btn btn-ghost btn-sm" onclick="openAuditLog(\''+inv.id+'\')">📋</button>'+
-        (inv.wf==="ready_for_approval"?'<button class="btn btn-success btn-sm" onclick="openApproval(\''+inv.id+'\')">✅ Approve</button>':'')+
+        (inv.wf==="draft"?'<button class="btn btn-secondary btn-sm" onclick="sendInvoiceForApproval(\''+inv.id+'\')">Send for Approval</button>':'')+(inv.wf==="ready_for_approval"?'<span class="badge badge-orange" style="font-size:10px">Awaiting CFO</span>':'')+(inv.wf==="rejected"?'<span class="badge badge-red" style="font-size:10px">Rejected</span>':'')+
         (inv.wf==="issued"?'<button class="btn btn-ghost btn-sm" onclick="showToast(\'PDF\',\'teal\')">PDF</button>':'')+
         '</div></td></tr>';
     }).join('')+'</tbody></table></div>';
@@ -1965,7 +1970,7 @@ function renderCIAppr(){
   var p=DATA.invoices.filter(function(i){return i.wf==="ready_for_approval";});
   if(!p.length)return '<div class="card"><div class="card-body"><div class="empty-state"><div class="empty-state-icon">✅</div><div class="empty-state-text">No pending approvals</div></div></div></div>';
   return '<div style="padding:14px 18px;border-radius:var(--radius);background:var(--orange-glow);border:1px solid rgba(245,158,11,.25);display:flex;align-items:center;gap:12px;margin-bottom:16px"><span style="font-size:24px">⏳</span><div><div style="font-size:14px;font-weight:700;color:var(--orange)">'+p.length+' invoice(s) awaiting approval</div><div class="fs-12 text-muted">Cannot be issued until approved</div></div></div>'+
-    p.map(function(inv){return '<div class="card section-mb"><div class="card-header"><div style="display:flex;align-items:center;gap:12px"><span class="text-mono fs-13 text-teal fw-700">'+inv.id+'</span>'+renderWF(inv.wf)+'</div><button class="btn btn-primary btn-sm" onclick="openApproval(\''+inv.id+'\')">✅ Approve</button></div><div class="card-body"><div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px"><div><div class="fs-10 text-muted">AGENT</div><div class="fs-13 fw-600 text-white">'+inv.agent+'</div></div><div><div class="fs-10 text-muted">PRINCIPAL</div><div class="fs-13">'+inv.principal+'</div></div><div><div class="fs-10 text-muted">AMOUNT</div><div style="font-size:14px;font-weight:700;color:var(--teal)">\u20ac'+inv.total.toLocaleString()+'</div></div><div><div class="fs-10 text-muted">DUE</div><div class="fs-13 text-orange">'+inv.due+'</div></div></div></div></div>';}).join('');
+    p.map(function(inv){return '<div class="card section-mb"><div class="card-header"><div style="display:flex;align-items:center;gap:12px"><span class="text-mono fs-13 text-teal fw-700">'+inv.id+'</span>'+renderWF(inv.wf)+'</div><span class="badge badge-orange">Awaiting CFO approval</span></div><div class="card-body"><div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px"><div><div class="fs-10 text-muted">AGENT</div><div class="fs-13 fw-600 text-white">'+inv.agent+'</div></div><div><div class="fs-10 text-muted">PRINCIPAL</div><div class="fs-13">'+inv.principal+'</div></div><div><div class="fs-10 text-muted">AMOUNT</div><div style="font-size:14px;font-weight:700;color:var(--teal)">\u20ac'+inv.total.toLocaleString()+'</div></div><div><div class="fs-10 text-muted">DUE</div><div class="fs-13 text-orange">'+inv.due+'</div></div></div></div></div>';}).join('');
 }
 
 /* ─────────────────────────────────────────────
@@ -3075,16 +3080,20 @@ function issueCert(name, course){
 }
 
 function approveInvoice(id){
+  if(!currentUser || currentUser.role!=='cfo'){ showToast('Not authorized \u2014 CFO approval only','red'); return; }
   var inv = DATA.invoices.find(function(x){ return x.id===id; });
-  if(inv){ inv.wf='issued'; inv.status='paid'; if(!inv.approver){ inv.approver='Niki Varia'; } }
+  if(inv){ inv.wf='approved'; inv.status='approved'; inv.approver=currentUser.name; inv.appAt='Today'; inv.rejectReason=null; }
   saveState();
   closeModal('modal-inv-approve');
-  showToast('Invoice '+id+' approved & issued','green');
+  showToast('Invoice '+id+' approved','green');
   showSection(activeSection);
 }
 function rejectInvoice(id){
+  if(!currentUser || currentUser.role!=='cfo'){ showToast('Not authorized \u2014 CFO only','red'); return; }
   var inv = DATA.invoices.find(function(x){ return x.id===id; });
-  if(inv){ inv.wf='rejected'; inv.status='rejected'; }
+  var inp = document.getElementById('cfor-'+id);
+  var reason = (inp && inp.value.trim()) ? inp.value.trim() : 'Rejected by CFO';
+  if(inv){ inv.wf='rejected'; inv.status='rejected'; inv.rejectReason=reason; }
   saveState();
   closeModal('modal-inv-approve');
   showToast('Invoice '+id+' rejected','orange');
@@ -3525,6 +3534,105 @@ showSection = function(id){
     return;
   }
   return wmCsOrigShowSection(id);
+};
+
+/* ===== CFO / FINAL APPROVER ROLE (Φ4) — invoice approval (CFO-ONLY) + financial reports (RO). Global scope, no IIFE. ===== */
+USERS['niki@wimas.io'] = { name:'Niki Varia', role:'cfo', pass:'demo123', av:'NV', color:'#8b5cf6' };
+NAV_MENUS.cfo = [
+  { section:'MAIN' },
+  { id:'cfoapprovals', label:'Invoice Approvals', icon:'💳' },
+  { id:'cforeports',   label:'Financial Reports', icon:'📊' },
+  { id:'cfoprofile',   label:'My Profile',        icon:'👤' }
+];
+
+/* admin/agent DRAFTER action (not approval): move a draft invoice to pending CFO approval */
+function sendInvoiceForApproval(id){
+  var inv = DATA.invoices.find(function(x){ return x.id===id; });
+  if(inv && inv.wf==='draft'){ inv.wf='ready_for_approval'; inv.status='pending'; inv.rejectReason=null; }
+  saveState();
+  showToast('Invoice '+id+' sent for CFO approval','teal');
+  showSection(activeSection);
+}
+
+/* helpers */
+function cfoMoney(n){ return '€'+(n||0).toLocaleString(); }
+function cfoPending(){ return DATA.invoices.filter(function(i){ return i.wf==='ready_for_approval'; }); }
+
+/* CFO renderers */
+function renderCfoApprovals(){
+  var list = cfoPending();
+  return '<div class="page-header"><div><div class="page-title">💳 Invoice Approvals</div>' +
+    '<div class="page-subtitle">Final Approver — approve or reject invoices (this role only)</div></div></div>' +
+    (list.length ? list.map(function(inv){
+      return '<div class="card"><div class="card-header"><span class="card-title">'+inv.id+'</span><span class="badge badge-orange">pending approval</span></div>' +
+        '<div class="card-body">' +
+        '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(30,48,80,.4)"><span class="text-muted fs-12">Agent · Principal</span><span class="fs-12 fw-600">'+inv.agent+' · '+inv.principal+'</span></div>' +
+        '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(30,48,80,.4)"><span class="text-muted fs-12">Amount</span><span class="fs-13 fw-700" style="color:var(--teal)">'+cfoMoney(inv.total)+'</span></div>' +
+        '<div style="display:flex;justify-content:space-between;padding:6px 0"><span class="text-muted fs-12">Due</span><span class="fs-12 fw-600 text-orange">'+inv.due+'</span></div>' +
+        '<input id="cfor-'+inv.id+'" class="form-input" placeholder="Reject reason (optional)" style="margin-top:10px;font-size:16px">' +
+        '<div style="display:flex;gap:8px;margin-top:10px">' +
+        '<button class="btn btn-primary btn-sm" style="flex:1;justify-content:center;min-height:44px" onclick="approveInvoice(\''+inv.id+'\')">✅ Approve</button>' +
+        '<button class="btn btn-ghost btn-sm" style="flex:1;justify-content:center;min-height:44px" onclick="rejectInvoice(\''+inv.id+'\')">✖ Reject</button>' +
+        '</div></div></div>';
+    }).join('') : '<div class="card"><div class="card-body">No invoices awaiting approval.</div></div>');
+}
+
+function renderCfoReports(){
+  var inv = DATA.invoices;
+  function sum(f){ return inv.filter(f).reduce(function(a,b){ return a+(b.total||0); },0); }
+  var totalBilled = sum(function(){ return true; });
+  var approvedAmt = sum(function(i){ return i.wf==='approved'||i.wf==='issued'; });
+  var pendingAmt  = sum(function(i){ return i.wf==='ready_for_approval'; });
+  var overdue     = inv.filter(function(i){ return i.status==='overdue'; });
+  var byWf = {};
+  inv.forEach(function(i){ byWf[i.wf]=(byWf[i.wf]||0)+1; });
+  var rows = [['Draft','draft'],['Pending approval','ready_for_approval'],['Approved','approved'],['Issued','issued'],['Rejected','rejected']];
+  return '<div class="page-header"><div><div class="page-title">📊 Financial Reports</div>' +
+    '<div class="page-subtitle">Read-only — invoice financial overview</div></div></div>' +
+    '<div class="stat-grid">' +
+    '<div class="stat-card teal"><div class="stat-icon teal">🧾</div><div class="stat-val text-teal">'+inv.length+'</div><div class="stat-label">Invoices</div></div>' +
+    '<div class="stat-card green"><div class="stat-icon green">✅</div><div class="stat-val text-green">'+cfoMoney(approvedAmt)+'</div><div class="stat-label">Approved / Issued</div></div>' +
+    '<div class="stat-card orange"><div class="stat-icon orange">⏳</div><div class="stat-val text-orange">'+cfoMoney(pendingAmt)+'</div><div class="stat-label">Pending Approval</div></div>' +
+    '<div class="stat-card purple"><div class="stat-icon purple">💶</div><div class="stat-val" style="color:var(--purple)">'+cfoMoney(totalBilled)+'</div><div class="stat-label">Total Billed</div></div>' +
+    '</div>' +
+    '<div class="card"><div class="card-header"><span class="card-title">Invoices by Workflow Stage</span></div>' +
+    '<table class="tbl"><thead><tr><th>Stage</th><th>Count</th></tr></thead><tbody>' +
+    rows.map(function(r){ return '<tr><td class="fw-600 text-white">'+r[0]+'</td><td>'+(byWf[r[1]]||0)+'</td></tr>'; }).join('') +
+    '</tbody></table></div>' +
+    '<div class="card"><div class="card-header"><span class="card-title">⚠ Overdue ('+overdue.length+')</span></div>' +
+    '<div class="card-body">' +
+    (overdue.length ? overdue.map(function(i){ return '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(30,48,80,.4)"><span class="fs-12 fw-600">'+i.id+' · '+i.agent+'</span><span class="fs-12 text-red">'+cfoMoney(i.total)+' · due '+i.due+'</span></div>'; }).join('') : '<div class="fs-12 text-muted">None overdue.</div>') +
+    '</div></div>';
+}
+
+function renderCfoProfile(){
+  var u = currentUser;
+  return '<div class="page-header"><div><div class="page-title">👤 My Profile</div><div class="page-subtitle">CFO / Final Approver</div></div></div>' +
+    '<div class="card"><div class="card-header"><span class="card-title">'+u.name+'</span><span class="badge badge-purple">Final Approver</span></div>' +
+    '<div class="card-body">' +
+    '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(30,48,80,.4)"><span class="text-muted fs-13">Role</span><span class="fs-13 fw-600">CFO — invoice approval authority</span></div>' +
+    '<div style="display:flex;justify-content:space-between;padding:8px 0"><span class="text-muted fs-13">Invoices pending your approval</span><span class="fs-13 fw-600">'+cfoPending().length+'</span></div>' +
+    '</div></div>';
+}
+
+/* routing: 6th wrapper layer (responsive -> portal -> instructor -> center_staff -> cfo) */
+var CFO_RENDERERS = { cfoapprovals:renderCfoApprovals, cforeports:renderCfoReports, cfoprofile:renderCfoProfile };
+var CFO_LABELS = { cfoapprovals:'Invoice Approvals', cforeports:'Financial Reports', cfoprofile:'My Profile' };
+var CFO_REMAP = { dashboard:'cfoapprovals', compliance:'cfoapprovals', settings:'cfoprofile' };
+var wmCfoOrigShowSection = showSection;
+showSection = function(id){
+  if (currentUser && currentUser.role === 'cfo') {
+    if (CFO_REMAP[id]) id = CFO_REMAP[id];
+    if (!CFO_RENDERERS[id]) id = 'cfoapprovals';
+    activeSection = id;
+    document.querySelectorAll('.nav-item').forEach(function(el){ el.classList.remove('active'); });
+    var nav = document.getElementById('nav-'+id); if (nav) nav.classList.add('active');
+    var bc = document.getElementById('breadcrumb'); if (bc) bc.innerHTML = '<span class="current">'+(CFO_LABELS[id]||id)+'</span>';
+    var app = document.getElementById('app'); if (app) app.classList.remove('nav-open');
+    document.getElementById('page-area').innerHTML = CFO_RENDERERS[id]();
+    return;
+  }
+  return wmCfoOrigShowSection(id);
 };
 </script>
 </body>
