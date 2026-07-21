@@ -591,6 +591,11 @@ html, body { height: 100%; font-family: var(--font); background: var(--navy-900)
         <div><div class="demo-name">Kostas Papadopoulos</div><div class="demo-role">Instructor</div></div>
         <div style="margin-left:auto;font-size:11px;color:var(--muted)">→</div>
       </div>
+      <div class="demo-btn" onclick="fillDemo('ops.wimas@wimas.io','Center Staff','WC','#f59e0b')">
+        <div class="demo-av" style="background:#f59e0b">WC</div>
+        <div><div class="demo-name">WIMAS Center Ops</div><div class="demo-role">Center Staff</div></div>
+        <div style="margin-left:auto;font-size:11px;color:var(--muted)">→</div>
+      </div>
     </div>
 
     <div class="divider-text">or sign in manually</div>
@@ -1210,7 +1215,7 @@ function openOTRDetail(num, seafarer, principal, courses) {
     '<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">Courses Required</div>' +
     '<div style="font-size:13px;color:var(--white)">' + courses + '</div></div></div>' +
     '<div class="form-group"><label class="form-label">Assign to Training Center</label>' +
-    '<select class="form-input"><option>WIMAS Training Center (Internal)</option><option>STI Maritime Center</option><option>Compass Training</option></select></div>' +
+    '<select class="form-input" id="otr-assign-center"><option>WIMAS Training Center (Internal)</option><option>STI Maritime Center</option><option>Compass Training</option></select></div>' +
     '<div class="form-row cols-2"><div class="form-group"><label class="form-label">Scheduled Date</label><input class="form-input" type="date"></div>' +
     '<div class="form-group"><label class="form-label">Internal Notes</label><input class="form-input" type="text" placeholder="Notes for training center..."></div></div>';
   openModal('modal-otr-detail');
@@ -1230,6 +1235,9 @@ var SEED_DATA = {
     { num:'OTR-2026-0150', seafarer:'Nikos Drakos',         rank:'2nd Officer',  principal:'Pioneer',   courses:'Bridge Resource Mgmt',            status:'scheduled', urgent:false, date:'28 Feb 2026' },
     { num:'OTR-2026-0149', seafarer:'Elena Voulgari',       rank:'3rd Officer',  principal:'Crossover', courses:'Crowd & Crisis Mgmt',             status:'completed', urgent:false, date:'25 Feb 2026' },
     { num:'OTR-2026-0148', seafarer:'Stavros Hatzis',       rank:'Chief Officer',principal:'Shell',     courses:'STCW BST Refresher',              status:'pending',   urgent:false, date:'24 Feb 2026' },
+    { num:'OTR-2026-0147', seafarer:'Maria Papadaki',   rank:'AB',           principal:'Shell',     courses:'Medical First Aid Adv.',  status:'routed', center:'WIMAS', declineReason:null, urgent:false, date:'06 Mar 2026' },
+    { num:'OTR-2026-0146', seafarer:'Elena Voulgari',   rank:'3rd Officer',  principal:'Crossover', courses:'Bridge Resource Mgmt',    status:'routed', center:'WIMAS', declineReason:null, urgent:true,  date:'05 Mar 2026' },
+    { num:'OTR-2026-0145', seafarer:'Thanasis Pappas',  rank:'2nd Officer',  principal:'Pioneer',   courses:'STCW BST Refresher',      status:'routed', center:'STI',   declineReason:null, urgent:false, date:'04 Mar 2026' },
   ],
   seafarers: [
     { name:'Petros Nikolaou',   rank:'AB',           principal:'Shell',     passport:'AE4821934', nat:'Greek',   compliance:85,  status:'active' },
@@ -1675,13 +1683,13 @@ function renderOTRs() {
 function renderOTRTable(otrs) {
   return '<table class="tbl"><thead><tr><th>OTR Number</th><th>Seafarer</th><th>Principal</th><th>Courses</th><th>Date</th><th>Status</th><th></th></tr></thead><tbody>' +
     otrs.map(function(o) {
-      var statusBadge = o.status==='pending'?'badge-orange':o.status==='scheduled'?'badge-teal':'badge-green';
+      var statusBadge = o.status==='pending'?'badge-orange':o.status==='scheduled'?'badge-teal':o.status==='routed'?'badge-purple':o.status==='declined'?'badge-red':o.status==='completed'?'badge-green':'badge-muted';
       return '<tr><td class="text-mono fs-11 text-teal">' + o.num + (o.urgent?'<span class="badge badge-red" style="font-size:9px;margin-left:6px">URGENT</span>':'') + '</td>' +
         '<td><div class="fs-13 fw-600 text-white">' + o.seafarer + '</div><span class="badge badge-purple" style="font-size:10px">' + o.rank + '</span></td>' +
         '<td class="fs-12">' + o.principal + '</td>' +
         '<td class="fs-12 text-muted" style="max-width:180px">' + o.courses + '</td>' +
         '<td class="text-mono fs-11">' + o.date + '</td>' +
-        '<td><span class="badge ' + statusBadge + '">' + o.status + '</span></td>' +
+        '<td><span class="badge ' + statusBadge + '">' + o.status + '</span>' + (o.center?'<div class="fs-11 text-muted" style="margin-top:3px">\u2192 '+o.center+'</div>':'') + (o.declineReason?'<div class="fs-11" style="color:var(--red);margin-top:3px">\u2716 '+o.declineReason+'</div>':'') + '</td>' +
         '<td><div style="display:flex;gap:4px"><button class="btn btn-ghost btn-sm" onclick="openOTRDetail(\'' + o.num + '\',\'' + o.seafarer + '\',\'' + o.principal + '\',\'' + o.courses.replace(/'/g,"\\'") + '\')">View →</button>' +
         (DATA.otrLC[o.num] ? '<button class="btn btn-ghost btn-sm" onclick="openLifecycle(\'' + o.num + '\')">🔗</button>' : '') +
         '</div></td>' +
@@ -3085,10 +3093,14 @@ function rejectInvoice(id){
 
 function assignOTR(){
   var o = DATA.otrs.find(function(x){ return x.num===WM_OTR_CUR; });
-  if(o){ o.status='scheduled'; o.urgent=false; }
+  if(o){
+    var raw = (document.getElementById('otr-assign-center')||{}).value || '';
+    var c = raw.indexOf('WIMAS')>-1?'WIMAS':raw.indexOf('STI')>-1?'STI':raw.indexOf('Compass')>-1?'Compass':'WIMAS';
+    o.center=c; o.status='routed'; o.urgent=false; o.declineReason=null;
+  }
   saveState();
   closeModal('modal-otr-detail');
-  showToast('OTR '+(WM_OTR_CUR||'')+' assigned & scheduled','green');
+  showToast('OTR '+(WM_OTR_CUR||'')+' routed to '+((o&&o.center)||'')+' for confirmation','green');
   showSection(activeSection);
 }
 
@@ -3412,6 +3424,107 @@ showSection = function(id){
     return;
   }
   return wmInstrOrigShowSection(id);
+};
+
+/* ===== TRAINING CENTER STAFF ROLE (Φ3) — center-scoped OTR routing confirm/decline + roster (read). Global scope, no IIFE. ===== */
+USERS['ops.wimas@wimas.io'] = { name:'WIMAS Center Ops', role:'center_staff', centerName:'WIMAS', pass:'demo123', av:'WC', color:'#f59e0b' };
+NAV_MENUS.center_staff = [
+  { section:'MAIN' },
+  { id:'csotrs',     label:'Routed OTRs',     icon:'📋' },
+  { id:'cssessions', label:'Center Sessions', icon:'📅' },
+  { id:'csprofile',  label:'My Profile',      icon:'👤' }
+];
+
+/* scoping invariant: a center_staff only ever touches its own center's data */
+function csCenter(){ return currentUser && currentUser.centerName; }
+function csOwnsOtr(o){ return !!(o && o.center===csCenter()); }
+function csMyRoutedOtrs(){ return DATA.otrs.filter(function(o){ return o.center===csCenter() && o.status==='routed'; }); }
+function csMySessions(){ return DATA.sessions.filter(function(s){ return s.center===csCenter(); }); }
+
+/* writes: confirm / decline routed OTR (center-scoped) */
+function csConfirmOTR(num){
+  var o = DATA.otrs.find(function(x){ return x.num===num; });
+  if(!csOwnsOtr(o) || o.status!=='routed') return;
+  o.status='scheduled'; o.declineReason=null;
+  saveState();
+  showToast('OTR '+num+' confirmed → scheduled','green');
+  showSection('csotrs');
+}
+function csDeclineOTR(num){
+  var o = DATA.otrs.find(function(x){ return x.num===num; });
+  if(!csOwnsOtr(o) || o.status!=='routed') return;
+  var inp = document.getElementById('csr-'+num);
+  var reason = (inp && inp.value.trim()) ? inp.value.trim() : 'No reason given';
+  o.status='declined'; o.declineReason=reason;
+  saveState();
+  showToast('OTR '+num+' declined — returned to admin','orange');
+  showSection('csotrs');
+}
+
+/* renderers */
+function renderCsOtrs(){
+  var list = csMyRoutedOtrs();
+  return '<div class="page-header"><div><div class="page-title">📋 Routed OTRs</div>' +
+    '<div class="page-subtitle">'+csCenter()+' — requests routed to your center for confirmation</div></div></div>' +
+    (list.length ? list.map(function(o){
+      return '<div class="card"><div class="card-header"><span class="card-title">'+o.num+(o.urgent?' <span class="badge badge-red" style="font-size:9px">URGENT</span>':'')+'</span><span class="badge badge-purple">routed</span></div>' +
+        '<div class="card-body">' +
+        '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(30,48,80,.4)"><span class="text-muted fs-12">Seafarer</span><span class="fs-12 fw-600">'+o.seafarer+' · '+o.rank+'</span></div>' +
+        '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(30,48,80,.4)"><span class="text-muted fs-12">Principal</span><span class="fs-12 fw-600">'+o.principal+'</span></div>' +
+        '<div style="display:flex;justify-content:space-between;padding:6px 0"><span class="text-muted fs-12">Courses</span><span class="fs-12 fw-600" style="text-align:right;max-width:60%">'+o.courses+'</span></div>' +
+        '<input id="csr-'+o.num+'" class="form-input" placeholder="Decline reason (optional)" style="margin-top:10px;font-size:16px">' +
+        '<div style="display:flex;gap:8px;margin-top:10px">' +
+        '<button class="btn btn-primary btn-sm" style="flex:1;justify-content:center;min-height:44px" onclick="csConfirmOTR(\''+o.num+'\')">✅ Confirm → Schedule</button>' +
+        '<button class="btn btn-ghost btn-sm" style="flex:1;justify-content:center;min-height:44px" onclick="csDeclineOTR(\''+o.num+'\')">✖ Decline</button>' +
+        '</div></div></div>';
+    }).join('') : '<div class="card"><div class="card-body">No routed OTRs awaiting confirmation.</div></div>');
+}
+
+function renderCsSessions(){
+  var sess = csMySessions();
+  return '<div class="page-header"><div><div class="page-title">📅 Center Sessions</div>' +
+    '<div class="page-subtitle">'+csCenter()+' — sessions &amp; enrolled seafarers (read-only)</div></div></div>' +
+    (sess.length ? sess.map(function(s){
+      var roster = DATA.enrollments.filter(function(e){ return e.sessionId===s.id; });
+      var b = s.status==='ongoing'?'badge-green':s.status==='full'?'badge-red':s.status==='completed'?'badge-muted':'badge-teal';
+      return '<div class="card"><div class="card-header"><span class="card-title">'+s.course+'</span><span class="badge '+b+'">'+s.status+'</span></div>' +
+        '<div class="card-body">' +
+        '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(30,48,80,.4)"><span class="text-muted fs-12">Dates · Room</span><span class="fs-12 fw-600">'+s.start+' → '+s.end+' · '+s.room+'</span></div>' +
+        '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(30,48,80,.4)"><span class="text-muted fs-12">Instructor</span><span class="fs-12 fw-600">'+s.instructor+'</span></div>' +
+        '<div style="padding:8px 0 2px"><span class="text-muted fs-12">Roster ('+roster.length+')</span></div>' +
+        (roster.length ? roster.map(function(e){ return '<div class="fs-12" style="padding:4px 0;color:var(--white)">• '+e.seafarer+(e.certId?' <span class="badge badge-teal" style="font-size:9px">cert</span>':'')+'</div>'; }).join('') : '<div class="fs-11 text-muted">No enrolled seafarers.</div>') +
+        '</div></div>';
+    }).join('') : '<div class="card"><div class="card-body">No sessions at your center.</div></div>');
+}
+
+function renderCsProfile(){
+  var u = currentUser;
+  return '<div class="page-header"><div><div class="page-title">👤 My Profile</div><div class="page-subtitle">Training Center Staff</div></div></div>' +
+    '<div class="card"><div class="card-header"><span class="card-title">'+u.name+'</span><span class="badge badge-orange">Center Staff</span></div>' +
+    '<div class="card-body">' +
+    '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(30,48,80,.4)"><span class="text-muted fs-13">Center</span><span class="fs-13 fw-600">'+u.centerName+'</span></div>' +
+    '<div style="display:flex;justify-content:space-between;padding:8px 0"><span class="text-muted fs-13">Routed OTRs pending</span><span class="fs-13 fw-600">'+csMyRoutedOtrs().length+'</span></div>' +
+    '</div></div>';
+}
+
+/* routing: 5th wrapper layer (responsive -> portal -> instructor -> center_staff) */
+var CS_RENDERERS = { csotrs:renderCsOtrs, cssessions:renderCsSessions, csprofile:renderCsProfile };
+var CS_LABELS = { csotrs:'Routed OTRs', cssessions:'Center Sessions', csprofile:'My Profile' };
+var CS_REMAP = { dashboard:'csotrs', compliance:'csotrs', settings:'csprofile' };
+var wmCsOrigShowSection = showSection;
+showSection = function(id){
+  if (currentUser && currentUser.role === 'center_staff') {
+    if (CS_REMAP[id]) id = CS_REMAP[id];
+    if (!CS_RENDERERS[id]) id = 'csotrs';
+    activeSection = id;
+    document.querySelectorAll('.nav-item').forEach(function(el){ el.classList.remove('active'); });
+    var nav = document.getElementById('nav-'+id); if (nav) nav.classList.add('active');
+    var bc = document.getElementById('breadcrumb'); if (bc) bc.innerHTML = '<span class="current">'+(CS_LABELS[id]||id)+'</span>';
+    var app = document.getElementById('app'); if (app) app.classList.remove('nav-open');
+    document.getElementById('page-area').innerHTML = CS_RENDERERS[id]();
+    return;
+  }
+  return wmCsOrigShowSection(id);
 };
 </script>
 </body>
