@@ -1420,7 +1420,7 @@ function renderDashboard() {
   if (role === 'Money Agent')  return renderDashboardAgent();
   if (role === 'System Admin') return renderDashboardAdmin();
 
-  return '<div class="page-header">' +
+  return wgCTA() + '<div class="page-header">' +
     '<div><div class="page-title">Good morning, ' + currentUser.name.split(' ')[0] + ' 👋</div>' +
     '<div class="page-subtitle">Saturday, 7 March 2026 — Here\'s what\'s happening today</div></div>' +
     '<div class="page-actions">' +
@@ -1520,7 +1520,7 @@ function renderBarChart() {
 }
 
 function renderDashboardAgent() {
-  return '<div class="page-header"><div><div class="page-title">Welcome back, ' + currentUser.name.split(' ')[0] + ' 👋</div>' +
+  return wgCTA() + '<div class="page-header"><div><div class="page-title">Welcome back, ' + currentUser.name.split(' ')[0] + ' 👋</div>' +
     '<div class="page-subtitle">Saturday, 7 March 2026 — Your fleet overview</div></div>' +
     '<div class="page-actions"><button class="btn btn-primary" onclick="openModal(\'modal-create-otr\')">＋ Submit OTR</button></div></div>' +
 
@@ -1536,7 +1536,7 @@ function renderDashboardAgent() {
 }
 
 function renderDashboardAdmin() {
-  return '<div class="page-header"><div><div class="page-title">System Admin Dashboard</div>' +
+  return wgCTA() + '<div class="page-header"><div><div class="page-title">System Admin Dashboard</div>' +
     '<div class="page-subtitle">Platform health and user management overview</div></div></div>' +
 
     '<div class="stat-grid">' +
@@ -3262,7 +3262,7 @@ function renderSeafarerHome(){
   var first = me.name.split(' ')[0];
   var next = DATA.sessions.filter(function(s){ return s.status==='scheduled'||s.status==='ongoing'; })[0];
   var notes = DATA.notifications.filter(function(n){ return n.seafarer===me.name; }).slice(0,2);
-  return '<div class="sf-portal">' +
+  return '<div class="sf-portal">' + wgCTA() +
     '<div class="sfp-greet">Hi '+first+' 👋</div>' +
     '<div class="sfp-sub">'+me.rank+' · '+me.principal+'</div>' +
     '<div class="card"><div class="card-header"><span class="card-title">🛡 My Compliance</span>' +
@@ -3449,7 +3449,7 @@ function inSaveGrades(sid){
 /* renderers */
 function renderInSessions(){
   var sess = inMySessions();
-  return '<div class="page-header"><div><div class="page-title">📅 My Sessions</div>' +
+  return wgCTA() + '<div class="page-header"><div><div class="page-title">📅 My Sessions</div>' +
     '<div class="page-subtitle">Sessions you are teaching</div></div></div>' +
     (sess.length ? '<div class="grid-2">' + sess.map(function(s){
       var roster = inEnrollments(s.id).length;
@@ -3571,7 +3571,7 @@ function csDeclineOTR(num){
 /* renderers */
 function renderCsOtrs(){
   var list = csMyRoutedOtrs();
-  return '<div class="page-header"><div><div class="page-title">📋 Routed OTRs</div>' +
+  return wgCTA() + '<div class="page-header"><div><div class="page-title">📋 Routed OTRs</div>' +
     '<div class="page-subtitle">'+csCenter()+' — requests routed to your center for confirmation</div></div></div>' +
     (list.length ? list.map(function(o){
       return '<div class="card"><div class="card-header"><span class="card-title">'+o.num+(o.urgent?' <span class="badge badge-red" style="font-size:9px">URGENT</span>':'')+'</span><span class="badge badge-purple">routed</span></div>' +
@@ -3659,7 +3659,7 @@ function cfoPending(){ return DATA.invoices.filter(function(i){ return i.wf==='r
 /* CFO renderers */
 function renderCfoApprovals(){
   var list = cfoPending();
-  return '<div class="page-header"><div><div class="page-title">💳 Invoice Approvals</div>' +
+  return wgCTA() + '<div class="page-header"><div><div class="page-title">💳 Invoice Approvals</div>' +
     '<div class="page-subtitle">Final Approver — approve or reject invoices (this role only)</div></div></div>' +
     (list.length ? list.map(function(inv){
       return '<div class="card"><div class="card-header"><span class="card-title">'+inv.id+'</span><span class="badge badge-orange">pending approval</span></div>' +
@@ -3903,6 +3903,210 @@ function saveOrg(){
   saveState();
   showToast('Organization settings saved','green');
   showSection('settings');
+}
+
+/* ===== Φ7 GUIDE EXPANSION — 7-role business diagram + 4 new sections + updates + all-role access. Global scope, no IIFE. ===== */
+
+/* A) full-business diagram (7 roles). Replaces the 5-step diagram in Overview. Same gd-* SVG style. */
+function figBusiness(){
+  var el = WG_LANG==='el';
+  var L = el
+    ? { t:"Η πλήρης ροή — 7 ρόλοι, ένας κύκλος", m:"Μητρώο Συμμόρφωσης (ΚΑΝΟΝΑΣ)", gap:"κενό / λήξη → +OTR",
+        admin:"⚙ System Admin — διακυβέρνηση: χρήστες · κέντρα · ρυθμίσεις", sea:"🧑‍✈️ Πύλη Ναυτικού (read-only)",
+        loop:"↩ το πιστοποιητικό ενημερώνει το μητρώο", toSea:"πιστοποιητικό + ειδοποίηση",
+        s:[["Αίτημα OTR","Money Agent / Admin"],["Δρομολόγηση & Confirm","Training Admin → Center Staff"],["Πρόγραμμα & Enroll","Training Admin"],["Παρουσίες & Βαθμοί","Εκπαιδευτής"],["Πιστοποιητικό","αυτόματο"],["Τιμολόγιο & Έγκριση","Admin → CFO"]],
+        cap:"Κάθε κενό γίνεται OTR· ο εκπαιδευτής εκδίδει πιστοποιητικό· ο ναυτικός το βλέπει· ο CFO εγκρίνει το τιμολόγιο (drafter ≠ approver)." }
+    : { t:"The full flow — 7 roles, one cycle", m:"Compliance Matrix (the RULE)", gap:"gap / expiry → +OTR",
+        admin:"⚙ System Admin — governance: users · centers · settings", sea:"🧑‍✈️ Seafarer portal (read-only)",
+        loop:"↩ the certificate updates the matrix", toSea:"certificate + notification",
+        s:[["OTR Request","Money Agent / Admin"],["Route & Confirm","Training Admin → Center Staff"],["Schedule & Enroll","Training Admin"],["Attendance & Grades","Instructor"],["Certificate","automatic"],["Invoice & Approve","Admin → CFO"]],
+        cap:"Every gap becomes an OTR; the instructor issues the certificate; the seafarer sees it; the CFO approves the invoice (drafter ≠ approver)." };
+  var x=[20,210,400,590,780,970], y=168, w=165, h=74, col=["#F59E0B","#8B5CF6","#0EA5E9","#10B981","#0E7490","#F59E0B"];
+  var boxes="", arrows="";
+  for(var i=0;i<6;i++){
+    boxes+='<g><rect x="'+x[i]+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="12" fill="#fff" stroke="'+col[i]+'" stroke-width="2"/>'
+      +'<text x="'+(x[i]+w/2)+'" y="'+(y+22)+'" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="700" fill="'+col[i]+'">'+(i+1)+'</text>'
+      +'<text x="'+(x[i]+w/2)+'" y="'+(y+43)+'" text-anchor="middle" font-family="Sora" font-size="12" font-weight="700" fill="#0F2A43">'+L.s[i][0]+'</text>'
+      +'<text x="'+(x[i]+w/2)+'" y="'+(y+61)+'" text-anchor="middle" font-family="JetBrains Mono" font-size="9.5" fill="#64748B">'+L.s[i][1]+'</text></g>';
+    if(i<5){var ax=x[i]+w, bx=x[i+1];arrows+='<line x1="'+ax+'" y1="'+(y+h/2)+'" x2="'+(bx-6)+'" y2="'+(y+h/2)+'" stroke="#94A3B8" stroke-width="2" marker-end="url(#ahb)"/>';}
+  }
+  var cx=x[4]+w/2; /* certificate box center */
+  return '<div class="gd-figwrap"><p class="gd-figtitle">🗺️ '+L.t+'</p>'
+   +'<svg viewBox="0 0 1180 340" width="100%" preserveAspectRatio="xMidYMid meet" role="img">'
+   +'<defs><marker id="ahb" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#94A3B8"/></marker>'
+   +'<marker id="ahbr" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#EF4444"/></marker>'
+   +'<marker id="ahbg" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#10B981"/></marker></defs>'
+   /* compliance matrix (RULE) top-left, feeds step 1 */
+   +'<rect x="20" y="28" width="360" height="54" rx="12" fill="#FEF2F2" stroke="#EF4444" stroke-width="2"/>'
+   +'<text x="200" y="52" text-anchor="middle" font-family="Sora" font-size="12.5" font-weight="700" fill="#991B1B">📋 '+L.m+'</text>'
+   +'<text x="200" y="70" text-anchor="middle" font-family="Sora" font-size="11" fill="#B91C1C">'+L.gap+'</text>'
+   +'<line x1="102" y1="82" x2="102" y2="'+(y-6)+'" stroke="#EF4444" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#ahbr)"/>'
+   /* System Admin — small governance chip, top-right (not a band) */
+   +'<rect x="470" y="34" width="690" height="40" rx="10" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1.5"/>'
+   +'<text x="815" y="59" text-anchor="middle" font-family="Sora" font-size="11.5" font-weight="600" fill="#475569">'+L.admin+'</text>'
+   +boxes+arrows
+   /* compliance loop: certificate back up to matrix (teal dashed) */
+   +'<path d="M '+cx+' '+(y+h)+' V 300 H 102 V 82" fill="none" stroke="#0E7490" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#ahbr)"/>'
+   +'<text x="120" y="296" font-family="Sora" font-size="11" fill="#0E7490">'+L.loop+'</text>'
+   /* certificate -> seafarer portal (green) */
+   +'<rect x="880" y="270" width="280" height="46" rx="12" fill="#ECFDF5" stroke="#10B981" stroke-width="2"/>'
+   +'<text x="1020" y="298" text-anchor="middle" font-family="Sora" font-size="12" font-weight="700" fill="#065F46">'+L.sea+'</text>'
+   +'<path d="M '+cx+' '+(y+h)+' V 250 H 1020 V 268" fill="none" stroke="#10B981" stroke-width="2" stroke-dasharray="4,4" marker-end="url(#ahbg)"/>'
+   +'<text x="'+(cx+16)+'" y="246" font-family="Sora" font-size="11" fill="#065F46">'+L.toSea+'</text>'
+   +'</svg><p class="gd-figcap">'+L.cap+'</p></div>';
+}
+
+/* helper: build a standard guide card object from bilingual pieces */
+function wgCardObj(a,tE,tN,sE,sN,dE,dN,steps,rE,rN){
+  return { a:a, title:{el:tE,en:tN}, see:{el:sE,en:sN}, does:{el:dE,en:dN},
+    steps:steps.map(function(p){return {el:p[0],en:p[1]};}), result:{el:rE,en:rN} };
+}
+
+/* C) Overview: use figBusiness + add business-bullets card */
+(function(){}); /* (no IIFE) */
+var _ov = WG_TABS.filter(function(t){return t.id==='overview';})[0];
+if(_ov){
+  _ov.fig = figBusiness;
+  _ov.cards.push(wgCardObj('#0EA5E9',
+    'Οι αρχές του συστήματος','System principles',
+    'Πέντε αρχές που διατρέχουν ΟΛΟ το ταξίδι — από το OTR ως το τιμολόγιο.','Five principles that run through the WHOLE journey — from OTR to invoice.',
+    'Εξηγούν γιατί κάθε ενέργεια ενός ρόλου φαίνεται σωστά στους άλλους.','They explain why each role’s action shows up correctly for the others.',
+    [['Κοινή κατάσταση (shared state): μία ενέργεια, ορατή παντού μετά από login.','Shared state: one action, visible everywhere after login.'],
+     ['Δικαιώματα ανά ρόλο (per-role scoping): ο καθένας βλέπει ΜΟΝΟ τα δικά του (sessions, center, στόλος).','Per-role scoping: each user sees ONLY their own (sessions, center, fleet).'],
+     ['Διαχωρισμός καθηκόντων (SoD): ο συντάκτης του τιμολογίου ΔΕΝ το εγκρίνει — μόνο ο CFO.','Segregation of duties (SoD): the invoice drafter does NOT approve it — only the CFO.'],
+     ['Ενιαία πηγή πιστοποιητικών (single-source): το ίδιο cert στον admin και στην πύλη του ναυτικού.','Single-source certificates: the same cert in the admin view and the seafarer portal.'],
+     ['Mobile-first πύλη ναυτικού: read-only, δουλεύει σε κινητό.','Mobile-first seafarer portal: read-only, works on a phone.']],
+    'Πέντε αρχές, ένα συνεκτικό σύστημα.','Five principles, one coherent system.'));
+}
+
+/* B) FOUR new role sections */
+var TAB_instructor = {id:"instructor",dot:"#10B981",label:{el:"Εκπαιδευτής",en:"Instructor"},
+  intro:{e:"🎓",title:{el:"Εκπαιδευτής — παρουσίες, βαθμοί, πιστοποιητικό",en:"Instructor — attendance, grades, certificate"},
+   text:{el:"Ο εκπαιδευτής βλέπει ΜΟΝΟ τα δικά του sessions, καταγράφει παρουσίες και βαθμούς, και με επιτυχία εκδίδεται αυτόματα το πιστοποιητικό.",en:"The instructor sees ONLY their own sessions, records attendance and grades, and on a pass the certificate is auto-issued."},
+   aud:[{el:"Teacher / Instructor",en:"Teacher / Instructor"}]},
+  cards:[wgCardObj('#10B981','Από τη βαθμολογία στο πιστοποιητικό','From grade to certificate',
+    'My Sessions (μόνο δικά σου), Attendance (present/absent), Grades (βαθμός + pass/fail).','My Sessions (yours only), Attendance (present/absent), Grades (grade + pass/fail).',
+    'Στο Save & Issue Certs: pass + παρουσία → cert στο DATA.certs (idempotent, χωρίς διπλά).','On Save & Issue Certs: pass + present → cert in DATA.certs (idempotent, no duplicates).',
+    [['Συνδέσου ως Instructor (chip «Kostas Papadopoulos»).','Sign in as Instructor (chip “Kostas Papadopoulos”).'],
+     ['Άνοιξε «My Sessions» — βλέπεις μόνο τα μαθήματα που διδάσκεις.','Open “My Sessions” — you see only the courses you teach.'],
+     ['Πάτα «Attendance» και σημείωσε κάθε ναυτικό Present/Absent.','Press “Attendance” and mark each seafarer Present/Absent.'],
+     ['Πήγαινε «Grades», βάλε βαθμό (≥60 = pass) και πάτα «Save & Issue Certs».','Go to “Grades”, enter a grade (≥60 = pass) and press “Save & Issue Certs”.'],
+     ['Το πιστοποιητικό εκδίδεται· ξανα-αποθήκευση δεν βγάζει δεύτερο.','The certificate issues; re-saving does not create a second one.']],
+    'Ένα session → πιστοποιητικά, ορατά αμέσως σε admin και ναυτικό.','One session → certificates, instantly visible to admin and seafarer.')]};
+
+var TAB_centerstaff = {id:"centerstaff",dot:"#F59E0B",label:{el:"Στέλεχος Κέντρου",en:"Center Staff"},
+  intro:{e:"🏢",title:{el:"Στέλεχος Κέντρου — δρομολογημένα OTR",en:"Center Staff — routed OTRs"},
+   text:{el:"Στελέχη εξωτερικών/εσωτερικών κέντρων βλέπουν ΜΟΝΟ τα OTR και sessions του κέντρου τους και επιβεβαιώνουν ή απορρίπτουν.",en:"Center staff see ONLY their own center’s routed OTRs and sessions, and confirm or decline them."},
+   aud:[{el:"Training Center Staff",en:"Training Center Staff"}]},
+  cards:[wgCardObj('#F59E0B','Confirm / Decline με scoping','Confirm / Decline with scoping',
+    'Routed OTRs (μόνο του κέντρου σου) + Center Sessions/roster (read).','Routed OTRs (your center only) + Center Sessions/roster (read).',
+    'Confirm → status «scheduled» (ορατό στον admin)· Decline + λόγος → πίσω στον admin.','Confirm → status “scheduled” (visible to admin); Decline + reason → back to admin.',
+    [['Συνδέσου ως Center Staff (chip «WIMAS Center Ops»).','Sign in as Center Staff (chip “WIMAS Center Ops”).'],
+     ['Landing «Routed OTRs»: μόνο τα OTR που δρομολογήθηκαν στο κέντρο σου.','Landing “Routed OTRs”: only the OTRs routed to your center.'],
+     ['Σε κάθε OTR: «✅ Confirm → Schedule» ή «✖ Decline» (γράψε λόγο).','On each OTR: “✅ Confirm → Schedule” or “✖ Decline” (write a reason).'],
+     ['Δες «Center Sessions» για το πρόγραμμα και τους εγγεγραμμένους ναυτικούς (read-only).','See “Center Sessions” for the schedule and enrolled seafarers (read-only).']],
+    'Άλλου κέντρου δεδομένα δεν φαίνονται ποτέ — ούτε σε λίστα ούτε σε μετρητή.','Other centers’ data never appears — not in a list nor a count.')]};
+
+var TAB_cfo = {id:"cfo",dot:"#8B5CF6",label:{el:"CFO / Έγκριση",en:"CFO / Approval"},
+  intro:{e:"💳",title:{el:"CFO — έγκριση τιμολογίων & οικονομικά",en:"CFO — invoice approval & finance"},
+   text:{el:"Ο CFO/Λογιστήριο είναι ο ΜΟΝΟΣ που εγκρίνει τιμολόγια (segregation of duties) και βλέπει read-only οικονομικές αναφορές.",en:"The CFO/Accounting is the ONLY one who approves invoices (segregation of duties) and sees read-only financial reports."},
+   aud:[{el:"CFO / Accounting",en:"CFO / Accounting"}]},
+  cards:[wgCardObj('#8B5CF6','Segregation of duties','Segregation of duties',
+    'Invoice Approvals (εκκρεμή) + Financial Reports (read-only σύνολα/στάδια).','Invoice Approvals (pending) + Financial Reports (read-only totals/stages).',
+    'Ο admin ΔΗΜΙΟΥΡΓΕΙ & στέλνει· ο CFO ΕΓΚΡΙΝΕΙ ή απορρίπτει με λόγο. Ο admin δεν έχει κουμπί approve.','Admin CREATES & sends; CFO APPROVES or rejects with a reason. Admin has no approve button.',
+    [['Ως Admin: Certificates & Invoices → «+ New Invoice» → «Send for Approval».','As Admin: Certificates & Invoices → “+ New Invoice” → “Send for Approval”.'],
+     ['Συνδέσου ως CFO (chip «Niki Varia»).','Sign in as CFO (chip “Niki Varia”).'],
+     ['«Invoice Approvals»: δες τα εκκρεμή → «✅ Approve» ή «✖ Reject» (+λόγος).','“Invoice Approvals”: see pending → “✅ Approve” or “✖ Reject” (+reason).'],
+     ['Η κατάσταση γίνεται approved/rejected — ορατή στον admin. Δες «Financial Reports».','Status becomes approved/rejected — visible to admin. Check “Financial Reports”.']],
+    'Ο έλεγχος χρημάτων χωριστός από τη δημιουργία — καθαρό audit.','Money control separate from creation — clean audit.')]};
+
+var TAB_portal = {id:"portal",dot:"#0EA5E9",label:{el:"Πύλη Ναυτικού",en:"Seafarer Portal"},
+  intro:{e:"🧑‍✈️",title:{el:"Πύλη Ναυτικού — self-service (read-only)",en:"Seafarer Portal — self-service (read-only)"},
+   text:{el:"Ο ναυτικός βλέπει τα δικά του πιστοποιητικά, την εκπαίδευση που έρχεται, τα e-learning και τις ειδοποιήσεις — mobile-first, μόνο ανάγνωση.",en:"The seafarer sees their own certificates, upcoming training, e-learning and notifications — mobile-first, read-only."},
+   aud:[{el:"Seafarer",en:"Seafarer"}]},
+  cards:[wgCardObj('#0EA5E9','Ένα cert, μία πηγή','One cert, one source',
+    'Home (compliance %), My Certificates, Upcoming Training, E-Learning, Profile, Notifications.','Home (compliance %), My Certificates, Upcoming Training, E-Learning, Profile, Notifications.',
+    'Διαβάζει live DATA: το cert που εξέδωσε ο εκπαιδευτής είναι ΤΟ ΙΔΙΟ που βλέπει ο admin.','Reads live DATA: the cert the instructor issued is THE SAME the admin sees.',
+    [['Συνδέσου ως Seafarer (chip «Petros Nikolaou»).','Sign in as Seafarer (chip “Petros Nikolaou”).'],
+     ['«My Certificates»: τα πιστοποιητικά σου (ίδια με του admin — single source).','“My Certificates”: your certificates (same as admin’s — single source).'],
+     ['«Upcoming Training»: τα sessions όπου σε ενέγραψαν.','“Upcoming Training”: the sessions you were enrolled into.'],
+     ['«Notifications»: «Certificate issued», «Enrolled in course» κ.λπ.','“Notifications”: “Certificate issued”, “Enrolled in course”, etc.'],
+     ['GDPR: στο Profile βλέπεις «τι δεδομένα κρατάμε» + «Request correction».','GDPR: in Profile see “what data we store” + “Request correction”.']],
+    'Ο ναυτικός ενημερωμένος στο κινητό, χωρίς δικαίωμα αλλαγής.','The seafarer informed on mobile, with no edit rights.')]};
+
+var _gi = WG_TABS.map(function(t){return t.id;}).indexOf('glossary');
+WG_TABS.splice(_gi<0?WG_TABS.length:_gi, 0, TAB_instructor, TAB_centerstaff, TAB_cfo, TAB_portal);
+
+/* 3) Update existing sections with new features (push one card each) */
+var WG_UPDATES = {
+  otr: wgCardObj('#F59E0B','🆕 Compliance gate + δρομολόγηση σε κέντρο','🆕 Compliance gate + routing to a center',
+    'Κατά την υποβολή OTR εμφανίζεται προειδοποίηση για τα πιστοποιητικά που λείπουν· το OTR δρομολογείται σε κέντρο.','On OTR submit a warning shows the missing certificates; the OTR is routed to a center.',
+    'Ο έλεγχος συμμόρφωσης συγκρίνει τα valid certs του ναυτικού με τον κανόνα του principal.','The compliance check compares the seafarer’s valid certs against the principal’s rule.',
+    [['Δημιούργησε OTR — δες το «⚠ Missing: …» αν λείπουν required certs.','Create an OTR — see “⚠ Missing: …” if required certs are missing.'],
+     ['«View → Assign & Confirm»: διάλεξε κέντρο → status «routed».','“View → Assign & Confirm”: pick a center → status “routed”.'],
+     ['Το κέντρο (Center Staff) κάνει Confirm/Decline — δες την ενότητα «Στέλεχος Κέντρου».','The center (Center Staff) Confirms/Declines — see the “Center Staff” section.']],
+    'Καμία εκπαίδευση χωρίς ορατό το κενό συμμόρφωσης.','No training without the compliance gap in plain sight.'),
+  schedule: wgCardObj('#8B5CF6','🆕 Conflict detection + Enroll/Waitlist','🆕 Conflict detection + Enroll/Waitlist',
+    'Νέο session μπλοκάρεται αν ο εκπαιδευτής/room επικαλύπτεται· κάθε session έχει «＋ Enroll».','A new session is blocked if the instructor/room overlaps; each session has “＋ Enroll”.',
+    'Enroll: αν υπάρχει χώρος → εγγραφή + ειδοποίηση· αν γεμάτο → waitlist.','Enroll: if space → enrollment + notification; if full → waitlist.',
+    [['«New Session»: ίδιος εκπαιδευτής + επικαλυπτόμενες ημερομηνίες → κόκκινο «Conflict».','“New Session”: same instructor + overlapping dates → red “Conflict”.'],
+     ['Σε γραμμή session πάτα «＋ Enroll» → διάλεξε ναυτικό → «Enroll».','On a session row press “＋ Enroll” → pick a seafarer → “Enroll”.'],
+     ['Γεμάτο session → ο ναυτικός μπαίνει σε waitlist αντί για εγγραφή.','Full session → the seafarer goes to the waitlist instead of enrolling.']],
+    'Χωρίς διπλο-κρατήσεις, με ελεγχόμενη πληρότητα.','No double-bookings, with controlled capacity.'),
+  attendance: wgCardObj('#10B981','🆕 Scoped στον εκπαιδευτή','🆕 Scoped to the instructor',
+    'Ο εκπαιδευτής βλέπει μόνο τα δικά του sessions· η έκδοση cert είναι idempotent.','The instructor sees only their own sessions; cert issuance is idempotent.',
+    'Δες τη νέα ενότητα «Εκπαιδευτής» για τη ροή attendance → grade → cert.','See the new “Instructor” section for the attendance → grade → cert flow.',
+    [['Ο ρόλος Instructor έχει δικό του μενού (My Sessions / Attendance / Grades).','The Instructor role has its own menu (My Sessions / Attendance / Grades).']],
+    'Καθαρός διαχωρισμός τάξης ανά εκπαιδευτή.','Clean per-instructor classroom separation.'),
+  certificates: wgCardObj('#0E7490','🆕 Upload External (πραγματικό)','🆕 Upload External (real)',
+    'Το «Upload External» καταχωρεί πραγματικό cert στο DATA.certs (flag external).','“Upload External” records a real cert in DATA.certs (external flag).',
+    'Εμφανίζεται ΚΑΙ στον admin ΚΑΙ στην πύλη του ναυτικού — single source.','It shows in BOTH the admin view AND the seafarer portal — single source.',
+    [['Certificates & Invoices → «Upload External» → συμπλήρωσε & υπόβαλε.','Certificates & Invoices → “Upload External” → fill in & submit.'],
+     ['Το cert φαίνεται αμέσως στη λίστα και στην πύλη του ναυτικού.','The cert appears immediately in the list and in the seafarer portal.']],
+    'Εξωτερικά πιστοποιητικά, ίδια αλήθεια παντού.','External certificates, one truth everywhere.'),
+  invoices: wgCardObj('#8B5CF6','🆕 Create + Send + CFO approve (SoD)','🆕 Create + Send + CFO approve (SoD)',
+    '«+ New Invoice» → draft· «Send for Approval» → εκκρεμεί· ΜΟΝΟ ο CFO εγκρίνει.','“+ New Invoice” → draft; “Send for Approval” → pending; ONLY the CFO approves.',
+    'Ο admin δεν έχει κουμπί approve — segregation of duties. Δες ενότητα «CFO».','Admin has no approve button — segregation of duties. See the “CFO” section.',
+    [['Δημιούργησε invoice → «Send for Approval» → «Awaiting CFO».','Create an invoice → “Send for Approval” → “Awaiting CFO”.'],
+     ['Ως CFO κάνε Approve/Reject· η κατάσταση γυρίζει ορατή στον admin.','As CFO Approve/Reject; the status returns visible to the admin.']],
+    'Το money-loop κλείνει με έλεγχο δύο ματιών.','The money loop closes with two-eyes control.'),
+  compliance: wgCardObj('#EF4444','🆕 Drill-down','🆕 Drill-down',
+    'Κλικ σε κελί κατάστασης του μητρώου → λίστα ναυτικών valid/expiring/expired/missing.','Click a matrix status cell → list of seafarers valid/expiring/expired/missing.',
+    'Τα νούμερα προκύπτουν από live DATA (πραγματικά πιστοποιητικά).','The numbers come from live DATA (real certificates).',
+    [['Άνοιξε «Compliance», διάλεξε principal, κάνε κλικ σε ένα status cell.','Open “Compliance”, pick a principal, click a status cell.']],
+    'Από τον κανόνα στα πρόσωπα, με ένα κλικ.','From the rule to the people, in one click.'),
+  reports: wgCardObj('#8B5CF6','🆕 Clickable bars + market','🆕 Clickable bars + market',
+    'Οι μπάρες «Compliance by Principal» είναι clickable (drill-down) + External Center Usage.','The “Compliance by Principal” bars are clickable (drill-down) + External Center Usage.',
+    'Κλικ σε μπάρα → ο στόλος του principal· κλικ σε agent (στα invoices) → προφίλ Money Agent.','Click a bar → the principal’s fleet; click an agent (in invoices) → Money Agent profile.',
+    [['«Reports» → κλικ σε μπάρα principal για drill-down στη λίστα ναυτικών.','“Reports” → click a principal bar to drill down into the seafarer list.']],
+    'Στρατηγική εικόνα με βάθος έως το άτομο.','A strategic view with depth down to the individual.'),
+  centers: wgCardObj('#0EA5E9','🆕 Add Center (πραγματικό)','🆕 Add Center (real)',
+    'Το «＋ Add Center» δημιουργεί πραγματικό κέντρο στο DATA.','“＋ Add Center” creates a real center in DATA.',
+    'Το νέο κέντρο εμφανίζεται στο dropdown του «New Session» και στα center scopes.','The new center appears in the “New Session” dropdown and in center scopes.',
+    [['Training Centers → «＋ Add Center» → στοιχεία & διαπιστεύσεις → Add.','Training Centers → “＋ Add Center” → details & accreditations → Add.']],
+    'Το δίκτυο κέντρων επεκτείνεται χωρίς κώδικα.','The center network grows with no code.'),
+  users: wgCardObj('#64748B','🆕 7 ρόλοι + Org/Branding','🆕 7 roles + Org/Branding',
+    'Επτά ρόλοι πλέον (Admin, Training Admin, Money Agent, Instructor, Center Staff, CFO, Seafarer).','Seven roles now (Admin, Training Admin, Money Agent, Instructor, Center Staff, CFO, Seafarer).',
+    'Στα Settings υπάρχει «Organization & Branding» (persist) + Reset demo.','Settings has “Organization & Branding” (persisted) + Reset demo.',
+    [['Δες τις ξεχωριστές ενότητες Instructor / Center Staff / CFO / Πύλη Ναυτικού.','See the dedicated Instructor / Center Staff / CFO / Seafarer Portal sections.']],
+    'Ένα RBAC μοντέλο που καλύπτει όλη την επιχείρηση.','One RBAC model covering the whole business.')
+};
+Object.keys(WG_UPDATES).forEach(function(id){ var t=WG_TABS.filter(function(x){return x.id===id;})[0]; if(t&&t.cards){ t.cards.push(WG_UPDATES[id]); } });
+
+/* 4) User Guide access for the 4 new roles (nav item + renderer + label) */
+[['seafarer',SF_RENDERERS,SF_LABELS],['instructor',IN_RENDERERS,IN_LABELS],['center_staff',CS_RENDERERS,CS_LABELS],['cfo',CFO_RENDERERS,CFO_LABELS]].forEach(function(r){
+  var role=r[0], REN=r[1], LAB=r[2];
+  if(NAV_MENUS[role] && !NAV_MENUS[role].some(function(x){return x.id==='guide';})){ NAV_MENUS[role].push({ id:'guide', label:'User Guide', icon:'📘' }); }
+  REN.guide = renderGuide; LAB.guide = 'User Guide';
+});
+
+/* Dashboard CTA helper (reused by admin dashboard + role landings) */
+function wgCTA(){
+  var el=(WG_LANG==='el');
+  return '<div class="card" style="margin-bottom:14px;border-left:4px solid var(--teal)"><div class="card-body" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">' +
+    '<div><div class="fs-14 fw-700 text-white">📘 '+(el?'Οδηγός Χρήσης':'User Guide')+'</div><div class="fs-12 text-muted">'+(el?'Δες τι κάνει κάθε ενότητα και πώς συνδέονται — EL/EN, με PDF.':'See what each section does and how they connect — EL/EN, with PDF.')+'</div></div>' +
+    '<button class="btn btn-primary btn-sm" onclick="showSection(\'guide\')">'+(el?'Άνοιγμα οδηγού →':'Open guide →')+'</button>' +
+    '</div></div>';
 }
 </script>
 </body>
